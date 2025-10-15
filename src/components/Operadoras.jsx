@@ -3,16 +3,13 @@ import { Link } from 'react-router-dom';
 
 function Operadoras() {
   const operadoras = [
-    { nome: 'Unimed', cor: '#00953B' },
-    { nome: 'Bradesco Saúde', cor: '#CC092F' },
-    { nome: 'SulAmérica', cor: '#003087' },
-    { nome: 'Amil', cor: '#0066B3' },
-    { nome: 'Amil One', cor: '#0066B3' },
-    { nome: 'Porto Seguro', cor: '#005CA9' },
-    { nome: 'NotreDame Intermédica', cor: '#00A859' },
-    { nome: 'Hapvida', cor: '#00A859' },
-    { nome: 'Prevent Senior', cor: '#E30613' },
-    
+    { nome: 'Bradesco Saúde', cor: '#CC092F', destaque: true },
+    { nome: 'Porto Seguro', cor: '#005CA9', destaque: true },
+    { nome: 'SulAmérica', cor: '#003087', corSecundaria: '#FF6B35', destaque: true },
+    { nome: 'Amil', cor: '#7B2CBF', destaque: true },
+    { nome: 'Assim Saúde', cor: '#0075C9', destaque: false },
+    { nome: 'Prevent Senior', cor: '#0066CC', corSecundaria: '#7FD13B', destaque: false }, // AZUL + VERDE
+    { nome: 'Unimed', cor: '#00953B', destaque: false }
   ];
 
   return (
@@ -69,7 +66,7 @@ function Operadoras() {
           ✦ Trabalho com as melhores
         </motion.p>
 
-                <h2 style={{
+        <h2 style={{
           fontSize: 'clamp(40px, 7vw, 72px)',
           fontWeight: '300',
           marginBottom: 'clamp(24px, 3vw, 32px)',
@@ -94,7 +91,6 @@ function Operadoras() {
           </span>
         </h2>
 
-        
         <p style={{
           fontSize: 'clamp(14px, 1.7vw, 16px)',
           color: '#6B6662',
@@ -139,18 +135,26 @@ function Operadoras() {
                 transition: { duration: 0.4 }
               }}
               style={{
-                padding: 'clamp(28px, 4vw, 40px)',
-                background: 'rgba(255, 255, 255, 0.7)',
+                padding: operadora.destaque 
+                  ? 'clamp(36px, 5vw, 52px)' 
+                  : 'clamp(28px, 4vw, 40px)',
+                background: operadora.destaque 
+                  ? 'rgba(255, 255, 255, 0.95)' 
+                  : 'rgba(255, 255, 255, 0.7)',
                 backdropFilter: 'blur(30px)',
                 WebkitBackdropFilter: 'blur(30px)',
-                border: `1px solid ${operadora.cor}15`,
+                border: operadora.destaque 
+                  ? `2px solid ${operadora.cor}30` 
+                  : `1px solid ${operadora.cor}15`,
                 borderRadius: '20px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '140px',
-                boxShadow: '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+                minHeight: operadora.destaque ? '180px' : '140px',
+                boxShadow: operadora.destaque 
+                  ? `0 12px 48px ${operadora.cor}20, inset 0 1px 0 rgba(255, 255, 255, 0.8)` 
+                  : '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
                 cursor: 'pointer',
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 position: 'relative',
@@ -158,56 +162,96 @@ function Operadoras() {
                 transform: 'perspective(1000px) rotateX(0deg)'
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.boxShadow = `0 20px 60px ${operadora.cor}25, inset 0 1px 0 rgba(255, 255, 255, 0.6)`;
-                e.currentTarget.style.borderColor = `${operadora.cor}40`;
+                e.currentTarget.style.boxShadow = operadora.corSecundaria
+                  ? `0 20px 60px ${operadora.cor}30, 0 20px 60px ${operadora.corSecundaria}20, inset 0 1px 0 rgba(255, 255, 255, 0.9)`
+                  : `0 20px 60px ${operadora.cor}30, inset 0 1px 0 rgba(255, 255, 255, 0.9)`;
+                e.currentTarget.style.borderColor = `${operadora.cor}50`;
                 e.currentTarget.style.transform = 'perspective(1000px) rotateX(-5deg)';
                 const shine = e.currentTarget.querySelector('.shine-effect');
                 if (shine) shine.style.opacity = '1';
               }}
               onMouseOut={(e) => {
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)';
-                e.currentTarget.style.borderColor = `${operadora.cor}15`;
+                e.currentTarget.style.boxShadow = operadora.destaque 
+                  ? `0 12px 48px ${operadora.cor}20, inset 0 1px 0 rgba(255, 255, 255, 0.8)` 
+                  : '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)';
+                e.currentTarget.style.borderColor = operadora.destaque 
+                  ? `${operadora.cor}30` 
+                  : `${operadora.cor}15`;
                 e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg)';
                 const shine = e.currentTarget.querySelector('.shine-effect');
                 if (shine) shine.style.opacity = '0';
               }}
             >
+              {/* Badge "Destaque" */}
+              {operadora.destaque && (
+                <div style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  background: operadora.corSecundaria
+                    ? `linear-gradient(135deg, ${operadora.cor}20, ${operadora.corSecundaria}20)`
+                    : `linear-gradient(135deg, ${operadora.cor}20, ${operadora.cor}10)`,
+                  color: operadora.cor,
+                  fontSize: 'clamp(9px, 1.1vw, 10px)',
+                  fontWeight: '600',
+                  padding: '4px 10px',
+                  borderRadius: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  border: `1px solid ${operadora.cor}30`
+                }}>
+                  ⭐ Destaque
+                </div>
+              )}
+
               {/* Linha decorativa no topo */}
               <div style={{
                 position: 'absolute',
                 top: 0,
                 left: '20%',
                 right: '20%',
-                height: '3px',
-                background: `linear-gradient(90deg, transparent, ${operadora.cor}60, transparent)`,
-                opacity: 0.6,
+                height: operadora.destaque ? '4px' : '3px',
+                background: operadora.corSecundaria
+                  ? `linear-gradient(90deg, transparent, ${operadora.cor}70, ${operadora.corSecundaria}70, transparent)`
+                  : `linear-gradient(90deg, transparent, ${operadora.cor}70, transparent)`,
+                opacity: operadora.destaque ? 0.8 : 0.6,
                 borderRadius: '0 0 8px 8px'
               }}/>
 
               <span style={{
-                fontSize: 'clamp(17px, 2.4vw, 22px)',
-                fontWeight: '400',
+                fontSize: operadora.destaque 
+                  ? 'clamp(20px, 2.8vw, 26px)' 
+                  : 'clamp(17px, 2.4vw, 22px)',
+                fontWeight: operadora.destaque ? '500' : '400',
                 color: operadora.cor,
                 textAlign: 'center',
                 letterSpacing: '0.02em',
                 lineHeight: 1.3,
                 marginBottom: 'clamp(12px, 2vw, 16px)',
-                fontFamily: "'Playfair Display', serif"
+                fontFamily: "'Playfair Display', serif",
+                ...(operadora.corSecundaria && {
+                  background: `linear-gradient(135deg, ${operadora.cor} 0%, ${operadora.corSecundaria} 100%)`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                })
               }}>
                 {operadora.nome}
               </span>
               
               <span style={{
-                fontSize: 'clamp(11px, 1.4vw, 13px)',
-                color: '#9B9289',
-                fontWeight: '500',
+                fontSize: operadora.destaque 
+                  ? 'clamp(12px, 1.5vw, 14px)' 
+                  : 'clamp(11px, 1.4vw, 13px)',
+                color: operadora.destaque ? operadora.cor : '#9B9289',
+                fontWeight: operadora.destaque ? '600' : '500',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
                 transition: 'all 0.3s ease'
               }}
               className="cta-text"
               >
-                Solicitar →
+                {operadora.destaque ? 'Solicitar Agora →' : 'Solicitar →'}
               </span>
 
               {/* Efeito de brilho no hover */}
@@ -219,7 +263,9 @@ function Operadoras() {
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  background: `linear-gradient(135deg, ${operadora.cor}08, transparent)`,
+                  background: operadora.corSecundaria
+                    ? `linear-gradient(135deg, ${operadora.cor}12, ${operadora.corSecundaria}08, transparent)`
+                    : `linear-gradient(135deg, ${operadora.cor}12, transparent)`,
                   opacity: 0,
                   transition: 'opacity 0.4s ease',
                   pointerEvents: 'none'
