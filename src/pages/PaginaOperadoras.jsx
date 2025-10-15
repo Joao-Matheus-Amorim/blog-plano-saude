@@ -4,42 +4,42 @@ function PaginaOperadoras() {
   const operadoras = [
     {
       nome: 'Bradesco Saúde',
-      cor: '#8B1538', // Vinho oficial Bradesco
+      cor: '#8B1538',
       corSecundaria: '#FFFFFF',
       descricao: 'Uma das maiores operadoras do Brasil, com ampla rede credenciada e tecnologia de ponta.',
       diferenciais: ['App completo', 'Telemedicina 24h', 'Rede nacional']
     },
     {
       nome: 'Porto Seguro',
-      cor: '#003D7A', // Azul oficial Porto
+      cor: '#003D7A',
       corSecundaria: '#FFFFFF',
       descricao: 'Inovação e tecnologia com foco em prevenção e qualidade de vida.',
       diferenciais: ['Clube de vantagens', 'Telemedicina grátis', 'Desconto academias']
     },
     {
       nome: 'SulAmérica',
-      cor: '#003087', // Azul SulAmérica
-      corSecundaria: '#FF6B35', // Laranja oficial
+      cor: '#003087',
+      corSecundaria: '#FF6B35',
       descricao: 'Tradição e credibilidade com mais de 125 anos no mercado de seguros e saúde.',
       diferenciais: ['Descontos farmácias', 'Check-up anual', 'Orientação médica']
     },
     {
       nome: 'Amil',
-      cor: '#0066B3', // Azul Amil oficial
+      cor: '#0066B3',
       corSecundaria: '#FFFFFF',
       descricao: 'Líder em planos de saúde no Brasil, com excelência em atendimento e tecnologia.',
       diferenciais: ['Hospitais próprios', 'Programas de saúde', 'Cobertura internacional']
     },
     {
       nome: 'Prevent Senior',
-      cor: '#003057', // Azul Prussian oficial
-      corSecundaria: '#7FD13B', // Verde
+      cor: '#003057',
+      corSecundaria: '#7FD13B',
       descricao: 'Especializada em atendimento a idosos, com infraestrutura própria e preços acessíveis.',
       diferenciais: ['Foco em idosos', 'Hospitais próprios', 'Preço diferenciado']
     },
     {
       nome: 'Unimed',
-      cor: '#00953B', // Verde oficial Unimed
+      cor: '#00953B',
       corSecundaria: '#FFFFFF',
       descricao: 'A maior rede de cooperativas médicas do mundo, com atendimento humanizado e médicos cooperados.',
       diferenciais: ['Rede hospitalar própria', 'Médicos cooperados', 'Cobertura nacional']
@@ -114,6 +114,7 @@ function PaginaOperadoras() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))',
           gap: 'clamp(24px, 3vw, 32px)'
         }}>
+          {/* OPERADORAS NORMAIS */}
           {operadoras.map((op, index) => (
             <Link key={index} to="/contato" state={{ operadora: op.nome }} style={{
               textDecoration: 'none',
@@ -144,7 +145,6 @@ function PaginaOperadoras() {
                 e.currentTarget.style.borderColor = `${op.cor}15`;
               }}
               >
-                {/* Header com cor da marca */}
                 <div style={{
                   background: op.corSecundaria !== '#FFFFFF' 
                     ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
@@ -166,14 +166,12 @@ function PaginaOperadoras() {
                   </h3>
                 </div>
 
-                {/* Conteúdo */}
                 <div style={{
                   padding: 'clamp(28px, 3.5vw, 36px)',
                   flex: 1,
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
-                  {/* Descrição */}
                   <p style={{
                     fontSize: 'clamp(14px, 1.6vw, 15px)',
                     color: '#4A4A4A',
@@ -185,7 +183,6 @@ function PaginaOperadoras() {
                     {op.descricao}
                   </p>
 
-                  {/* Diferenciais */}
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -221,7 +218,6 @@ function PaginaOperadoras() {
                     ))}
                   </div>
 
-                  {/* Botão minimalista */}
                   <div style={{
                     background: op.corSecundaria !== '#FFFFFF'
                       ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
@@ -257,6 +253,173 @@ function PaginaOperadoras() {
               </div>
             </Link>
           ))}
+
+          {/* CARD ESPECIAL: NÃO ENCONTROU? */}
+          <Link to="/contato" style={{
+            textDecoration: 'none',
+            display: 'block'
+          }}>
+            <div style={{
+              position: 'relative',
+              background: 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              padding: '0',
+              transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 24px 60px rgba(0, 0, 0, 0.3)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)';
+            }}
+            >
+              {/* Badge "Outras Operadoras" */}
+              <div style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                fontSize: 'clamp(9px, 1.1vw, 10px)',
+                color: '#FFFFFF',
+                fontWeight: '600',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase'
+              }}>
+                Todas as Operadoras
+              </div>
+
+              <div style={{
+                padding: 'clamp(40px, 5vw, 52px)',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                textAlign: 'center'
+              }}>
+                {/* Ícone grande */}
+                <div style={{
+                  fontSize: 'clamp(48px, 6vw, 64px)',
+                  marginBottom: 'clamp(24px, 3vw, 32px)'
+                }}>
+                  💼
+                </div>
+
+                {/* Título */}
+                <h3 style={{
+                  fontSize: 'clamp(24px, 3vw, 32px)',
+                  color: '#FFFFFF',
+                  fontWeight: '600',
+                  margin: '0 0 clamp(16px, 2vw, 20px)',
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  lineHeight: 1.2,
+                  letterSpacing: '-0.02em'
+                }}>
+                  Não Encontrou?
+                </h3>
+
+                {/* Descrição */}
+                <p style={{
+                  fontSize: 'clamp(14px, 1.6vw, 16px)',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  lineHeight: 1.7,
+                  fontWeight: '400',
+                  marginBottom: 'clamp(28px, 3.5vw, 36px)'
+                }}>
+                  Trabalho com <strong style={{ color: '#FFFFFF' }}>todas as operadoras</strong> credenciadas pela ANS. 
+                  Entre em contato para consultar outras opções disponíveis.
+                </p>
+
+                {/* Lista de benefícios */}
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  marginBottom: 'clamp(28px, 3.5vw, 36px)',
+                  paddingTop: 'clamp(20px, 2.5vw, 24px)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  {[
+                    'Atendimento personalizado',
+                    'Cotação sem compromisso',
+                    'Resposta em até 24h'
+                  ].map((item, i) => (
+                    <div key={i} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      fontSize: 'clamp(13px, 1.5vw, 14px)',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontWeight: '500'
+                    }}>
+                      <span style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        background: 'rgba(255, 255, 255, 0.15)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        color: '#FFFFFF',
+                        fontWeight: 'bold',
+                        flexShrink: 0
+                      }}>✓</span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Botão CTA */}
+                <div style={{
+                  background: '#FFFFFF',
+                  padding: '16px 24px',
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  fontSize: 'clamp(13px, 1.5vw, 14px)',
+                  color: '#1A1A1A',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  borderRadius: '10px',
+                  boxShadow: '0 8px 24px rgba(255, 255, 255, 0.15)',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 255, 255, 0.25)';
+                  e.currentTarget.style.background = '#F5F5F5';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }}
+                >
+                  Falar com Especialista
+                  <span style={{ fontSize: '14px' }}>→</span>
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       </section>
 
