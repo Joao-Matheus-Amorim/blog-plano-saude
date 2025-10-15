@@ -74,10 +74,10 @@ function PaginaSobre() {
               fontWeight: '300',
               marginBottom: 'clamp(32px, 4vw, 48px)'
             }}>
-              Com anos de experiência no mercado de saúde, minha missão é ajudar pessoas e 
-              famílias a encontrarem a proteção ideal com o melhor custo-benefício. Acredito 
-              que ter um plano de saúde adequado não é luxo, é necessidade — e deve ser 
-              acessível para todos.
+              Com anos de experiência no mercado de saúde, dedico-me a ajudar famílias e 
+              empresas a encontrarem a proteção ideal com o melhor custo-benefício. 
+              Acredito que ter um plano de saúde adequado não é luxo, é necessidade — 
+              e deve ser acessível para todos.
             </p>
 
             <Link to="/contato" style={{
@@ -239,6 +239,149 @@ function PaginaSobre() {
         </div>
       </section>
 
+      {/* SEÇÃO: BADGES MINIMALISTAS */}
+      <section style={{
+        padding: 'clamp(60px, 8vh, 80px) clamp(40px, 8vw, 100px)',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 'clamp(24px, 4vw, 40px)',
+          flexWrap: 'wrap'
+        }}>
+          {/* Badge Famílias */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(197, 188, 181, 0.2)',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
+          }}
+          >
+            <div style={{
+              fontSize: 'clamp(32px, 4.5vw, 44px)',
+              fontWeight: '300',
+              color: '#A8877A',
+              fontFamily: "'Playfair Display', serif",
+              letterSpacing: '-0.02em',
+              lineHeight: 1
+            }}>
+              100<span style={{ fontSize: '0.6em' }}>+</span>
+            </div>
+            <div style={{
+              fontSize: 'clamp(13px, 1.6vw, 15px)',
+              color: '#6B6662',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              lineHeight: 1.4
+            }}>
+              Famílias<br/>Beneficiadas
+            </div>
+          </div>
+
+          {/* Badge Empresas */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(197, 188, 181, 0.2)',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
+          }}
+          >
+            <div style={{
+              fontSize: 'clamp(32px, 4.5vw, 44px)',
+              fontWeight: '300',
+              color: '#8B7E74',
+              fontFamily: "'Playfair Display', serif",
+              letterSpacing: '-0.02em',
+              lineHeight: 1
+            }}>
+              20<span style={{ fontSize: '0.6em' }}>+</span>
+            </div>
+            <div style={{
+              fontSize: 'clamp(13px, 1.6vw, 15px)',
+              color: '#6B6662',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              lineHeight: 1.4
+            }}>
+              Empresas<br/>Atendidas
+            </div>
+          </div>
+
+          {/* Badge Resposta */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(197, 188, 181, 0.2)',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
+          }}
+          >
+            <div style={{
+              fontSize: 'clamp(32px, 4.5vw, 44px)',
+              fontWeight: '300',
+              color: '#9B9289',
+              fontFamily: "'Playfair Display', serif",
+              letterSpacing: '-0.02em',
+              lineHeight: 1
+            }}>
+              24<span style={{ fontSize: '0.7em' }}>h</span>
+            </div>
+            <div style={{
+              fontSize: 'clamp(13px, 1.6vw, 15px)',
+              color: '#6B6662',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              lineHeight: 1.4
+            }}>
+              Resposta<br/>Garantida
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SEÇÃO: MINHA HISTÓRIA */}
       <section style={{
         padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
@@ -273,7 +416,8 @@ function PaginaSobre() {
               Comecei minha jornada no setor de saúde há mais de 5 anos, motivada pela vontade 
               de fazer a diferença na vida das pessoas. Vi de perto como a falta de informação 
               e orientação adequada levava muitas famílias a contratarem planos inadequados ou 
-              pagarem valores abusivos.
+              pagarem valores abusivos — e também como empresas deixavam de oferecer esse 
+              benefício essencial aos seus colaboradores por desconhecerem as melhores opções.
             </p>
 
             <p style={{
@@ -286,8 +430,9 @@ function PaginaSobre() {
               Decidi, então, especializar-me em consultoria personalizada, estudando a fundo 
               todas as operadoras, coberturas e particularidades do mercado. Meu objetivo 
               sempre foi claro: <strong style={{ color: '#8B7E74', fontWeight: '500' }}>
-              democratizar o acesso a planos de saúde de qualidade</strong>, ajudando cada 
-              pessoa a encontrar exatamente o que precisa, dentro do orçamento disponível.
+              democratizar o acesso a planos de saúde de qualidade</strong>, ajudando tanto 
+              pessoas físicas quanto empresas a encontrarem exatamente o que precisam, 
+              dentro do orçamento disponível.
             </p>
 
             <p style={{
@@ -298,10 +443,10 @@ function PaginaSobre() {
               textAlign: 'justify'
             }}>
               Hoje, tenho orgulho de dizer que já ajudei <strong style={{ color: '#8B7E74', fontWeight: '500' }}>
-              mais de 100 famílias</strong> a economizarem significativamente e terem a 
-              tranquilidade de contar com um plano adequado às suas necessidades. Cada cliente 
-              é único, e meu compromisso é oferecer um atendimento humanizado, transparente e 
-              focado em resultados.
+              mais de 100 famílias e 20+ empresas</strong> a economizarem significativamente 
+              e terem a tranquilidade de contar com um plano adequado às suas necessidades. 
+              Cada cliente é único, e meu compromisso é oferecer um atendimento humanizado, 
+              transparente e focado em resultados — seja para você, sua família ou sua equipe.
             </p>
           </div>
         </div>
@@ -330,10 +475,10 @@ function PaginaSobre() {
           gap: 'clamp(32px, 4vw, 48px)'
         }}>
           {[
-            { num: '100+', label: 'Clientes Atendidos' },
+            { num: '100+', label: 'Famílias Atendidas' },
+            { num: '20+', label: 'Empresas Parceiras' },
             { num: 'R$ 450', label: 'Economia Média/Mês' },
-            { num: '24h', label: 'Resposta Garantida' },
-            { num: '98%', label: 'Satisfação dos Clientes' }
+            { num: '98%', label: 'Satisfação' }
           ].map((item, i) => (
             <div key={i} style={{
               background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
@@ -458,7 +603,7 @@ function PaginaSobre() {
           marginBottom: 'clamp(40px, 5vw, 56px)'
         }}>
           Estou à disposição para ajudá-lo a encontrar o plano de saúde perfeito 
-          para você e sua família. A consultoria é gratuita e sem compromisso.
+          para você, sua família ou sua empresa. A consultoria é gratuita e sem compromisso.
         </p>
 
         <div style={{

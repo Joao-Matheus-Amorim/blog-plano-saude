@@ -239,7 +239,7 @@ function Hero() {
               }}
             />
 
-            {/* Badge 3D luxuoso - 100+ Famílias Beneficiadas */}
+            {/* Badge 1: Famílias Beneficiadas (centro inferior) */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -282,6 +282,52 @@ function Hero() {
                 textTransform: 'uppercase'
               }}>
                 Famílias Beneficiadas
+              </div>
+            </motion.div>
+
+            {/* Badge 2: Empresas Atendidas (canto superior esquerdo) */}
+            <motion.div
+              initial={{ opacity: 0, x: -25 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+              whileHover={{ scale: 1.08, x: -6 }}
+              style={{
+                position: 'absolute',
+                top: 'clamp(20px, 3vw, 32px)',
+                left: 'clamp(-28px, -4vw, -36px)',
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(30px)',
+                padding: 'clamp(18px, 2.8vw, 24px) clamp(28px, 4vw, 40px)',
+                borderRadius: '16px',
+                border: '1px solid rgba(139, 126, 116, 0.2)',
+                boxShadow: '0 16px 48px rgba(139, 126, 116, 0.25), 0 0 40px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                zIndex: 2,
+                whiteSpace: 'nowrap',
+                transition: 'all 0.4s ease',
+                textAlign: 'center'
+              }}
+            >
+              <div style={{
+                fontSize: 'clamp(26px, 3.8vw, 36px)',
+                fontWeight: '300',
+                background: 'linear-gradient(135deg, #8B7E74 0%, #6B6662 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                marginBottom: '4px',
+                fontFamily: "'Playfair Display', serif",
+                letterSpacing: '-0.02em'
+              }}>
+                20+
+              </div>
+              <div style={{
+                fontSize: 'clamp(10px, 1.2vw, 12px)',
+                color: '#9B9289',
+                fontWeight: '500',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase'
+              }}>
+                Empresas Atendidas
               </div>
             </motion.div>
           </div>
