@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
+import PaginaSobre from './pages/PaginaSobre.jsx';
+import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
+import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
+import PaginaFAQ from './pages/PaginaFAQ.jsx';
 
 function App() {
   return (
@@ -13,10 +17,15 @@ function App() {
           <Routes>
             <Route path="/" element={<PaginaBlog />} />
             <Route path="/contato" element={<PaginaContato />} />
+            <Route path="/sobre" element={<PaginaSobre />} />
+            <Route path="/operadoras" element={<PaginaOperadoras />} />
+            <Route path="/depoimentos" element={<PaginaDepoimentos />} />
+            <Route path="/faq" element={<PaginaFAQ />} />
           </Routes>
         </main>
 
-                <footer style={{ 
+        {/* FOOTER PROFISSIONAL */}
+        <footer style={{ 
           background: 'linear-gradient(180deg, #FAF8F5 0%, #F0ECE6 100%)',
           padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px) clamp(50px, 6vw, 70px)',
           borderTop: '1px solid rgba(197, 188, 181, 0.15)',
@@ -139,6 +148,90 @@ function App() {
                   }}
                   >
                     <span style={{ fontSize: '12px' }}>→</span> Início
+                  </a>
+                  <a href="/sobre" style={{
+                    fontSize: 'clamp(15px, 1.9vw, 17px)',
+                    color: '#6B6662',
+                    textDecoration: 'none',
+                    fontWeight: '300',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = '#8B7E74';
+                    e.target.style.transform = 'translateX(6px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.color = '#6B6662';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
+                  >
+                    <span style={{ fontSize: '12px' }}>→</span> Sobre
+                  </a>
+                  <a href="/operadoras" style={{
+                    fontSize: 'clamp(15px, 1.9vw, 17px)',
+                    color: '#6B6662',
+                    textDecoration: 'none',
+                    fontWeight: '300',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = '#8B7E74';
+                    e.target.style.transform = 'translateX(6px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.color = '#6B6662';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
+                  >
+                    <span style={{ fontSize: '12px' }}>→</span> Operadoras
+                  </a>
+                  <a href="/depoimentos" style={{
+                    fontSize: 'clamp(15px, 1.9vw, 17px)',
+                    color: '#6B6662',
+                    textDecoration: 'none',
+                    fontWeight: '300',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = '#8B7E74';
+                    e.target.style.transform = 'translateX(6px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.color = '#6B6662';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
+                  >
+                    <span style={{ fontSize: '12px' }}>→</span> Depoimentos
+                  </a>
+                  <a href="/faq" style={{
+                    fontSize: 'clamp(15px, 1.9vw, 17px)',
+                    color: '#6B6662',
+                    textDecoration: 'none',
+                    fontWeight: '300',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = '#8B7E74';
+                    e.target.style.transform = 'translateX(6px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.color = '#6B6662';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
+                  >
+                    <span style={{ fontSize: '12px' }}>→</span> FAQ
                   </a>
                   <a href="/contato" style={{
                     fontSize: 'clamp(15px, 1.9vw, 17px)',
@@ -322,7 +415,6 @@ function App() {
             </div>
           </div>
         </footer>
-
       </div>
     </Router>
   );
