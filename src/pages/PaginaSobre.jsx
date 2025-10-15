@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import PaginaSobre from './pages/PaginaSobre.jsx';
+
 
 function PaginaSobre() {
   return (
