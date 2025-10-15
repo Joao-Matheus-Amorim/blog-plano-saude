@@ -183,7 +183,7 @@ function App() {
                   gap: 'clamp(12px, 1.8vw, 16px)'
                 }}>
                   {/* Botão Instagram */}
-                  <a href="https://www.instagram.com/maisavalentim/" target="_blank" rel="noopener noreferrer" style={{
+                  <a href="https://www.instagram.com/planosdesaudemaisavalentim/" target="_blank" rel="noopener noreferrer" style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '10px',
