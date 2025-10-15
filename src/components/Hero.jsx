@@ -224,20 +224,23 @@ function Hero() {
             />
             
             <motion.img 
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.4 }}
-              src="/images/maisa1.jpg" 
-              alt="Maisa Valentim"
-              style={{
-                width: '100%',
-                height: 'auto',
-                borderRadius: '24px',
-                boxShadow: '0 24px 72px rgba(139, 126, 116, 0.2), 0 0 60px rgba(168, 135, 122, 0.1)',
-                position: 'relative',
-                zIndex: 1,
-                border: '1px solid rgba(197, 188, 181, 0.15)'
-              }}
-            />
+  whileHover={{ scale: 1.02 }}
+  transition={{ duration: 0.4 }}
+  src="/images/maisa-perfil.jpg"  // ou maisa-hero.jpg
+  alt="Maisa Valentim"
+  style={{
+    width: '100%',
+    height: 'clamp(450px, 65vh, 650px)',
+    borderRadius: '24px',
+    boxShadow: '0 24px 72px rgba(139, 126, 116, 0.2), 0 0 60px rgba(168, 135, 122, 0.1)',
+    position: 'relative',
+    zIndex: 1,
+    border: '1px solid rgba(197, 188, 181, 0.15)',
+    objectFit: 'cover',
+    objectPosition: 'center 20%'
+  }}
+/>
+
 
             {/* Badge 1: Empresas Atendidas (TOPO DIREITO) - 3D OPACO */}
             <motion.div

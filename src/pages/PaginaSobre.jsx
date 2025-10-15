@@ -111,13 +111,13 @@ function PaginaSobre() {
             </Link>
           </div>
 
-          {/* Coluna Imagem/Card COM FOTO */}
+          {/* Coluna Imagem/Card COM FOTO MAIOR E MELHORADA ✨ */}
           <div style={{
             background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(197, 188, 181, 0.2)',
             borderRadius: '24px',
-            padding: 'clamp(40px, 6vw, 60px)',
+            padding: 'clamp(48px, 7vw, 72px)',  // ✅ PADDING MAIOR
             boxShadow: '0 20px 60px rgba(139, 126, 116, 0.15)',
             position: 'relative',
             overflow: 'hidden'
@@ -135,42 +135,67 @@ function PaginaSobre() {
             }}/>
 
             <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-              {/* FOTO DA MAISA */}
+              {/* FOTO DA MAISA - MUITO MAIOR ✨ */}
               <div style={{
-                width: '220px',
-                height: '220px',
-                margin: '0 auto clamp(28px, 4vw, 40px)',
+                width: '280px',              // ✅ 27% MAIOR (era 220px)
+                height: '280px',
+                margin: '0 auto clamp(32px, 4.5vw, 48px)',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                boxShadow: '0 12px 40px rgba(168, 135, 122, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.8), 0 0 0 5px rgba(197, 188, 181, 0.2)',
-                border: '3px solid white'
-              }}>
+                boxShadow: `
+                  0 16px 60px rgba(168, 135, 122, 0.35),
+                  0 0 0 6px rgba(255, 255, 255, 0.9),
+                  0 0 0 7px rgba(197, 188, 181, 0.25)
+                `,
+                border: '4px solid white',   // ✅ BORDA MAIS GROSSA
+                transition: 'all 0.4s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = `
+                  0 20px 80px rgba(168, 135, 122, 0.45),
+                  0 0 0 6px rgba(255, 255, 255, 1),
+                  0 0 0 7px rgba(197, 188, 181, 0.3)
+                `;
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = `
+                  0 16px 60px rgba(168, 135, 122, 0.35),
+                  0 0 0 6px rgba(255, 255, 255, 0.9),
+                  0 0 0 7px rgba(197, 188, 181, 0.25)
+                `;
+              }}
+              >
                 <img 
-                  src="/maisa-perfil.jpg"
+                  src="/images/maisa1.jpg"
                   alt="Maisa Valentim - Consultora de Planos de Saúde"
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    objectPosition: 'center'
+                    objectPosition: 'center 30%',
+                    transform: 'scale(1.15)',
+                    transition: 'all 0.4s ease',
+                    filter: 'brightness(1.02) contrast(1.05)'  // ✨ MELHOR CONTRASTE
                   }}
                 />
               </div>
 
               <h3 style={{
-                fontSize: 'clamp(22px, 3vw, 28px)',
+                fontSize: 'clamp(26px, 3.5vw, 32px)',  // ✅ NOME MAIOR
                 color: '#8B7E74',
                 fontWeight: '400',
-                marginBottom: '12px',
+                marginBottom: '14px',
                 fontFamily: "'Playfair Display', serif"
               }}>
                 Maisa Valentim
               </h3>
 
               <p style={{
-                fontSize: 'clamp(14px, 1.7vw, 16px)',
+                fontSize: 'clamp(15px, 1.9vw, 17px)',  // ✅ CARGO MAIOR
                 color: '#9B9289',
-                marginBottom: 'clamp(24px, 3vw, 32px)',
+                marginBottom: 'clamp(28px, 3.5vw, 36px)',
                 fontWeight: '300'
               }}>
                 Consultora de Planos de Saúde
@@ -186,11 +211,11 @@ function PaginaSobre() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '12px 24px',
+                  padding: '14px 28px',  // ✅ BOTÕES MAIORES
                   background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                   color: 'white',
                   textDecoration: 'none',
-                  fontSize: '14px',
+                  fontSize: '15px',      // ✅ TEXTO MAIOR
                   fontWeight: '500',
                   borderRadius: '10px',
                   transition: 'all 0.3s ease',
@@ -212,11 +237,11 @@ function PaginaSobre() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '12px 24px',
+                  padding: '14px 28px',  // ✅ BOTÕES MAIORES
                   background: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)',
                   color: 'white',
                   textDecoration: 'none',
-                  fontSize: '14px',
+                  fontSize: '15px',      // ✅ TEXTO MAIOR
                   fontWeight: '500',
                   borderRadius: '10px',
                   transition: 'all 0.3s ease',
