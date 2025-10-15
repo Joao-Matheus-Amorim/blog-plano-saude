@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom';
-import PaginaSobre from './pages/PaginaSobre.jsx';
-
 
 function PaginaSobre() {
   return (
@@ -124,7 +122,6 @@ function PaginaSobre() {
             position: 'relative',
             overflow: 'hidden'
           }}>
-            {/* Orbe decorativo */}
             <div style={{
               position: 'absolute',
               top: '-100px',
@@ -138,7 +135,6 @@ function PaginaSobre() {
             }}/>
 
             <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-              {/* Placeholder para foto - você pode adicionar uma imagem real aqui */}
               <div style={{
                 width: '200px',
                 height: '200px',
@@ -327,173 +323,53 @@ function PaginaSobre() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
           gap: 'clamp(32px, 4vw, 48px)'
         }}>
-          {/* Card 1 */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(197, 188, 181, 0.2)',
-            borderRadius: '20px',
-            padding: 'clamp(32px, 5vw, 48px)',
-            textAlign: 'center',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
-          }}
-          >
-            <div style={{
-              fontSize: 'clamp(48px, 7vw, 72px)',
-              fontWeight: '300',
-              background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: '12px',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              100+
+          {[
+            { num: '100+', label: 'Clientes Atendidos' },
+            { num: 'R$ 450', label: 'Economia Média/Mês' },
+            { num: '24h', label: 'Resposta Garantida' },
+            { num: '98%', label: 'Satisfação dos Clientes' }
+          ].map((item, i) => (
+            <div key={i} style={{
+              background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(197, 188, 181, 0.2)',
+              borderRadius: '20px',
+              padding: 'clamp(32px, 5vw, 48px)',
+              textAlign: 'center',
+              transition: 'all 0.4s ease',
+              boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
+            }}
+            >
+              <div style={{
+                fontSize: 'clamp(48px, 7vw, 72px)',
+                fontWeight: '300',
+                background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                marginBottom: '12px',
+                fontFamily: "'Playfair Display', serif"
+              }}>
+                {item.num}
+              </div>
+              <p style={{
+                fontSize: 'clamp(15px, 1.9vw, 17px)',
+                color: '#8B7E74',
+                fontWeight: '500',
+                margin: 0
+              }}>
+                {item.label}
+              </p>
             </div>
-            <p style={{
-              fontSize: 'clamp(15px, 1.9vw, 17px)',
-              color: '#8B7E74',
-              fontWeight: '500',
-              margin: 0
-            }}>
-              Clientes Atendidos
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(197, 188, 181, 0.2)',
-            borderRadius: '20px',
-            padding: 'clamp(32px, 5vw, 48px)',
-            textAlign: 'center',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
-          }}
-          >
-            <div style={{
-              fontSize: 'clamp(48px, 7vw, 72px)',
-              fontWeight: '300',
-              background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: '12px',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              R$ 450
-            </div>
-            <p style={{
-              fontSize: 'clamp(15px, 1.9vw, 17px)',
-              color: '#8B7E74',
-              fontWeight: '500',
-              margin: 0
-            }}>
-              Economia Média/Mês
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(197, 188, 181, 0.2)',
-            borderRadius: '20px',
-            padding: 'clamp(32px, 5vw, 48px)',
-            textAlign: 'center',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
-          }}
-          >
-            <div style={{
-              fontSize: 'clamp(48px, 7vw, 72px)',
-              fontWeight: '300',
-              background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: '12px',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              24h
-            </div>
-            <p style={{
-              fontSize: 'clamp(15px, 1.9vw, 17px)',
-              color: '#8B7E74',
-              fontWeight: '500',
-              margin: 0
-            }}>
-              Resposta Garantida
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(197, 188, 181, 0.2)',
-            borderRadius: '20px',
-            padding: 'clamp(32px, 5vw, 48px)',
-            textAlign: 'center',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
-          }}
-          >
-            <div style={{
-              fontSize: 'clamp(48px, 7vw, 72px)',
-              fontWeight: '300',
-              background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: '12px',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              98%
-            </div>
-            <p style={{
-              fontSize: 'clamp(15px, 1.9vw, 17px)',
-              color: '#8B7E74',
-              fontWeight: '500',
-              margin: 0
-            }}>
-              Satisfação dos Clientes
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -520,113 +396,33 @@ function PaginaSobre() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
             gap: 'clamp(32px, 4vw, 48px)'
           }}>
-            {/* Valor 1 */}
-            <div>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '20px'
-              }}>
-                🤝
+            {[
+              { emoji: '🤝', title: 'Transparência', desc: 'Informações claras e honestas sobre todos os planos, sem letras miúdas ou surpresas.' },
+              { emoji: '💙', title: 'Comprometimento', desc: 'Acompanhamento completo antes, durante e após a contratação do seu plano.' },
+              { emoji: '⚖️', title: 'Ética', desc: 'Sempre recomendo o que é melhor para você, não o que rende mais comissão.' },
+              { emoji: '🎯', title: 'Personalização', desc: 'Cada cliente é único. Analiso seu perfil para encontrar o plano ideal.' }
+            ].map((valor, i) => (
+              <div key={i}>
+                <div style={{ fontSize: '48px', marginBottom: '20px' }}>{valor.emoji}</div>
+                <h3 style={{
+                  fontSize: 'clamp(20px, 2.5vw, 24px)',
+                  color: '#8B7E74',
+                  fontWeight: '400',
+                  marginBottom: '12px',
+                  fontFamily: "'Playfair Display', serif"
+                }}>
+                  {valor.title}
+                </h3>
+                <p style={{
+                  fontSize: 'clamp(14px, 1.7vw, 16px)',
+                  color: '#6B6662',
+                  lineHeight: 1.8,
+                  fontWeight: '300'
+                }}>
+                  {valor.desc}
+                </p>
               </div>
-              <h3 style={{
-                fontSize: 'clamp(20px, 2.5vw, 24px)',
-                color: '#8B7E74',
-                fontWeight: '400',
-                marginBottom: '12px',
-                fontFamily: "'Playfair Display', serif"
-              }}>
-                Transparência
-              </h3>
-              <p style={{
-                fontSize: 'clamp(14px, 1.7vw, 16px)',
-                color: '#6B6662',
-                lineHeight: 1.8,
-                fontWeight: '300'
-              }}>
-                Informações claras e honestas sobre todos os planos, sem letras miúdas ou surpresas.
-              </p>
-            </div>
-
-            {/* Valor 2 */}
-            <div>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '20px'
-              }}>
-                💙
-              </div>
-              <h3 style={{
-                fontSize: 'clamp(20px, 2.5vw, 24px)',
-                color: '#8B7E74',
-                fontWeight: '400',
-                marginBottom: '12px',
-                fontFamily: "'Playfair Display', serif"
-              }}>
-                Comprometimento
-              </h3>
-              <p style={{
-                fontSize: 'clamp(14px, 1.7vw, 16px)',
-                color: '#6B6662',
-                lineHeight: 1.8,
-                fontWeight: '300'
-              }}>
-                Acompanhamento completo antes, durante e após a contratação do seu plano.
-              </p>
-            </div>
-
-            {/* Valor 3 */}
-            <div>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '20px'
-              }}>
-                ⚖️
-              </div>
-              <h3 style={{
-                fontSize: 'clamp(20px, 2.5vw, 24px)',
-                color: '#8B7E74',
-                fontWeight: '400',
-                marginBottom: '12px',
-                fontFamily: "'Playfair Display', serif"
-              }}>
-                Ética
-              </h3>
-              <p style={{
-                fontSize: 'clamp(14px, 1.7vw, 16px)',
-                color: '#6B6662',
-                lineHeight: 1.8,
-                fontWeight: '300'
-              }}>
-                Sempre recomendo o que é melhor para você, não o que rende mais comissão.
-              </p>
-            </div>
-
-            {/* Valor 4 */}
-            <div>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '20px'
-              }}>
-                🎯
-              </div>
-              <h3 style={{
-                fontSize: 'clamp(20px, 2.5vw, 24px)',
-                color: '#8B7E74',
-                fontWeight: '400',
-                marginBottom: '12px',
-                fontFamily: "'Playfair Display', serif"
-              }}>
-                Personalização
-              </h3>
-              <p style={{
-                fontSize: 'clamp(14px, 1.7vw, 16px)',
-                color: '#6B6662',
-                lineHeight: 1.8,
-                fontWeight: '300'
-              }}>
-                Cada cliente é único. Analiso seu perfil para encontrar o plano ideal.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
