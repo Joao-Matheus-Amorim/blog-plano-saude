@@ -46,7 +46,7 @@ function PaginaContato() {
 
       if (error) {
         console.error('Erro Supabase:', error);
-        alert('Erro ao salvar lead: ' + error.message);
+        alert('Erro ao enviar: ' + error.message);
         setEnviando(false);
         return;
       }
@@ -62,7 +62,8 @@ function PaginaContato() {
         mensagem: ''
       });
 
-      alert('Lead salvo com sucesso!');
+      alertalert('✅ Solicitação enviada com sucesso!\n\nVocê será redirecionado para o WhatsApp para continuar o atendimento.');
+
     } catch (err) {
       console.error('Erro inesperado:', err);
       alert('Erro ao enviar. Tente novamente.');
