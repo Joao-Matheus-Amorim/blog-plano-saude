@@ -111,7 +111,7 @@ function PaginaSobre() {
             </Link>
           </div>
 
-          {/* Coluna Imagem/Card */}
+          {/* Coluna Imagem/Card COM FOTO */}
           <div style={{
             background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
             backdropFilter: 'blur(20px)',
@@ -135,20 +135,26 @@ function PaginaSobre() {
             }}/>
 
             <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+              {/* FOTO DA MAISA */}
               <div style={{
-                width: '200px',
-                height: '200px',
+                width: '220px',
+                height: '220px',
                 margin: '0 auto clamp(28px, 4vw, 40px)',
-                background: 'linear-gradient(135deg, #A8877A 0%, #C5BCB5 100%)',
                 borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '80px',
-                boxShadow: '0 12px 40px rgba(168, 135, 122, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
-                border: '3px solid rgba(255, 255, 255, 0.2)'
+                overflow: 'hidden',
+                boxShadow: '0 12px 40px rgba(168, 135, 122, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.8), 0 0 0 5px rgba(197, 188, 181, 0.2)',
+                border: '3px solid white'
               }}>
-                👩‍⚕️
+                <img 
+                  src="/maisa-perfil.jpg"
+                  alt="Maisa Valentim - Consultora de Planos de Saúde"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center'
+                  }}
+                />
               </div>
 
               <h3 style={{

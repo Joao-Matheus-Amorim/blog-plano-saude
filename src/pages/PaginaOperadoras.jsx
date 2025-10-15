@@ -2,12 +2,7 @@ import { Link } from 'react-router-dom';
 
 function PaginaOperadoras() {
   const operadoras = [
-    {
-      nome: 'Unimed',
-      cor: '#00A859',
-      descricao: 'A maior rede de cooperativas médicas do mundo, com atendimento humanizado e médicos cooperados.',
-      diferenciais: ['Rede hospitalar própria', 'Médicos cooperados', 'Cobertura nacional']
-    },
+   
     {
       nome: 'Bradesco Saúde',
       cor: '#CC0000',
@@ -26,36 +21,27 @@ function PaginaOperadoras() {
       descricao: 'Líder em planos de saúde no Brasil, com excelência em atendimento e tecnologia.',
       diferenciais: ['Hospitais próprios', 'Programas de saúde', 'Cobertura internacional']
     },
-    {
-      nome: 'Amil One',
-      cor: '#FF6B35',
-      descricao: 'Plano digital da Amil com preços acessíveis e atendimento moderno e ágil.',
-      diferenciais: ['Totalmente digital', 'Preço acessível', 'App intuitivo']
-    },
+    
     {
       nome: 'Porto Seguro',
       cor: '#003366',
       descricao: 'Inovação e tecnologia com foco em prevenção e qualidade de vida.',
       diferenciais: ['Clube de vantagens', 'Telemedicina grátis', 'Desconto academias']
     },
-    {
-      nome: 'NotreDame Intermédica',
-      cor: '#008C45',
-      descricao: 'Fusão das gigantes NotreDame e Intermédica, oferecendo ampla cobertura e estrutura.',
-      diferenciais: ['Hospitais próprios', 'Rede integrada', 'Tecnologia avançada']
-    },
-    {
-      nome: 'Hapvida',
-      cor: '#00A859',
-      descricao: 'Grande rede de hospitais próprios no Brasil, com foco em verticalização da saúde.',
-      diferenciais: ['Hospitais próprios', 'Preço competitivo', 'Cobertura regional']
-    },
+    
+    
     {
       nome: 'Prevent Senior',
       cor: '#CC0000',
       descricao: 'Especializada em atendimento a idosos, com infraestrutura própria e preços acessíveis.',
       diferenciais: ['Foco em idosos', 'Hospitais próprios', 'Preço diferenciado']
-    }
+    },
+    {
+      nome: 'Unimed',
+      cor: '#00A859',
+      descricao: 'A maior rede de cooperativas médicas do mundo, com atendimento humanizado e médicos cooperados.',
+      diferenciais: ['Rede hospitalar própria', 'Médicos cooperados', 'Cobertura nacional']
+    },
   ];
 
   return (
