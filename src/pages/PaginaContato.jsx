@@ -29,48 +29,53 @@ function PaginaContato() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setEnviando(true);
+  e.preventDefault();
+  setEnviando(true);
 
-    try {
-      const { error } = await supabase.from('lead').insert([
-        {
-          nome: formData.nome,
-          email: formData.email,
-          telefone: formData.telefone,
-          operadora: formData.operadora,
-          mensagem: formData.mensagem,
-          data_envio: new Date().toISOString()
-        }
-      ]);
-
-      if (error) {
-        console.error('Erro Supabase:', error);
-        alert('Erro ao enviar: ' + error.message);
-        setEnviando(false);
-        return;
+  try {
+    // 1. Salvar lead no Supabase
+    const { error } = await supabase.from('lead').insert([
+      {
+        nome: formData.nome,
+        email: formData.email,
+        telefone: formData.telefone,
+        operadora: formData.operadora,
+        mensagem: formData.mensagem,
+        data_envio: new Date().toISOString()
       }
+    ]);
 
-      const mensagemWhatsApp = `Olá! Gostaria de solicitar uma cotação de plano de saúde.%0A%0ANome: ${formData.nome}%0AEmail: ${formData.email}%0ATelefone: ${formData.telefone}%0AOperadora: ${formData.operadora}%0AMensagem: ${formData.mensagem}`;
-      window.open(`https://wa.me/5521977472141?text=${mensagemWhatsApp}`, '_blank');
-
-      setFormData({
-        nome: '',
-        email: '',
-        telefone: '',
-        operadora: '',
-        mensagem: ''
-      });
-
-      alertalert('✅ Solicitação enviada com sucesso!\n\nVocê será redirecionado para o WhatsApp para continuar o atendimento.');
-
-    } catch (err) {
-      console.error('Erro inesperado:', err);
-      alert('Erro ao enviar. Tente novamente.');
-    } finally {
+    if (error) {
+      console.error('Erro Supabase:', error);
+      alert('Ops! Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente.');
       setEnviando(false);
+      return;
     }
-  };
+
+    // 2. Mostrar mensagem de sucesso
+    alert('✅ Solicitação enviada com sucesso!\n\nVocê será redirecionado para o WhatsApp para continuar o atendimento.');
+
+    // 3. Abrir WhatsApp
+    const mensagemWhatsApp = `Olá! Gostaria de solicitar uma cotação de plano de saúde.%0A%0ANome: ${formData.nome}%0AEmail: ${formData.email}%0ATelefone: ${formData.telefone}%0AOperadora: ${formData.operadora}%0AMensagem: ${formData.mensagem}`;
+    window.open(`https://wa.me/5521977472141?text=${mensagemWhatsApp}`, '_blank');
+
+    // 4. Limpar formulário
+    setFormData({
+      nome: '',
+      email: '',
+      telefone: '',
+      operadora: '',
+      mensagem: ''
+    });
+
+  } catch (err) {
+    console.error('Erro inesperado:', err);
+    alert('Ops! Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.');
+  } finally {
+    setEnviando(false);
+  }
+};
+
 
   return (
     <section style={{
