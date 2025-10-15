@@ -239,95 +239,181 @@ function Hero() {
               }}
             />
 
-            {/* Badge 1: Empresas Atendidas (TOPO DIREITO) */}
+            {/* Badge 1: Empresas Atendidas (TOPO DIREITO) - 3D OPACO */}
             <motion.div
-              initial={{ opacity: 0, x: 25 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 25, rotateY: -15 }}
+              animate={{ opacity: 1, x: 0, rotateY: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              whileHover={{ scale: 1.08, x: 6 }}
+              whileHover={{ 
+                scale: 1.08, 
+                x: 6,
+                rotateY: 8,
+                rotateX: -5
+              }}
               style={{
                 position: 'absolute',
                 top: 'clamp(20px, 3vw, 32px)',
                 right: 'clamp(-28px, -4vw, -36px)',
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(30px)',
-                padding: 'clamp(18px, 2.8vw, 24px) clamp(28px, 4vw, 40px)',
-                borderRadius: '16px',
-                border: '1px solid rgba(139, 126, 116, 0.2)',
-                boxShadow: '0 16px 48px rgba(139, 126, 116, 0.25), 0 0 40px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 248, 245, 0.95) 100%)',
+                backdropFilter: 'blur(40px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+                padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
+                borderRadius: '20px',
+                border: '2px solid rgba(139, 126, 116, 0.15)',
+                boxShadow: `
+                  0 20px 60px rgba(139, 126, 116, 0.35),
+                  0 8px 24px rgba(0, 0, 0, 0.12),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.9),
+                  inset 0 -2px 8px rgba(139, 126, 116, 0.08)
+                `,
                 zIndex: 2,
                 whiteSpace: 'nowrap',
-                transition: 'all 0.4s ease',
-                textAlign: 'center'
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                textAlign: 'center',
+                transform: 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
+                transformStyle: 'preserve-3d'
               }}
             >
+              {/* Reflexo superior espelhado */}
               <div style={{
-                fontSize: 'clamp(26px, 3.8vw, 36px)',
-                fontWeight: '300',
-                background: 'linear-gradient(135deg, #8B7E74 0%, #6B6662 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                marginBottom: '4px',
-                fontFamily: "'Playfair Display', serif",
-                letterSpacing: '-0.02em'
-              }}>
-                20+
-              </div>
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '50%',
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
+                borderRadius: '20px 20px 0 0',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}/>
+
+              {/* Reflexo inferior */}
               <div style={{
-                fontSize: 'clamp(10px, 1.2vw, 12px)',
-                color: '#9B9289',
-                fontWeight: '500',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase'
-              }}>
-                Empresas Atendidas
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '40%',
+                background: 'linear-gradient(0deg, rgba(139, 126, 116, 0.08) 0%, transparent 100%)',
+                borderRadius: '0 0 20px 20px',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}/>
+
+              {/* Conteúdo */}
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{
+                  fontSize: 'clamp(30px, 4.2vw, 40px)',
+                  fontWeight: '300',
+                  background: 'linear-gradient(135deg, #8B7E74 0%, #6B6662 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  marginBottom: '6px',
+                  fontFamily: "'Playfair Display', serif",
+                  letterSpacing: '-0.02em',
+                  textShadow: '0 2px 8px rgba(139, 126, 116, 0.15)'
+                }}>
+                  20+
+                </div>
+                <div style={{
+                  fontSize: 'clamp(11px, 1.3vw, 13px)',
+                  color: '#8B7E74',
+                  fontWeight: '600',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase'
+                }}>
+                  Empresas Atendidas
+                </div>
               </div>
             </motion.div>
 
-            {/* Badge 2: Famílias Beneficiadas (INFERIOR ESQUERDO) */}
+            {/* Badge 2: Famílias Beneficiadas (INFERIOR ESQUERDO) - 3D OPACO */}
             <motion.div
-              initial={{ opacity: 0, x: -25 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: -25, rotateY: 15 }}
+              animate={{ opacity: 1, x: 0, rotateY: 0 }}
               transition={{ delay: 1.2, duration: 0.8 }}
-              whileHover={{ scale: 1.05, x: -6 }}
+              whileHover={{ 
+                scale: 1.05, 
+                x: -6,
+                rotateY: -8,
+                rotateX: -5
+              }}
               style={{
                 position: 'absolute',
                 bottom: 'clamp(20px, 3vw, 32px)',
                 left: 'clamp(-28px, -4vw, -36px)',
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(30px)',
-                padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 48px)',
-                borderRadius: '18px',
-                border: '1px solid rgba(197, 188, 181, 0.25)',
-                boxShadow: '0 16px 48px rgba(139, 126, 116, 0.25), 0 0 40px rgba(168, 135, 122, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 248, 245, 0.95) 100%)',
+                backdropFilter: 'blur(40px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+                padding: 'clamp(22px, 3.2vw, 32px) clamp(36px, 5vw, 52px)',
+                borderRadius: '22px',
+                border: '2px solid rgba(168, 135, 122, 0.15)',
+                boxShadow: `
+                  0 20px 60px rgba(168, 135, 122, 0.4),
+                  0 8px 24px rgba(0, 0, 0, 0.12),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.9),
+                  inset 0 -2px 8px rgba(168, 135, 122, 0.08)
+                `,
                 zIndex: 2,
                 whiteSpace: 'nowrap',
-                transition: 'all 0.4s ease',
-                textAlign: 'center'
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                textAlign: 'center',
+                transform: 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
+                transformStyle: 'preserve-3d'
               }}
             >
+              {/* Reflexo superior espelhado */}
               <div style={{
-                fontSize: 'clamp(28px, 4vw, 38px)',
-                fontWeight: '300',
-                background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                marginBottom: '4px',
-                fontFamily: "'Playfair Display', serif",
-                letterSpacing: '-0.02em'
-              }}>
-                100+
-              </div>
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '50%',
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
+                borderRadius: '22px 22px 0 0',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}/>
+
+              {/* Reflexo inferior */}
               <div style={{
-                fontSize: 'clamp(11px, 1.3vw, 13px)',
-                color: '#9B9289',
-                fontWeight: '500',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase'
-              }}>
-                Famílias Beneficiadas
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '40%',
+                background: 'linear-gradient(0deg, rgba(168, 135, 122, 0.08) 0%, transparent 100%)',
+                borderRadius: '0 0 22px 22px',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}/>
+
+              {/* Conteúdo */}
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{
+                  fontSize: 'clamp(32px, 4.5vw, 44px)',
+                  fontWeight: '300',
+                  background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  marginBottom: '6px',
+                  fontFamily: "'Playfair Display', serif",
+                  letterSpacing: '-0.02em',
+                  textShadow: '0 2px 8px rgba(168, 135, 122, 0.15)'
+                }}>
+                  100+
+                </div>
+                <div style={{
+                  fontSize: 'clamp(11px, 1.3vw, 13px)',
+                  color: '#A8877A',
+                  fontWeight: '600',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase'
+                }}>
+                  Famílias Beneficiadas
+                </div>
               </div>
             </motion.div>
           </div>
