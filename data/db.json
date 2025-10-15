@@ -1,0 +1,40 @@
+{
+  "leads": [
+    {
+      "id": "0513",
+      "nome": "João Matheus Amorim de Oliveira",
+      "email": "joaomatheus.lab@gmail.com",
+      "telefone": "21984495249",
+      "mensagem": "Gostaria de cotar um Pj 4 vidas BRadesco",
+      "data": "2025-10-12T20:19:56.351Z"
+    },
+    {
+      "id": "d60a",
+      "nome": "asasasasa",
+      "email": "asasasass@gmail.com",
+      "telefone": "21984495249",
+      "mensagem": "asasasa",
+      "data": "2025-10-12T20:49:21.819Z"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "titulo": "Por que contratar um plano de saúde?",
+      "conteudo": "Ter um plano de saúde garante atendimento rápido e segurança para sua família. Em casos de emergência, não precisa esperar horas no sistema público.",
+      "data": "2025-10-10"
+    },
+    {
+      "id": "2",
+      "titulo": "Como escolher o melhor plano",
+      "conteudo": "Compare coberturas, rede credenciada e valores mensais. Verifique se os hospitais e médicos da sua região estão inclusos na rede.",
+      "data": "2025-10-11"
+    },
+    {
+      "id": "3",
+      "titulo": "Plano individual ou familiar?",
+      "conteudo": "Se tem dependentes, o plano familiar pode ser mais econômico. Analise quantas pessoas vão usar e compare os custos.",
+      "data": "2025-10-12"
+    }
+  ]
+}
