@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
@@ -7,9 +9,48 @@ import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
 
+// ✅ COMPONENTE GOOGLE ANALYTICS INTEGRADO
+function GoogleAnalytics() {
+  const location = useLocation();
+  const GA_TRACKING_ID = 'G-FY4Z9HBPD2';
+
+  useEffect(() => {
+    // Script 1: Carrega o Google Analytics
+    const script1 = document.createElement('script');
+    script1.async = true;
+    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
+    document.head.appendChild(script1);
+
+    // Script 2: Inicializa o Google Analytics
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${GA_TRACKING_ID}', {
+        page_path: window.location.pathname,
+      });
+    `;
+    document.head.appendChild(script2);
+  }, []);
+
+  // Rastrear mudanças de página
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <GoogleAnalytics />  {/* ← ✅ GOOGLE ANALYTICS ADICIONADO */}
+      
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header />
         
@@ -128,132 +169,36 @@ function App() {
                   flexDirection: 'column',
                   gap: 'clamp(14px, 2vw, 18px)'
                 }}>
-                  <a href="/" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> Início
-                  </a>
-                  <a href="/sobre" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> Sobre
-                  </a>
-                  <a href="/operadoras" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> Operadoras
-                  </a>
-                  <a href="/depoimentos" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> Depoimentos
-                  </a>
-                  <a href="/faq" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> FAQ
-                  </a>
-                  <a href="/contato" style={{
-                    fontSize: 'clamp(15px, 1.9vw, 17px)',
-                    color: '#6B6662',
-                    textDecoration: 'none',
-                    fontWeight: '300',
-                    transition: 'all 0.3s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.color = '#8B7E74';
-                    e.target.style.transform = 'translateX(6px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.color = '#6B6662';
-                    e.target.style.transform = 'translateX(0)';
-                  }}
-                  >
-                    <span style={{ fontSize: '12px' }}>→</span> Contato
-                  </a>
+                  {[
+                    { href: '/', label: 'Início' },
+                    { href: '/sobre', label: 'Sobre' },
+                    { href: '/operadoras', label: 'Operadoras' },
+                    { href: '/depoimentos', label: 'Depoimentos' },
+                    { href: '/faq', label: 'FAQ' },
+                    { href: '/contato', label: 'Contato' }
+                  ].map((link, i) => (
+                    <a key={i} href={link.href} style={{
+                      fontSize: 'clamp(15px, 1.9vw, 17px)',
+                      color: '#6B6662',
+                      textDecoration: 'none',
+                      fontWeight: '300',
+                      transition: 'all 0.3s ease',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.color = '#8B7E74';
+                      e.target.style.transform = 'translateX(6px)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.color = '#6B6662';
+                      e.target.style.transform = 'translateX(0)';
+                    }}
+                    >
+                      <span style={{ fontSize: '12px' }}>→</span> {link.label}
+                    </a>
+                  ))}
                 </div>
               </div>
 
