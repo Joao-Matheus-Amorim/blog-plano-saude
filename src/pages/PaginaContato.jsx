@@ -52,14 +52,7 @@ function PaginaContato() {
       return;
     }
 
-    // 2. Mostrar mensagem de sucesso
-    alert('✅ Solicitação enviada com sucesso!\n\nVocê será redirecionado para o WhatsApp para continuar o atendimento.');
-
-    // 3. Abrir WhatsApp
-    const mensagemWhatsApp = `Olá! Gostaria de solicitar uma cotação de plano de saúde.%0A%0ANome: ${formData.nome}%0AEmail: ${formData.email}%0ATelefone: ${formData.telefone}%0AOperadora: ${formData.operadora}%0AMensagem: ${formData.mensagem}`;
-    window.open(`https://wa.me/5521977472141?text=${mensagemWhatsApp}`, '_blank');
-
-    // 4. Limpar formulário
+    // 2. Limpar formulário ANTES de redirecionar
     setFormData({
       nome: '',
       email: '',
@@ -68,6 +61,12 @@ function PaginaContato() {
       mensagem: ''
     });
 
+    // 3. Redirecionar para WhatsApp
+    const mensagemWhatsApp = `Olá! Gostaria de solicitar uma cotação de plano de saúde.%0A%0ANome: ${formData.nome}%0AEmail: ${formData.email}%0ATelefone: ${formData.telefone}%0AOperadora: ${formData.operadora}%0AMensagem: ${formData.mensagem}`;
+    
+    // Redireciona diretamente (mesma aba)
+    window.location.href = `https://wa.me/5521977472141?text=${mensagemWhatsApp}`;
+
   } catch (err) {
     console.error('Erro inesperado:', err);
     alert('Ops! Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.');
@@ -75,6 +74,7 @@ function PaginaContato() {
     setEnviando(false);
   }
 };
+
 
 
   return (
