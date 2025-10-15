@@ -1,0 +1,11 @@
+# Permitir todos os robôs
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://consultoriadesaude.vercel.app/sitemap.xml
+
+# Bloquear páginas administrativas (se houver no futuro)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
