@@ -33,15 +33,17 @@ export default function PaginaContato() {
     console.log('📤 Enviando para tabela: lead');
 
     try {
-      // ✅ TABELA CORRETA: 'lead' (SINGULAR)
+      // ✅ INCLUIR operadora e data_envio
       const { data, error: insertError } = await supabase
-        .from('lead')  // ✅ SINGULAR
+        .from('lead')
         .insert([
           {
             nome: formData.nome,
             email: formData.email,
             telefone: formData.telefone,
-            mensagem: formData.mensagem || ''
+            operadora: null, // ✅ Pode ser null
+            mensagem: formData.mensagem || '',
+            data_envio: new Date().toISOString() // ✅ Data atual
           }
         ])
         .select();
