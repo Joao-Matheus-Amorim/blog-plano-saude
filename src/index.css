@@ -273,3 +273,71 @@ ul, ol {
 .shadow-elevated {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }
+/* ========================================
+   📱 OTIMIZAÇÕES MOBILE
+   ======================================== */
+
+/* Prevenir zoom em inputs no iOS */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important; /* iOS não dá zoom se for >= 16px */
+  }
+}
+
+/* Touch targets mínimos (acessibilidade) */
+button, a, input[type="submit"], input[type="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Melhor tap em mobile */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: rgba(168, 135, 122, 0.2);
+  }
+  
+  button, a {
+    -webkit-tap-highlight-color: rgba(168, 135, 122, 0.3);
+  }
+}
+
+/* Scroll suave em touch */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevenir seleção de texto em botões */
+button, a {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Input focus em mobile */
+@media (max-width: 768px) {
+  input:focus, textarea:focus, select:focus {
+    font-size: 16px;
+    outline: none;
+    border-color: #A8877A;
+  }
+}
+
+/* Overflow seguro */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Imagens responsivas */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Grid responsivo automático */
+@media (max-width: 768px) {
+  [style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+  }
+}
