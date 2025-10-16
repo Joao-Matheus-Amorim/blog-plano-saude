@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from './components/Header.jsx';
@@ -8,6 +8,7 @@ import PaginaSobre from './pages/PaginaSobre.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
+
 
 // ✅ COMPONENTE GOOGLE ANALYTICS INTEGRADO
 function GoogleAnalytics() {
@@ -46,7 +47,16 @@ function GoogleAnalytics() {
   return null;
 }
 
+
 function App() {
+  // Função para rolar para o topo ao clicar nos links
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <Router>
       <GoogleAnalytics />  {/* ← ✅ GOOGLE ANALYTICS ADICIONADO */}
@@ -65,7 +75,7 @@ function App() {
           </Routes>
         </main>
 
-        {/* FOOTER PROFISSIONAL */}
+        {/* FOOTER PROFISSIONAL COM LINKS FUNCIONANDO */}
         <footer style={{ 
           background: 'linear-gradient(180deg, #FAF8F5 0%, #F0ECE6 100%)',
           padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px) clamp(50px, 6vw, 70px)',
@@ -152,7 +162,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Coluna 2: Links */}
+              {/* Coluna 2: Links - ✅ CORRIGIDO COM <Link> */}
               <div>
                 <h4 style={{
                   fontSize: 'clamp(11px, 1.4vw, 13px)',
@@ -170,34 +180,38 @@ function App() {
                   gap: 'clamp(14px, 2vw, 18px)'
                 }}>
                   {[
-                    { href: '/', label: 'Início' },
-                    { href: '/sobre', label: 'Sobre' },
-                    { href: '/operadoras', label: 'Operadoras' },
-                    { href: '/depoimentos', label: 'Depoimentos' },
-                    { href: '/faq', label: 'FAQ' },
-                    { href: '/contato', label: 'Contato' }
+                    { to: '/', label: 'Início' },
+                    { to: '/sobre', label: 'Sobre' },
+                    { to: '/operadoras', label: 'Operadoras' },
+                    { to: '/depoimentos', label: 'Depoimentos' },
+                    { to: '/faq', label: 'FAQ' },
+                    { to: '/contato', label: 'Contato' }
                   ].map((link, i) => (
-                    <a key={i} href={link.href} style={{
-                      fontSize: 'clamp(15px, 1.9vw, 17px)',
-                      color: '#6B6662',
-                      textDecoration: 'none',
-                      fontWeight: '300',
-                      transition: 'all 0.3s ease',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.color = '#8B7E74';
-                      e.target.style.transform = 'translateX(6px)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.color = '#6B6662';
-                      e.target.style.transform = 'translateX(0)';
-                    }}
+                    <Link 
+                      key={i} 
+                      to={link.to}
+                      onClick={scrollToTop}
+                      style={{
+                        fontSize: 'clamp(15px, 1.9vw, 17px)',
+                        color: '#6B6662',
+                        textDecoration: 'none',
+                        fontWeight: '300',
+                        transition: 'all 0.3s ease',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.color = '#8B7E74';
+                        e.target.style.transform = 'translateX(6px)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.color = '#6B6662';
+                        e.target.style.transform = 'translateX(0)';
+                      }}
                     >
                       <span style={{ fontSize: '12px' }}>→</span> {link.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
