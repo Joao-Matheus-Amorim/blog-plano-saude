@@ -1,22 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 
-// ✅ CREDENCIAIS SUPABASE
-const supabaseUrl = "https://jdrglgivyjxvytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l2eWp4dnl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1NTEwMjMsImV4cCI6MjA0NTEyNzAyM30.W5enb8d52I25enhSDo4-mJQY6QOj5hBKKs6hPB9zQWU";
+// ✅ CONFIGURAÇÃO SUPABASE
+const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// ✅ LISTA DE OPERADORAS
+const OPERADORAS = [
+  'Bradesco Saúde',
+  'Porto Seguro',
+  'SulAmérica',
+  'Amil',
+  'Assim Saúde',
+  'Prevent Senior',
+  'Unimed',
+  'Outra'
+];
+
 export default function PaginaContato() {
+  const location = useLocation();
+  const operadoraSelecionada = location.state?.operadora || '';
+
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     telefone: '',
+    operadora: operadoraSelecionada,
     mensagem: ''
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // ✅ Atualiza operadora quando mudar
+  useEffect(() => {
+    if (operadoraSelecionada) {
+      setFormData(prev => ({ ...prev, operadora: operadoraSelecionada }));
+    }
+  }, [operadoraSelecionada]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,16 +48,13 @@ export default function PaginaContato() {
     setError('');
     setSuccess(false);
 
-    if (!formData.nome || !formData.email || !formData.telefone) {
+    if (!formData.nome || !formData.email || !formData.telefone || !formData.operadora) {
       setError('Preencha todos os campos obrigatórios');
       setLoading(false);
       return;
     }
 
-    console.log('📤 Enviando para tabela: lead');
-
     try {
-      // ✅ INCLUIR operadora e data_envio
       const { data, error: insertError } = await supabase
         .from('lead')
         .insert([
@@ -41,23 +62,20 @@ export default function PaginaContato() {
             nome: formData.nome,
             email: formData.email,
             telefone: formData.telefone,
-            operadora: null, // ✅ Pode ser null
+            operadora: formData.operadora,
             mensagem: formData.mensagem || '',
-            data_envio: new Date().toISOString() // ✅ Data atual
+            data_envio: new Date().toISOString()
           }
         ])
         .select();
 
       if (insertError) {
-        console.error('❌ Erro:', insertError);
         throw new Error(insertError.message);
       }
 
-      console.log('✅ Lead salvo com sucesso:', data);
-      
       const nomeAtual = formData.nome;
       setSuccess(true);
-      setFormData({ nome: '', email: '', telefone: '', mensagem: '' });
+      setFormData({ nome: '', email: '', telefone: '', operadora: '', mensagem: '' });
       
       setTimeout(() => {
         window.open(
@@ -67,7 +85,6 @@ export default function PaginaContato() {
       }, 2000);
 
     } catch (err) {
-      console.error('❌ Erro completo:', err);
       setError(err.message || 'Erro ao enviar. Tente novamente.');
     } finally {
       setLoading(false);
@@ -85,7 +102,6 @@ export default function PaginaContato() {
       padding: 'clamp(60px, 10vw, 120px) clamp(20px, 5vw, 60px)'
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* TÍTULO */}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <h1 style={{
             fontSize: 'clamp(32px, 5vw, 56px)',
@@ -103,9 +119,22 @@ export default function PaginaContato() {
           }}>
             Preencha o formulário e receba uma cotação personalizada
           </p>
+          {operadoraSelecionada && (
+            <p style={{
+              marginTop: '16px',
+              padding: '12px 24px',
+              background: 'rgba(168, 135, 122, 0.1)',
+              border: '1px solid rgba(168, 135, 122, 0.3)',
+              borderRadius: '12px',
+              color: '#8B7E74',
+              fontSize: '14px',
+              fontWeight: '600'
+            }}>
+              ✨ Você selecionou: <strong>{operadoraSelecionada}</strong>
+            </p>
+          )}
         </div>
 
-        {/* FORMULÁRIO */}
         <form onSubmit={handleSubmit} style={{
           background: '#FFFFFF',
           padding: 'clamp(40px, 6vw, 60px)',
@@ -209,6 +238,54 @@ export default function PaginaContato() {
             />
           </div>
 
+          {/* Operadora (SELECT OBRIGATÓRIO) */}
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#2D3748',
+              fontWeight: '600',
+              marginBottom: '12px'
+            }}>
+              Operadora de Interesse *
+            </label>
+            <select
+              name="operadora"
+              value={formData.operadora}
+              onChange={handleChange}
+              required
+              style={{
+                width: '100%',
+                padding: '16px 20px',
+                fontSize: '16px',
+                border: operadoraSelecionada 
+                  ? '2px solid rgba(168, 135, 122, 0.5)' 
+                  : '2px solid rgba(197, 188, 181, 0.3)',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                outline: 'none',
+                background: operadoraSelecionada 
+                  ? 'rgba(168, 135, 122, 0.05)' 
+                  : '#FFFFFF',
+                cursor: 'pointer',
+                appearance: 'none',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238B7E74' d='M1.41 0L6 4.59 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 20px center',
+                paddingRight: '50px'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => e.target.style.borderColor = operadoraSelecionada 
+                ? 'rgba(168, 135, 122, 0.5)' 
+                : 'rgba(197, 188, 181, 0.3)'}
+            >
+              <option value="" disabled>Selecione uma operadora</option>
+              {OPERADORAS.map((op) => (
+                <option key={op} value={op}>{op}</option>
+              ))}
+            </select>
+          </div>
+
           {/* Mensagem */}
           <div style={{ marginBottom: '32px' }}>
             <label style={{
@@ -218,7 +295,7 @@ export default function PaginaContato() {
               fontWeight: '600',
               marginBottom: '12px'
             }}>
-              Mensagem
+              Mensagem (opcional)
             </label>
             <textarea
               name="mensagem"
@@ -273,7 +350,7 @@ export default function PaginaContato() {
             </div>
           )}
 
-          {/* BOTÃO */}
+          {/* BOTÃO ENVIAR */}
           <button
             type="submit"
             disabled={loading}
@@ -330,7 +407,6 @@ export default function PaginaContato() {
             maxWidth: '400px',
             margin: '0 auto'
           }}>
-            {/* WhatsApp */}
             <a
               href="https://wa.me/5521977472141"
               target="_blank"
@@ -358,7 +434,6 @@ export default function PaginaContato() {
               WhatsApp
             </a>
 
-            {/* Email */}
             <a
               href="mailto:maisarvalentim@gmail.com"
               style={{

@@ -1,47 +1,77 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { createClient } from '@supabase/supabase-js';
+
+// ✅ CONFIGURAÇÃO SUPABASE
+const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 function FormularioContato() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [operadora, setOperadora] = useState(''); // ✅ NOVO ESTADO
   const [mensagem, setMensagem] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState('');
 
   async function enviarFormulario(evento) {
     evento.preventDefault();
     setEnviando(true);
+    setErro('');
     
-    const lead = {
-      nome, 
-      email, 
-      telefone, 
-      mensagem,
-      data: new Date().toISOString()
-    };
+    console.log('📤 Enviando lead para Supabase...');
 
     try {
-      const resposta = await fetch('http://localhost:3333/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(lead)
-      });
+      // ✅ INSERIR NO SUPABASE (tabela 'lead')
+      const { data, error: insertError } = await supabase
+        .from('lead')
+        .insert([
+          {
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            operadora: operadora || null, // ✅ CAMPO OPERADORA
+            mensagem: mensagem || '',
+            data_envio: new Date().toISOString()
+          }
+        ])
+        .select();
 
-      if (resposta.ok) {
-        setSucesso(true);
-        setNome('');
-        setEmail('');
-        setTelefone('');
-        setMensagem('');
-        
-        setTimeout(() => setSucesso(false), 5000);
+      if (insertError) {
+        console.error('❌ Erro Supabase:', insertError);
+        throw new Error(insertError.message);
       }
-    } catch (erro) {
-      alert('Erro ao enviar. Verifique sua conexão.');
+
+      console.log('✅ Lead salvo com sucesso:', data);
+      
+      // ✅ SUCESSO
+      setSucesso(true);
+      setNome('');
+      setEmail('');
+      setTelefone('');
+      setOperadora(''); // ✅ LIMPAR OPERADORA
+      setMensagem('');
+      
+      // ✅ REDIRECIONAR PARA WHATSAPP
+      setTimeout(() => {
+        const mensagemWhatsApp = `Olá! Meu nome é ${nome}. Acabei de preencher o formulário no site.`;
+        window.open(
+          `https://wa.me/5521977472141?text=${encodeURIComponent(mensagemWhatsApp)}`,
+          '_blank'
+        );
+        setSucesso(false);
+      }, 3000);
+
+    } catch (error) {
+      console.error('❌ Erro completo:', error);
+      setErro('Erro ao enviar. Tente novamente.');
+    } finally {
+      setEnviando(false);
     }
-    
-    setEnviando(false);
   }
 
   const inputStyle = {
@@ -116,7 +146,7 @@ function FormularioContato() {
             color: '#457B9D',
             lineHeight: 1.6
           }}>
-            Recebi sua solicitação! Entrarei em contato em até 24 horas com uma proposta personalizada. Obrigada pela confiança! 💚
+            Recebi sua solicitação! Entrarei em contato em até 24 horas. Redirecionando para WhatsApp... 💚
           </p>
         </motion.div>
       ) : (
@@ -141,14 +171,13 @@ function FormularioContato() {
               lineHeight: 1.7,
               fontWeight: '400'
             }}>
-              Preencha seus dados e receba uma proposta personalizada em até 24 horas, sem compromisso!
+              Preencha seus dados e receba uma proposta personalizada em até 24 horas!
             </p>
           </div>
 
+          {/* Nome */}
           <div style={{ marginBottom: '24px' }}>
-            <label style={labelStyle}>
-              Nome Completo *
-            </label>
+            <label style={labelStyle}>Nome Completo *</label>
             <input 
               type="text" 
               value={nome}
@@ -168,10 +197,9 @@ function FormularioContato() {
             />
           </div>
 
+          {/* Email */}
           <div style={{ marginBottom: '24px' }}>
-            <label style={labelStyle}>
-              E-mail *
-            </label>
+            <label style={labelStyle}>E-mail *</label>
             <input 
               type="email" 
               value={email}
@@ -191,10 +219,9 @@ function FormularioContato() {
             />
           </div>
 
+          {/* Telefone */}
           <div style={{ marginBottom: '24px' }}>
-            <label style={labelStyle}>
-              Telefone/WhatsApp *
-            </label>
+            <label style={labelStyle}>Telefone/WhatsApp *</label>
             <input 
               type="tel" 
               value={telefone}
@@ -214,10 +241,30 @@ function FormularioContato() {
             />
           </div>
 
+          {/* ✅ OPERADORA (NOVO CAMPO) */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={labelStyle}>Operadora Atual (opcional)</label>
+            <input 
+              type="text" 
+              value={operadora}
+              onChange={(e) => setOperadora(e.target.value)}
+              disabled={enviando}
+              style={inputStyle}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#81C3B7';
+                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
+                e.target.style.boxShadow = 'none';
+              }}
+              placeholder="Ex: Unimed, Amil, SulAmérica..."
+            />
+          </div>
+
+          {/* Mensagem */}
           <div style={{ marginBottom: '32px' }}>
-            <label style={labelStyle}>
-              Mensagem (opcional)
-            </label>
+            <label style={labelStyle}>Mensagem (opcional)</label>
             <textarea 
               value={mensagem}
               onChange={(e) => setMensagem(e.target.value)}
@@ -237,10 +284,31 @@ function FormularioContato() {
                 e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
                 e.target.style.boxShadow = 'none';
               }}
-              placeholder="Conte-me sobre suas necessidades de plano de saúde..."
+              placeholder="Conte-me sobre suas necessidades..."
             />
           </div>
 
+          {/* MENSAGEM DE ERRO */}
+          {erro && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                padding: '16px',
+                marginBottom: '24px',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                borderRadius: '12px',
+                color: '#dc2626',
+                fontSize: '14px',
+                textAlign: 'center'
+              }}
+            >
+              ❌ {erro}
+            </motion.div>
+          )}
+
+          {/* BOTÃO */}
           <motion.button 
             type="submit" 
             disabled={enviando}
@@ -288,7 +356,7 @@ function FormularioContato() {
             color: '#6B7280',
             lineHeight: 1.6
           }}>
-            Seus dados estão seguros e não serão compartilhados. Você receberá suporte vitalício após a contratação! 🔒
+            Seus dados estão seguros e não serão compartilhados. 🔒
           </p>
         </form>
       )}

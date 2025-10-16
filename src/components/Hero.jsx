@@ -317,7 +317,7 @@ function Hero() {
                   letterSpacing: '-0.02em',
                   textShadow: '0 2px 8px rgba(139, 126, 116, 0.15)'
                 }}>
-                  20+
+                  50+
                 </div>
                 <div style={{
                   fontSize: 'clamp(11px, 1.3vw, 13px)',
