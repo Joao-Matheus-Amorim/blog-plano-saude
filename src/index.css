@@ -1,108 +1,275 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+/* ========================================
+   ✨ SISTEMA DE FONTES
+   ======================================== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
 
+/* ========================================
+   🎨 RESET E BASE
+   ======================================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --shadow-3d: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 80px rgba(102, 126, 234, 0.2);
-  --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.15);
+  /* Cores do projeto (tema clean/saúde) */
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: #A8877A;
+  --color-bg-light: #FAF8F5;
+  --color-bg-cream: #F0ECE6;
+  --color-text-dark: #2D3748;
+  --color-text-gray: #6B6662;
+  --color-border: rgba(197, 188, 181, 0.2);
+}
+
+/* ========================================
+   📄 BODY E HTML
+   ======================================== */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #0a0e27;
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
-  background-attachment: fixed;
-  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #FFFFFF;
+  color: var(--color-text-dark);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
   min-height: 100vh;
-  font-weight: 200;
-  line-height: 1.7;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+/* ========================================
+   📝 TIPOGRAFIA
+   ======================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-text-dark);
 }
 
 ::selection {
-  background: rgba(102, 126, 234, 0.5);
-  color: white;
+  background: rgba(37, 99, 235, 0.2);
+  color: inherit;
 }
 
+/* ========================================
+   🎯 SCROLLBAR CUSTOMIZADO
+   ======================================== */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(10, 14, 39, 0.5);
+  background: var(--color-bg-cream);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+  background: var(--color-secondary);
+}
+
+/* ========================================
+   ⚡ ANIMAÇÕES E PERFORMANCE
+   ======================================== */
+
+/* Hardware acceleration para elementos animados */
+[style*="transform"],
+[style*="opacity"],
+[style*="filter"] {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Transições ultra suaves para elementos interativos */
+a, button, input, textarea, select {
+  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Suaviza hover em links e botões */
+a:hover, button:hover {
+  transition-duration: 0.3s;
+}
+
+/* Performance otimizada para imagens */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Scroll suave em containers */
+.scroll-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ========================================
+   🎬 KEYFRAMES
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
 }
 
-@keyframes rotate3d {
-  0% { transform: perspective(1000px) rotateY(0deg); }
-  100% { transform: perspective(1000px) rotateY(360deg); }
+/* Efeito de fade suave */
+.fade-enter {
+  animation: fadeInUp 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+.float-animation {
+  animation: float 3s ease-in-out infinite;
 }
 
-.glass-3d {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 0 60px rgba(102, 126, 234, 0.1);
+/* ========================================
+   📱 RESPONSIVIDADE
+   ======================================== */
+
+/* Otimização para mobile */
+@media (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  body {
+    font-size: 16px;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-.reflect-3d {
-  position: relative;
+/* ========================================
+   ♿ ACESSIBILIDADE
+   ======================================== */
+
+/* Reduz motion para usuários com preferência de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-.reflect-3d::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: inherit;
-  transform: scaleY(-1);
-  opacity: 0.15;
-  filter: blur(10px);
-  pointer-events: none;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+/* Focus visível para navegação por teclado */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   🎨 UTILIDADES GERAIS
+   ======================================== */
+
+/* Container padrão */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Espaçamentos consistentes */
+.section-padding {
+  padding: 80px 20px;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 40px 20px;
+  }
+}
+
+/* Reset de links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Reset de botões */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Reset de listas */
+ul, ol {
+  list-style: none;
+}
+
+/* ========================================
+   🎭 EFEITOS VISUAIS
+   ======================================== */
+
+/* Glassmorphism suave */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+}
+
+/* Sombra suave */
+.shadow-soft {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Sombra elevada */
+.shadow-elevated {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }

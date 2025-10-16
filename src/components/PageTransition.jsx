@@ -1,35 +1,53 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
+// 🌊 CURVA DE ANIMAÇÃO ULTRA SUAVE (SPRING PHYSICS)
+const spring = {
+  type: "spring",
+  damping: 40,
+  stiffness: 120,
+  mass: 0.8,
+};
+
+// 🎬 VARIANTES DE ANIMAÇÃO EXTREMAMENTE FLUIDAS
 const pageVariants = {
   initial: {
     opacity: 0,
-    scale: 0.98,
-    y: 20,
-    rotateX: -2,
-    filter: 'blur(10px)',
+    scale: 0.96,
+    y: 30,
+    rotateX: -3,
+    filter: 'blur(12px) brightness(0.95)',
   },
   enter: {
     opacity: 1,
     scale: 1,
     y: 0,
     rotateX: 0,
-    filter: 'blur(0px)',
+    filter: 'blur(0px) brightness(1)',
     transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1], // Curva de animação ultra suave
-      staggerChildren: 0.1,
+      duration: 1.2,
+      ease: [0.19, 1, 0.22, 1], // Easing EXTREMAMENTE suave (Expo Out)
+      opacity: { duration: 1, ease: [0.19, 1, 0.22, 1] },
+      scale: { duration: 1.2, ease: [0.19, 1, 0.22, 1] },
+      y: { ...spring, duration: 1.2 },
+      rotateX: { duration: 1.2, ease: [0.19, 1, 0.22, 1] },
+      filter: { duration: 1, ease: [0.19, 1, 0.22, 1] },
     }
   },
   exit: {
     opacity: 0,
-    scale: 1.02,
-    y: -20,
-    rotateX: 2,
-    filter: 'blur(10px)',
+    scale: 1.03,
+    y: -30,
+    rotateX: 3,
+    filter: 'blur(12px) brightness(1.05)',
     transition: {
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.8,
+      ease: [0.19, 1, 0.22, 1],
+      opacity: { duration: 0.6, ease: [0.19, 1, 0.22, 1] },
+      scale: { duration: 0.8, ease: [0.19, 1, 0.22, 1] },
+      y: { duration: 0.8, ease: [0.19, 1, 0.22, 1] },
+      rotateX: { duration: 0.8, ease: [0.19, 1, 0.22, 1] },
+      filter: { duration: 0.6, ease: [0.19, 1, 0.22, 1] },
     }
   }
 };
@@ -38,7 +56,7 @@ export default function PageTransition({ children }) {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={location.pathname}
         initial="initial"
@@ -46,9 +64,13 @@ export default function PageTransition({ children }) {
         exit="exit"
         variants={pageVariants}
         style={{
-          perspective: '1000px',
+          perspective: '2000px',
           transformStyle: 'preserve-3d',
-          willChange: 'transform, opacity',
+          willChange: 'transform, opacity, filter',
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
         }}
       >
         {children}

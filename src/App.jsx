@@ -1,7 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header.jsx';
+import PageTransition from './components/PageTransition.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobre.jsx';
@@ -9,20 +10,17 @@ import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
 
-
-// ✅ COMPONENTE GOOGLE ANALYTICS INTEGRADO
+// ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {
   const location = useLocation();
   const GA_TRACKING_ID = 'G-FY4Z9HBPD2';
 
   useEffect(() => {
-    // Script 1: Carrega o Google Analytics
     const script1 = document.createElement('script');
     script1.async = true;
     script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
     document.head.appendChild(script1);
 
-    // Script 2: Inicializa o Google Analytics
     const script2 = document.createElement('script');
     script2.innerHTML = `
       window.dataLayer = window.dataLayer || [];
@@ -35,7 +33,6 @@ function GoogleAnalytics() {
     document.head.appendChild(script2);
   }, []);
 
-  // Rastrear mudanças de página
   useEffect(() => {
     if (window.gtag) {
       window.gtag('event', 'page_view', {
@@ -47,9 +44,48 @@ function GoogleAnalytics() {
   return null;
 }
 
+// ✅ SCROLL ULTRA SUAVE PARA O TOPO
+function useSmoothScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Delay para sincronizar com a animação de saída
+    const timer = setTimeout(() => {
+      // Usando requestAnimationFrame para performance
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+}
+
+// ✅ COMPONENTE DE ROTAS COM TRANSIÇÕES ULTRA FLUIDAS
+function AnimatedRoutes() {
+  const location = useLocation();
+  useSmoothScrollToTop();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><PaginaBlog /></PageTransition>} />
+        <Route path="/contato" element={<PageTransition><PaginaContato /></PageTransition>} />
+        <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
+        <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
+        <Route path="/depoimentos" element={<PageTransition><PaginaDepoimentos /></PageTransition>} />
+        <Route path="/faq" element={<PageTransition><PaginaFAQ /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
-  // Função para rolar para o topo ao clicar nos links
+  // Função para scroll suave ao clicar nos links do footer
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -59,23 +95,28 @@ function App() {
 
   return (
     <Router>
-      <GoogleAnalytics />  {/* ← ✅ GOOGLE ANALYTICS ADICIONADO */}
+      <GoogleAnalytics />
       
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        overflow: 'hidden',
+        position: 'relative',
+      }}>
         <Header />
         
-        <main style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<PaginaBlog />} />
-            <Route path="/contato" element={<PaginaContato />} />
-            <Route path="/sobre" element={<PaginaSobre />} />
-            <Route path="/operadoras" element={<PaginaOperadoras />} />
-            <Route path="/depoimentos" element={<PaginaDepoimentos />} />
-            <Route path="/faq" element={<PaginaFAQ />} />
-          </Routes>
+        <main style={{ 
+          flex: 1,
+          position: 'relative',
+          isolation: 'isolate',
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale',
+        }}>
+          <AnimatedRoutes />
         </main>
 
-        {/* FOOTER PROFISSIONAL COM LINKS FUNCIONANDO */}
+        {/* ✅ FOOTER PROFISSIONAL COMPLETO */}
         <footer style={{ 
           background: 'linear-gradient(180deg, #FAF8F5 0%, #F0ECE6 100%)',
           padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px) clamp(50px, 6vw, 70px)',
@@ -162,7 +203,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Coluna 2: Links - ✅ CORRIGIDO COM <Link> */}
+              {/* Coluna 2: Links - ✅ COM REACT ROUTER LINK */}
               <div>
                 <h4 style={{
                   fontSize: 'clamp(11px, 1.4vw, 13px)',
@@ -202,12 +243,12 @@ function App() {
                         gap: '8px'
                       }}
                       onMouseOver={(e) => {
-                        e.target.style.color = '#8B7E74';
-                        e.target.style.transform = 'translateX(6px)';
+                        e.currentTarget.style.color = '#8B7E74';
+                        e.currentTarget.style.transform = 'translateX(6px)';
                       }}
                       onMouseOut={(e) => {
-                        e.target.style.color = '#6B6662';
-                        e.target.style.transform = 'translateX(0)';
+                        e.currentTarget.style.color = '#6B6662';
+                        e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >
                       <span style={{ fontSize: '12px' }}>→</span> {link.label}

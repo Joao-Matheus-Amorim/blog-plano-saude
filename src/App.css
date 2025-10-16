@@ -1,42 +1,102 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* ========================================
+   ✨ TRANSIÇÕES ULTRA SUAVES - HARDWARE ACCELERATED
+   ======================================== */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+html {
+  scroll-behavior: smooth;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Otimização de performance para animações */
+[style*="transform"],
+[style*="opacity"],
+[style*="filter"] {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Previne flash durante transições */
+body {
+  overflow-x: hidden;
 }
 
-.card {
-  padding: 2em;
+/* Suaviza todas as transições */
+a, button, .transition-element {
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.read-the-docs {
-  color: #888;
+/* ========================================
+   🎨 COMPONENTES ESPECÍFICOS DO APP
+   ======================================== */
+
+/* Container principal do app (se necessário) */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  position: relative;
+  isolation: isolate;
+}
+/* ========================================
+   ✨ TRANSIÇÕES ULTRA SUAVES - HARDWARE ACCELERATED
+   ======================================== */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Otimização de performance para animações */
+[style*="transform"],
+[style*="opacity"],
+[style*="filter"] {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+/* Previne flash durante transições */
+body {
+  overflow-x: hidden;
+}
+
+/* Suaviza todas as transições */
+a, button, .transition-element {
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ========================================
+   🎨 COMPONENTES ESPECÍFICOS DO APP
+   ======================================== */
+
+/* Container principal do app (se necessário) */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  position: relative;
+  isolation: isolate;
 }
