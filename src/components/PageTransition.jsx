@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-// 🌊 CURVA DE ANIMAÇÃO ULTRA SUAVE (SPRING PHYSICS)
+// 🌊 CURVA DE ANIMAÇÃO ULTRA SUAVE
 const spring = {
   type: "spring",
   damping: 40,
@@ -9,7 +9,7 @@ const spring = {
   mass: 0.8,
 };
 
-// 🎬 VARIANTES DE ANIMAÇÃO EXTREMAMENTE FLUIDAS
+// 🎬 VARIANTES DE ANIMAÇÃO
 const pageVariants = {
   initial: {
     opacity: 0,
@@ -26,7 +26,7 @@ const pageVariants = {
     filter: 'blur(0px) brightness(1)',
     transition: {
       duration: 1.2,
-      ease: [0.19, 1, 0.22, 1], // Easing EXTREMAMENTE suave (Expo Out)
+      ease: [0.19, 1, 0.22, 1],
       opacity: { duration: 1, ease: [0.19, 1, 0.22, 1] },
       scale: { duration: 1.2, ease: [0.19, 1, 0.22, 1] },
       y: { ...spring, duration: 1.2 },

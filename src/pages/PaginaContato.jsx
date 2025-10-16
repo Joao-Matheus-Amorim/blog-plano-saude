@@ -1,25 +1,62 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://jdrglgiyyjxyytjcfzbj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98';
+// ✅ CONFIGURAÇÃO DO SUPABASE
+const supabaseUrl = "https://jdrglgivyjxvytjcfzbj.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImKcCI6ImprclFpelkpUSJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imakx1Z2l2eWp4dnl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1NTEwMjMsImV4cCI6MjA0NTEyNzAyM30.W5enb8d52I25enb";
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-function PaginaContato() {
-  const location = useLocation();
-  const operadoraSelecionada = location.state?.operadora || '';
-
+export default function PaginaContato() {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     telefone: '',
-    operadora: operadoraSelecionada,
     mensagem: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const [enviando, setEnviando] = useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .insert([
+          {
+            nome: formData.nome,
+            email: formData.email,
+            telefone: formData.telefone,
+            mensagem: formData.mensagem,
+            created_at: new Date().toISOString()
+          }
+        ]);
+
+      if (error) throw error;
+
+      setSuccess(true);
+      setFormData({ nome: '', email: '', telefone: '', mensagem: '' });
+      
+      // Redirecionar para WhatsApp após 2 segundos
+      setTimeout(() => {
+        window.open(
+          `https://wa.me/5521977472141?text=Olá! Acabei de preencher o formulário no site. Meu nome é ${formData.nome}.`,
+          '_blank'
+        );
+      }, 2000);
+
+    } catch (err) {
+      setError('Erro ao enviar mensagem. Tente novamente.');
+      console.error('Erro:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -28,94 +65,54 @@ function PaginaContato() {
     });
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setEnviando(true);
-
-  try {
-    // 1. Salvar lead no Supabase
-    const { error } = await supabase.from('lead').insert([
-      {
-        nome: formData.nome,
-        email: formData.email,
-        telefone: formData.telefone,
-        operadora: formData.operadora,
-        mensagem: formData.mensagem,
-        data_envio: new Date().toISOString()
-      }
-    ]);
-
-    if (error) {
-      console.error('Erro Supabase:', error);
-      alert('Ops! Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente.');
-      setEnviando(false);
-      return;
-    }
-
-    // 2. Limpar formulário ANTES de redirecionar
-    setFormData({
-      nome: '',
-      email: '',
-      telefone: '',
-      operadora: '',
-      mensagem: ''
-    });
-
-    // 3. Redirecionar para WhatsApp
-    const mensagemWhatsApp = `Olá! Gostaria de solicitar uma cotação de plano de saúde.%0A%0ANome: ${formData.nome}%0AEmail: ${formData.email}%0ATelefone: ${formData.telefone}%0AOperadora: ${formData.operadora}%0AMensagem: ${formData.mensagem}`;
-    
-    // Redireciona diretamente (mesma aba)
-    window.location.href = `https://wa.me/5521977472141?text=${mensagemWhatsApp}`;
-
-  } catch (err) {
-    console.error('Erro inesperado:', err);
-    alert('Ops! Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.');
-  } finally {
-    setEnviando(false);
-  }
-};
-
-
-
   return (
-    <section style={{
+    <div style={{
       minHeight: '100vh',
-      padding: 'clamp(140px, 15vh, 180px) clamp(40px, 8vw, 100px) clamp(80px, 10vh, 120px)',
-      background: 'linear-gradient(180deg, #FAF8F5 0%, #F5F2ED 50%, #EDE9E3 100%)',
-      position: 'relative',
-      overflow: 'hidden'
+      background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%)',
+      padding: 'clamp(60px, 10vw, 120px) clamp(20px, 5vw, 60px)'
     }}>
       <div style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        position: 'relative',
-        zIndex: 1
+        maxWidth: '800px',
+        margin: '0 auto'
       }}>
-        <h1 style={{
-          fontSize: 'clamp(36px, 6vw, 60px)',
-          fontWeight: '300',
-          color: '#8B7E74',
-          marginBottom: '40px',
-          textAlign: 'center',
-          fontFamily: "'Playfair Display', serif"
-        }}>
-          Solicite sua Cotação
-        </h1>
+        {/* ✅ TÍTULO */}
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h1 style={{
+            fontSize: 'clamp(32px, 5vw, 56px)',
+            fontWeight: '300',
+            color: '#2D3748',
+            marginBottom: '16px',
+            fontFamily: "'Playfair Display', serif"
+          }}>
+            Entre em Contato
+          </h1>
+          <p style={{
+            fontSize: 'clamp(16px, 2vw, 18px)',
+            color: '#6B6662',
+            lineHeight: 1.8
+          }}>
+            Preencha o formulário abaixo e receba uma cotação personalizada
+          </p>
+        </div>
 
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          onSubmit={handleSubmit}
-          style={{
-            background: 'rgba(255, 255, 255, 0.8)',
-            padding: '40px',
-            borderRadius: '20px',
-            boxShadow: '0 20px 60px rgba(139, 126, 116, 0.15)'
-          }}
-        >
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#8B7E74', marginBottom: '8px' }}>
+        {/* ✅ FORMULÁRIO */}
+        <form onSubmit={handleSubmit} style={{
+          background: '#FFFFFF',
+          padding: 'clamp(40px, 6vw, 60px)',
+          borderRadius: '24px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(197, 188, 181, 0.2)'
+        }}>
+          {/* Nome */}
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#2D3748',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.05em'
+            }}>
               Nome Completo *
             </label>
             <input
@@ -126,18 +123,28 @@ function PaginaContato() {
               required
               style={{
                 width: '100%',
-                padding: '14px 18px',
+                padding: '16px 20px',
                 fontSize: '16px',
-                border: '1px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                outline: 'none'
+                border: '2px solid rgba(197, 188, 181, 0.3)',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Inter, sans-serif'
               }}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
             />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#8B7E74', marginBottom: '8px' }}>
+          {/* Email */}
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#2D3748',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.05em'
+            }}>
               E-mail *
             </label>
             <input
@@ -148,19 +155,29 @@ function PaginaContato() {
               required
               style={{
                 width: '100%',
-                padding: '14px 18px',
+                padding: '16px 20px',
                 fontSize: '16px',
-                border: '1px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                outline: 'none'
+                border: '2px solid rgba(197, 188, 181, 0.3)',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Inter, sans-serif'
               }}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
             />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#8B7E74', marginBottom: '8px' }}>
-              Telefone *
+          {/* Telefone */}
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#2D3748',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.05em'
+            }}>
+              Telefone/WhatsApp *
             </label>
             <input
               type="tel"
@@ -168,93 +185,212 @@ function PaginaContato() {
               value={formData.telefone}
               onChange={handleChange}
               required
+              placeholder="(21) 97747-2141"
               style={{
                 width: '100%',
-                padding: '14px 18px',
+                padding: '16px 20px',
                 fontSize: '16px',
-                border: '1px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                outline: 'none'
+                border: '2px solid rgba(197, 188, 181, 0.3)',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Inter, sans-serif'
               }}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
             />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#8B7E74', marginBottom: '8px' }}>
-              Operadora de Preferência
-            </label>
-            <select
-              name="operadora"
-              value={formData.operadora}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '14px 18px',
-                fontSize: '16px',
-                border: '1px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="">Selecione uma operadora</option>
-              <option value="Unimed">Unimed</option>
-              <option value="Bradesco Saúde">Bradesco Saúde</option>
-              <option value="SulAmérica">SulAmérica</option>
-              <option value="Amil">Amil</option>
-              <option value="Outra">Outra</option>
-            </select>
-          </div>
-
+          {/* Mensagem */}
           <div style={{ marginBottom: '32px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#8B7E74', marginBottom: '8px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#2D3748',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.05em'
+            }}>
               Mensagem
             </label>
             <textarea
               name="mensagem"
               value={formData.mensagem}
               onChange={handleChange}
-              rows="4"
+              rows="5"
+              placeholder="Conte-nos sobre suas necessidades..."
               style={{
                 width: '100%',
-                padding: '14px 18px',
+                padding: '16px 20px',
                 fontSize: '16px',
-                border: '1px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                outline: 'none',
-                fontFamily: 'inherit',
+                border: '2px solid rgba(197, 188, 181, 0.3)',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Inter, sans-serif',
                 resize: 'vertical'
               }}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
             />
           </div>
 
+          {/* ✅ MENSAGENS DE SUCESSO/ERRO */}
+          {success && (
+            <div style={{
+              padding: '16px',
+              background: 'rgba(34, 197, 94, 0.1)',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+              borderRadius: '12px',
+              marginBottom: '24px',
+              color: '#15803d',
+              fontSize: '14px',
+              textAlign: 'center'
+            }}>
+              ✅ Mensagem enviada com sucesso! Redirecionando para o WhatsApp...
+            </div>
+          )}
+
+          {error && (
+            <div style={{
+              padding: '16px',
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '12px',
+              marginBottom: '24px',
+              color: '#dc2626',
+              fontSize: '14px',
+              textAlign: 'center'
+            }}>
+              ❌ {error}
+            </div>
+          )}
+
+          {/* ✅ BOTÃO ENVIAR */}
           <button
             type="submit"
-            disabled={enviando}
+            disabled={loading}
             style={{
               width: '100%',
-              padding: '16px',
+              padding: '18px 32px',
               fontSize: '16px',
               fontWeight: '600',
               color: '#FFFFFF',
-              background: enviando ? '#ccc' : 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+              background: loading 
+                ? 'linear-gradient(135deg, #9B9289 0%, #8B7E74 100%)'
+                : 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
               border: 'none',
               borderRadius: '12px',
-              cursor: enviando ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 8px 28px rgba(139, 126, 116, 0.3)',
+              letterSpacing: '0.03em'
+            }}
+            onMouseOver={(e) => {
+              if (!loading) {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 36px rgba(139, 126, 116, 0.4)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 28px rgba(139, 126, 116, 0.3)';
             }}
           >
-            {enviando ? 'Enviando...' : 'Enviar Solicitação →'}
+            {loading ? 'Enviando...' : 'Enviar Mensagem →'}
           </button>
-        </motion.form>
+        </form>
+
+        {/* ✅ OUTRAS FORMAS DE CONTATO */}
+        <div style={{
+          marginTop: '60px',
+          textAlign: 'center'
+        }}>
+          <h3 style={{
+            fontSize: '24px',
+            fontWeight: '500',
+            color: '#2D3748',
+            marginBottom: '32px',
+            fontFamily: "'Playfair Display', serif"
+          }}>
+            Ou fale conosco diretamente
+          </h3>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            maxWidth: '400px',
+            margin: '0 auto'
+          }}>
+            {/* WhatsApp */}
+            <a
+              href="https://wa.me/5521977472141"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                color: '#FFFFFF',
+                textDecoration: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '600',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 8px 24px rgba(37, 211, 102, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 32px rgba(37, 211, 102, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(37, 211, 102, 0.3)';
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+
+            {/* Email */}
+            <a
+              href="mailto:maisarvalentim@gmail.com"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+                color: '#FFFFFF',
+                textDecoration: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '600',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 8px 24px rgba(168, 135, 122, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 32px rgba(168, 135, 122, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(168, 135, 122, 0.3)';
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+              E-mail
+            </a>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
-
-export default PaginaContato;

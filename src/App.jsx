@@ -49,9 +49,7 @@ function useSmoothScrollToTop() {
   const location = useLocation();
 
   useEffect(() => {
-    // Delay para sincronizar com a animação de saída
     const timer = setTimeout(() => {
-      // Usando requestAnimationFrame para performance
       requestAnimationFrame(() => {
         window.scrollTo({
           top: 0,
@@ -85,7 +83,6 @@ function AnimatedRoutes() {
 }
 
 function App() {
-  // Função para scroll suave ao clicar nos links do footer
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -116,7 +113,7 @@ function App() {
           <AnimatedRoutes />
         </main>
 
-        {/* ✅ FOOTER PROFISSIONAL COMPLETO */}
+        {/* ✅ FOOTER COM LOGO */}
         <footer style={{ 
           background: 'linear-gradient(180deg, #FAF8F5 0%, #F0ECE6 100%)',
           padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px) clamp(50px, 6vw, 70px)',
@@ -124,7 +121,6 @@ function App() {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          {/* Orbe flutuante de fundo */}
           <div style={{
             position: 'absolute',
             top: '-200px',
@@ -149,7 +145,7 @@ function App() {
               gap: 'clamp(48px, 7vw, 80px)',
               marginBottom: 'clamp(80px, 10vw, 120px)'
             }}>
-              {/* Coluna 1: Branding */}
+              {/* ✅ Coluna 1: Branding COM LOGO */}
               <div>
                 <div style={{
                   display: 'flex',
@@ -157,7 +153,16 @@ function App() {
                   gap: '12px',
                   marginBottom: 'clamp(20px, 3vw, 28px)'
                 }}>
-                  <span style={{ fontSize: '28px' }}>💎</span>
+                  {/* ✅ LOGO NO LUGAR DO DIAMANTE */}
+                  <img 
+                    src="/logo.png" 
+                    alt="Maisa Valentim Logo" 
+                    style={{ 
+                      width: '40px', 
+                      height: '40px',
+                      objectFit: 'contain'
+                    }} 
+                  />
                   <h3 style={{
                     fontSize: 'clamp(26px, 3.8vw, 38px)',
                     fontWeight: '300',
@@ -203,7 +208,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Coluna 2: Links - ✅ COM REACT ROUTER LINK */}
+              {/* Coluna 2: Links */}
               <div>
                 <h4 style={{
                   fontSize: 'clamp(11px, 1.4vw, 13px)',
@@ -377,7 +382,7 @@ function App() {
               </div>
             </div>
 
-            {/* Linha divisória glassmorphism */}
+            {/* Linha divisória */}
             <div style={{
               width: '100%',
               height: '1px',
@@ -413,6 +418,18 @@ function App() {
                 Cuidando da sua saúde com dedicação ✦
               </p>
             </div>
+            {/* ✅ LOGO COM LAZY LOADING */}
+<img 
+  src="/logo.png" 
+  alt="Maisa Valentim Logo" 
+  loading="lazy"  // ← ADICIONE ISSO!
+  style={{ 
+    width: '40px', 
+    height: '40px',
+    objectFit: 'contain'
+  }} 
+/>
+
           </div>
         </footer>
       </div>
