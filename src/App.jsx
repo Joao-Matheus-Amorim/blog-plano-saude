@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header.jsx';
 import PageTransition from './components/PageTransition.jsx';
+import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobre.jsx';
@@ -153,10 +154,11 @@ function App() {
                   gap: '12px',
                   marginBottom: 'clamp(20px, 3vw, 28px)'
                 }}>
-                  {/* ✅ LOGO NO LUGAR DO DIAMANTE */}
+                  {/* ✅ LOGO COM LAZY LOADING */}
                   <img 
                     src="/logo.png" 
                     alt="Maisa Valentim Logo" 
+                    loading="lazy"
                     style={{ 
                       width: '40px', 
                       height: '40px',
@@ -418,21 +420,12 @@ function App() {
                 Cuidando da sua saúde com dedicação ✦
               </p>
             </div>
-            {/* ✅ LOGO COM LAZY LOADING */}
-<img 
-  src="/logo.png" 
-  alt="Maisa Valentim Logo" 
-  loading="lazy"  // ← ADICIONE ISSO!
-  style={{ 
-    width: '40px', 
-    height: '40px',
-    objectFit: 'contain'
-  }} 
-/>
-
           </div>
         </footer>
       </div>
+
+      {/* ✅ BOTÃO FLUTUANTE WHATSAPP */}
+      <FloatingWhatsApp />
     </Router>
   );
 }
