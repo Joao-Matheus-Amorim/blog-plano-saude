@@ -4,13 +4,15 @@ import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header.jsx';
 import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
-import PopupSaida from './components/PopupSaida.jsx';
+import PopupSaida from './components/Popupsaida.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobre.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
+
+
 
 // ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {

@@ -3,6 +3,8 @@ import Operadoras from '../components/Operadoras.jsx';
 import Simulador from '../components/Simulador.jsx';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO.jsx';
+
 
 function PaginaBlog() {
   const beneficios = [
@@ -41,7 +43,13 @@ function PaginaBlog() {
   ];
 
   return (
+  
     <>
+    <SEO 
+      title="Início - Planos de Saúde RJ"
+      description="Consultoria especializada em planos de saúde no Rio de Janeiro. Bradesco, Unimed, SulAmérica. Cotação gratuita em 24h. Simulador online. Atendimento personalizado PJ e familiar."
+      keywords="plano de saúde RJ, simulador plano saúde, cotação gratuita, plano empresarial, Bradesco saúde Rio"
+    />
       <Hero />
       
       {/* ✅ SEÇÃO SIMULADOR */}
