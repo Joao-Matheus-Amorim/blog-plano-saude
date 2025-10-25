@@ -4,13 +4,14 @@ import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header.jsx';
 import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
+import PopupSaida from './components/PopupSaida.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobre.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
-import PopUp from './components/Simulador.jsx';
+
 // ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {
   const location = useLocation();
@@ -154,7 +155,6 @@ function App() {
                   gap: '12px',
                   marginBottom: 'clamp(20px, 3vw, 28px)'
                 }}>
-                  {/* ✅ LOGO COM LAZY LOADING */}
                   <img 
                     src="/logo.png" 
                     alt="Maisa Valentim Logo" 
@@ -426,6 +426,9 @@ function App() {
 
       {/* ✅ BOTÃO FLUTUANTE WHATSAPP */}
       <FloatingWhatsApp />
+      
+      {/* ✅ POP-UP DE SAÍDA */}
+      <PopupSaida />
     </Router>
   );
 }
