@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
-import SEO from '../components/SEO.jsx';
+import AdminLogin from '../components/AdminLogin.jsx';
 
 const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
@@ -9,35 +8,21 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function PaginaAdmin() {
   const [autenticado, setAutenticado] = useState(false);
-  const [senha, setSenha] = useState('');
   const [leads, setLeads] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [filtro, setFiltro] = useState('todos'); // todos, simulador, formulario
+  const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState('');
 
-  const SENHA_ADMIN = 'jpm2025'; // ⚠️ MUDE ESTA SENHA!
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (senha === SENHA_ADMIN) {
-      setAutenticado(true);
-      localStorage.setItem('admin_auth', 'true');
-      carregarLeads();
-    } else {
-      alert('Senha incorreta!');
-    }
-  };
-
   useEffect(() => {
-    const auth = localStorage.getItem('admin_auth');
+    const auth = localStorage.getItem('adminAutenticado');
     if (auth === 'true') {
       setAutenticado(true);
       carregarLeads();
+    } else {
+      setLoading(false);
     }
   }, []);
 
   const carregarLeads = async () => {
-    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('lead')
@@ -48,429 +33,358 @@ export default function PaginaAdmin() {
       setLeads(data || []);
     } catch (error) {
       console.error('Erro ao carregar leads:', error);
-      alert('Erro ao carregar leads');
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('adminAutenticado');
     setAutenticado(false);
-    localStorage.removeItem('admin_auth');
-    setSenha('');
   };
 
-  const leadsFiltrados = leads.filter(lead => {
-    // Filtro por origem
-    if (filtro === 'simulador' && !lead.vidas) return false;
-    if (filtro === 'formulario' && lead.vidas) return false;
+  const deletarLead = async (id) => {
+    if (!confirm('Tem certeza que deseja deletar este lead?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('lead')
+        .delete()
+        .eq('id', id);
 
-    // Filtro por busca
-    if (busca) {
-      const termoBusca = busca.toLowerCase();
-      return (
-        lead.nome?.toLowerCase().includes(termoBusca) ||
-        lead.email?.toLowerCase().includes(termoBusca) ||
-        lead.telefone?.includes(termoBusca)
-      );
+      if (error) throw error;
+      setLeads(leads.filter(lead => lead.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar lead:', error);
+      alert('Erro ao deletar lead');
     }
-
-    return true;
-  });
-
-  const stats = {
-    total: leads.length,
-    simulador: leads.filter(l => l.vidas).length,
-    formulario: leads.filter(l => !l.vidas).length,
-    valorTotal: leads.filter(l => l.custo).reduce((acc, l) => acc + Number(l.custo), 0)
   };
 
-  // Tela de Login
+  const exportarCSV = () => {
+    const csv = [
+      ['Nome', 'Email', 'Telefone', 'Operadora', 'Mensagem', 'Vidas', 'Data'],
+      ...leads.map(lead => [
+        lead.nome,
+        lead.email,
+        lead.telefone,
+        lead.operadora || '',
+        lead.mensagem || '',
+        lead.vidas || '',
+        new Date(lead.data_envio).toLocaleString('pt-BR')
+      ])
+    ].map(row => row.join(';')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leads_${new Date().toLocaleDateString('pt-BR')}.csv`;
+    a.click();
+  };
+
+  const leadsFiltrados = leads.filter(lead =>
+    lead.nome?.toLowerCase().includes(busca.toLowerCase()) ||
+    lead.email?.toLowerCase().includes(busca.toLowerCase()) ||
+    lead.telefone?.includes(busca) ||
+    lead.operadora?.toLowerCase().includes(busca.toLowerCase())
+  );
+
   if (!autenticado) {
-    return (
-      <>
-        <SEO title="Admin - Login" />
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          padding: '20px'
-        }}>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            style={{
-              background: 'white',
-              padding: '48px',
-              borderRadius: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              maxWidth: '400px',
-              width: '100%'
-            }}
-          >
-            <h1 style={{
-              fontSize: '28px',
-              fontWeight: '700',
-              color: '#2D3748',
-              marginBottom: '8px',
-              textAlign: 'center'
-            }}>
-              🔐 Admin Dashboard
-            </h1>
-            <p style={{
-              fontSize: '14px',
-              color: '#718096',
-              marginBottom: '32px',
-              textAlign: 'center'
-            }}>
-              Área restrita para gestão de leads
-            </p>
-
-            <form onSubmit={handleLogin}>
-              <input
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                placeholder="Digite a senha"
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  border: '2px solid #E2E8F0',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  marginBottom: '20px',
-                  outline: 'none'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
-              />
-
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseOver={(e) => e.target.style.transform = 'scale(1.02)'}
-                onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-              >
-                Entrar
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      </>
-    );
+    return <AdminLogin onLoginSuccess={() => {
+      setAutenticado(true);
+      carregarLeads();
+    }} />;
   }
 
-  // Dashboard Principal
   return (
-    <>
-      <SEO title="Admin - Dashboard de Leads" />
-      
-      <div style={{
-        minHeight: '100vh',
-        background: '#F7FAFC',
-        padding: '40px 20px'
+    <div style={{
+      paddingTop: 'clamp(100px, 12vh, 140px)',
+      background: 'linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%)',
+      minHeight: '100vh'
+    }}>
+      {/* HEADER */}
+      <section style={{
+        padding: 'clamp(40px, 6vh, 60px) clamp(40px, 8vw, 100px)',
+        maxWidth: '1600px',
+        margin: '0 auto'
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          {/* Header */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '40px',
-            flexWrap: 'wrap',
-            gap: '20px'
-          }}>
-            <div>
-              <h1 style={{
-                fontSize: 'clamp(24px, 4vw, 36px)',
-                fontWeight: '700',
-                color: '#2D3748',
-                marginBottom: '8px'
-              }}>
-                📊 Dashboard de Leads
-              </h1>
-              <p style={{ fontSize: '14px', color: '#718096' }}>
-                Gestão completa dos seus contatos
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <button
-                onClick={carregarLeads}
-                disabled={loading}
-                style={{
-                  padding: '12px 24px',
-                  background: '#667eea',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.6 : 1
-                }}
-              >
-                {loading ? '⏳' : '🔄'} Atualizar
-              </button>
-
-              <button
-                onClick={logout}
-                style={{
-                  padding: '12px 24px',
-                  background: '#E53E3E',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                🚪 Sair
-              </button>
-            </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '20px',
+          marginBottom: '40px'
+        }}>
+          <div>
+            <h1 style={{
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              fontWeight: '300',
+              color: '#8B7E74',
+              margin: '0 0 8px',
+              fontFamily: "'Playfair Display', serif"
+            }}>
+              Dashboard Admin 📊
+            </h1>
+            <p style={{
+              fontSize: 'clamp(14px, 1.8vw, 16px)',
+              color: '#9B9289',
+              margin: 0
+            }}>
+              {leads.length} leads capturados no total
+            </p>
           </div>
 
-          {/* Estatísticas */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '20px',
-            marginBottom: '40px'
-          }}>
-            {[
-              { label: 'Total de Leads', value: stats.total, icon: '📋', color: '#667eea' },
-              { label: 'Do Simulador', value: stats.simulador, icon: '🧮', color: '#48BB78' },
-              { label: 'Do Formulário', value: stats.formulario, icon: '📝', color: '#ED8936' },
-              { label: 'Valor Total', value: `R$ ${stats.valorTotal.toFixed(2)}`, icon: '💰', color: '#9F7AEA' }
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                style={{
-                  background: 'white',
-                  padding: '24px',
-                  borderRadius: '16px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                  border: `2px solid ${stat.color}20`
-                }}
-              >
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>{stat.icon}</div>
-                <div style={{
-                  fontSize: '28px',
-                  fontWeight: '700',
-                  color: stat.color,
-                  marginBottom: '4px'
-                }}>
-                  {stat.value}
-                </div>
-                <div style={{ fontSize: '13px', color: '#718096', fontWeight: '500' }}>
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Filtros */}
-          <div style={{
-            background: 'white',
-            padding: '20px',
-            borderRadius: '16px',
-            marginBottom: '20px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            display: 'flex',
-            gap: '16px',
-            flexWrap: 'wrap',
-            alignItems: 'center'
-          }}>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {['todos', 'simulador', 'formulario'].map(f => (
-                <button
-                  key={f}
-                  onClick={() => setFiltro(f)}
-                  style={{
-                    padding: '10px 20px',
-                    background: filtro === f ? '#667eea' : '#E2E8F0',
-                    color: filtro === f ? 'white' : '#4A5568',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    textTransform: 'capitalize',
-                    fontSize: '14px'
-                  }}
-                >
-                  {f === 'todos' ? '📋 Todos' : f === 'simulador' ? '🧮 Simulador' : '📝 Formulário'}
-                </button>
-              ))}
-            </div>
-
-            <input
-              type="text"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder="🔍 Buscar por nome, email ou telefone..."
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              onClick={exportarCSV}
               style={{
-                flex: 1,
-                minWidth: '250px',
-                padding: '12px 16px',
-                border: '2px solid #E2E8F0',
-                borderRadius: '10px',
+                padding: '12px 24px',
+                background: 'linear-gradient(135deg, #27AE60 0%, #229954 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
                 fontSize: '14px',
-                outline: 'none'
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 12px rgba(39, 174, 96, 0.3)'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#667eea'}
-              onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
-            />
-          </div>
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 20px rgba(39, 174, 96, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(39, 174, 96, 0.3)';
+              }}
+            >
+              📥 Exportar CSV
+            </button>
 
-          {/* Tabela de Leads */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            overflow: 'hidden'
-          }}>
-            {loading ? (
-              <div style={{ padding: '60px', textAlign: 'center' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
-                <p style={{ color: '#718096' }}>Carregando leads...</p>
-              </div>
-            ) : leadsFiltrados.length === 0 ? (
-              <div style={{ padding: '60px', textAlign: 'center' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
-                <p style={{ color: '#718096' }}>Nenhum lead encontrado</p>
-              </div>
-            ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{
-                  width: '100%',
-                  borderCollapse: 'collapse'
-                }}>
-                  <thead style={{
-                    background: '#F7FAFC',
-                    borderBottom: '2px solid #E2E8F0'
-                  }}>
-                    <tr>
-                      {['Nome', 'Email', 'Telefone', 'Origem', 'Detalhes', 'Data', 'Ações'].map(h => (
-                        <th key={h} style={{
-                          padding: '16px',
-                          textAlign: 'left',
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          color: '#4A5568',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em'
-                        }}>
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leadsFiltrados.map((lead, index) => (
-                      <motion.tr
-                        key={lead.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.05 }}
-                        style={{
-                          borderBottom: '1px solid #E2E8F0',
-                          transition: 'background 0.2s'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.background = '#F7FAFC'}
-                        onMouseOut={(e) => e.currentTarget.style.background = 'white'}
-                      >
-                        <td style={{ padding: '16px', fontWeight: '600', color: '#2D3748' }}>
-                          {lead.nome || '-'}
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '14px', color: '#4A5568' }}>
-                          {lead.email || '-'}
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '14px', color: '#4A5568' }}>
-                          {lead.telefone || '-'}
-                        </td>
-                        <td style={{ padding: '16px' }}>
-                          <span style={{
-                            padding: '4px 12px',
-                            borderRadius: '20px',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            background: lead.vidas ? '#48BB7820' : '#ED893620',
-                            color: lead.vidas ? '#48BB78' : '#ED8936'
-                          }}>
-                            {lead.vidas ? '🧮 Simulador' : '📝 Formulário'}
-                          </span>
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '13px', color: '#4A5568' }}>
-                          {lead.vidas ? (
-                            <>
-                              <div>{lead.operadora}</div>
-                              <div>{lead.tipo} - {lead.vidas} vidas</div>
-                              <div style={{ fontWeight: '700', color: '#48BB78' }}>
-                                R$ {Number(lead.custo || 0).toFixed(2)}
-                              </div>
-                            </>
-                          ) : (
-                            <div>{lead.mensagem?.substring(0, 50) || '-'}...</div>
-                          )}
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '13px', color: '#718096' }}>
-                          {new Date(lead.data_envio).toLocaleDateString('pt-BR')}
-                          <div style={{ fontSize: '11px' }}>
-                            {new Date(lead.data_envio).toLocaleTimeString('pt-BR')}
-                          </div>
-                        </td>
-                        <td style={{ padding: '16px' }}>
-                          <a
-                            href={`https://wa.me/55${lead.telefone?.replace(/\D/g, '')}?text=Olá ${lead.nome}, vi sua solicitação!`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              display: 'inline-block',
-                              padding: '8px 16px',
-                              background: '#25D366',
-                              color: 'white',
-                              borderRadius: '8px',
-                              textDecoration: 'none',
-                              fontSize: '14px',
-                              fontWeight: '600'
-                            }}
-                          >
-                            💬 WhatsApp
-                          </a>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          <div style={{
-            marginTop: '20px',
-            textAlign: 'center',
-            color: '#718096',
-            fontSize: '14px'
-          }}>
-            Mostrando {leadsFiltrados.length} de {leads.length} leads
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: '12px 24px',
+                background: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 12px rgba(231, 76, 60, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 20px rgba(231, 76, 60, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(231, 76, 60, 0.3)';
+              }}
+            >
+              🔓 Sair
+            </button>
           </div>
         </div>
-      </div>
-    </>
+
+        {/* BUSCA */}
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="🔍 Buscar por nome, email, telefone ou operadora..."
+          style={{
+            width: '100%',
+            padding: '16px 20px',
+            fontSize: '15px',
+            border: '2px solid rgba(197, 188, 181, 0.3)',
+            borderRadius: '12px',
+            outline: 'none',
+            transition: 'all 0.3s ease'
+          }}
+          onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+          onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
+        />
+      </section>
+
+      {/* ESTATÍSTICAS */}
+      <section style={{
+        padding: '0 clamp(40px, 8vw, 100px) 40px',
+        maxWidth: '1600px',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #3498DB 0%, #2980B9 100%)',
+            padding: '24px',
+            borderRadius: '12px',
+            color: 'white',
+            boxShadow: '0 4px 12px rgba(52, 152, 219, 0.3)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+              {leads.length}
+            </div>
+            <div style={{ fontSize: '14px', opacity: 0.9 }}>Total de Leads</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #27AE60 0%, #229954 100%)',
+            padding: '24px',
+            borderRadius: '12px',
+            color: 'white',
+            boxShadow: '0 4px 12px rgba(39, 174, 96, 0.3)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+              {leads.filter(l => {
+                const date = new Date(l.data_envio);
+                const today = new Date();
+                return date.toDateString() === today.toDateString();
+              }).length}
+            </div>
+            <div style={{ fontSize: '14px', opacity: 0.9 }}>Hoje</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #E67E22 0%, #D35400 100%)',
+            padding: '24px',
+            borderRadius: '12px',
+            color: 'white',
+            boxShadow: '0 4px 12px rgba(230, 126, 34, 0.3)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+              {leads.filter(l => {
+                const date = new Date(l.data_envio);
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                return date >= weekAgo;
+              }).length}
+            </div>
+            <div style={{ fontSize: '14px', opacity: 0.9 }}>Últimos 7 dias</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%)',
+            padding: '24px',
+            borderRadius: '12px',
+            color: 'white',
+            boxShadow: '0 4px 12px rgba(155, 89, 182, 0.3)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+              {leadsFiltrados.length}
+            </div>
+            <div style={{ fontSize: '14px', opacity: 0.9 }}>Filtrados</div>
+          </div>
+        </div>
+      </section>
+
+      {/* TABELA */}
+      <section style={{
+        padding: '0 clamp(40px, 8vw, 100px) clamp(80px, 12vh, 120px)',
+        maxWidth: '1600px',
+        margin: '0 auto'
+      }}>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
+            <p style={{ color: '#8B7E74' }}>Carregando leads...</p>
+          </div>
+        ) : leadsFiltrados.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
+            <p style={{ color: '#8B7E74' }}>
+              {busca ? 'Nenhum lead encontrado' : 'Nenhum lead capturado ainda'}
+            </p>
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              background: 'white',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
+            }}>
+              <thead>
+                <tr style={{ background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)' }}>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Nome</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Email</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Telefone</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Operadora</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Vidas</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'left', color: 'white', fontWeight: '600', fontSize: '14px' }}>Data</th>
+                  <th style={{ padding: '18px 16px', textAlign: 'center', color: 'white', fontWeight: '600', fontSize: '14px' }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leadsFiltrados.map((lead, i) => (
+                  <tr key={lead.id} style={{
+                    borderBottom: '1px solid rgba(197, 188, 181, 0.1)',
+                    background: i % 2 === 0 ? 'white' : 'rgba(250, 248, 245, 0.5)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(168, 135, 122, 0.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = i % 2 === 0 ? 'white' : 'rgba(250, 248, 245, 0.5)'}
+                  >
+                    <td style={{ padding: '16px', color: '#333', fontWeight: '600', fontSize: '14px' }}>{lead.nome}</td>
+                    <td style={{ padding: '16px', color: '#666', fontSize: '13px' }}>{lead.email}</td>
+                    <td style={{ padding: '16px', color: '#666', fontSize: '13px', fontFamily: 'monospace' }}>{lead.telefone}</td>
+                    <td style={{ padding: '16px' }}>
+                      <span style={{
+                        padding: '4px 12px',
+                        background: 'rgba(168, 135, 122, 0.1)',
+                        color: '#A8877A',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}>
+                        {lead.operadora || 'N/A'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '16px', color: '#9B9289', fontSize: '13px', textAlign: 'center' }}>{lead.vidas || '-'}</td>
+                    <td style={{ padding: '16px', color: '#9B9289', fontSize: '12px', whiteSpace: 'nowrap' }}>
+                      {new Date(lead.data_envio).toLocaleString('pt-BR')}
+                    </td>
+                    <td style={{ padding: '16px', textAlign: 'center' }}>
+                      <button
+                        onClick={() => deletarLead(lead.id)}
+                        style={{
+                          padding: '8px 16px',
+                          background: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 100%)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.transform = 'scale(1.05)';
+                          e.target.style.boxShadow = '0 4px 12px rgba(231, 76, 60, 0.3)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.transform = 'scale(1)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      >
+                        🗑️ Deletar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
