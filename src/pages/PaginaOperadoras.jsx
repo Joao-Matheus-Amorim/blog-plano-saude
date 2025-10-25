@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO.jsx';
 
 function PaginaOperadoras() {
   const operadoras = [
@@ -47,87 +48,234 @@ function PaginaOperadoras() {
   ];
 
   return (
-    <div style={{
-      paddingTop: 'clamp(100px, 12vh, 140px)',
-      background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 50%, #F5F5F5 100%)',
-      minHeight: '100vh'
-    }}>
-      
-      {/* HERO SECTION */}
-      <section style={{
-        padding: 'clamp(60px, 10vh, 100px) clamp(40px, 8vw, 100px) clamp(80px, 10vh, 120px)',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        textAlign: 'center'
+    <>
+      <SEO 
+        title="Operadoras - Bradesco, Unimed, SulAmérica"
+        description="Trabalhamos com as melhores operadoras de planos de saúde do Brasil: Bradesco, Unimed Rio, SulAmérica, Amil e Notre Dame Intermédica. Compare e escolha."
+        keywords="bradesco saúde, unimed rio, sulamerica, amil, notre dame, operadoras plano saúde, rede credenciada"
+        url="https://consultoriadesaude.vercel.app/operadoras"
+      />
+
+      <div style={{
+        paddingTop: 'clamp(100px, 12vh, 140px)',
+        background: 'linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 50%, #F5F5F5 100%)',
+        minHeight: '100vh'
       }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '8px 20px',
-          background: 'rgba(0, 0, 0, 0.03)',
-          border: '1px solid rgba(0, 0, 0, 0.08)',
-          borderRadius: '20px',
-          fontSize: 'clamp(10px, 1.2vw, 11px)',
-          color: '#666',
-          fontWeight: '600',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          marginBottom: 'clamp(24px, 3vw, 32px)'
+        
+        {/* HERO SECTION */}
+        <section style={{
+          padding: 'clamp(60px, 10vh, 100px) clamp(40px, 8vw, 100px) clamp(80px, 10vh, 120px)',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          textAlign: 'center'
         }}>
-          Operadoras Parceiras
-        </div>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 20px',
+            background: 'rgba(168, 135, 122, 0.08)',
+            border: '1px solid rgba(168, 135, 122, 0.15)',
+            borderRadius: '20px',
+            fontSize: 'clamp(10px, 1.2vw, 11px)',
+            color: '#8B7E74',
+            fontWeight: '600',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            marginBottom: 'clamp(24px, 3vw, 32px)'
+          }}>
+            Operadoras Parceiras
+          </div>
 
-        <h1 style={{
-          fontSize: 'clamp(36px, 5.5vw, 56px)',
-          fontWeight: '300',
-          color: '#1A1A1A',
-          margin: '0 0 clamp(20px, 2.5vw, 28px)',
-          lineHeight: 1.15,
-          letterSpacing: '-0.03em',
-          fontFamily: "'Inter', -apple-system, sans-serif"
-        }}>
-          As Melhores Operadoras<br/>do Mercado
-        </h1>
+          <h1 style={{
+            fontSize: 'clamp(36px, 5.5vw, 56px)',
+            fontWeight: '300',
+            color: '#8B7E74',
+            margin: '0 0 clamp(20px, 2.5vw, 28px)',
+            lineHeight: 1.15,
+            letterSpacing: '-0.03em',
+            fontFamily: "'Playfair Display', serif"
+          }}>
+            As Melhores Operadoras<br/>do Mercado
+          </h1>
 
-        <p style={{
-          fontSize: 'clamp(15px, 1.8vw, 18px)',
-          color: '#666',
-          lineHeight: 1.7,
-          fontWeight: '400',
-          maxWidth: '650px',
-          margin: '0 auto clamp(40px, 5vw, 56px)'
-        }}>
-          Trabalho com as principais operadoras de saúde do Brasil para oferecer 
-          a você a melhor opção com o melhor preço.
-        </p>
-      </section>
+          <p style={{
+            fontSize: 'clamp(15px, 1.8vw, 18px)',
+            color: '#6B6662',
+            lineHeight: 1.7,
+            fontWeight: '400',
+            maxWidth: '650px',
+            margin: '0 auto clamp(40px, 5vw, 56px)'
+          }}>
+            Trabalho com as principais operadoras de saúde do Brasil para oferecer 
+            a você a melhor opção com o melhor preço.
+          </p>
+        </section>
 
-      {/* SEÇÃO: CARDS MINIMALISTAS */}
-      <section style={{
-        padding: '0 clamp(40px, 8vw, 100px) clamp(80px, 12vh, 120px)',
-        maxWidth: '1300px',
-        margin: '0 auto'
-      }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))',
-          gap: 'clamp(24px, 3vw, 32px)'
+        {/* SEÇÃO: CARDS MINIMALISTAS */}
+        <section style={{
+          padding: '0 clamp(40px, 8vw, 100px) clamp(80px, 12vh, 120px)',
+          maxWidth: '1300px',
+          margin: '0 auto'
         }}>
-          {/* OPERADORAS NORMAIS */}
-          {operadoras.map((op, index) => (
-            <Link key={index} to="/contato" state={{ operadora: op.nome }} style={{
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))',
+            gap: 'clamp(24px, 3vw, 32px)'
+          }}>
+            {/* OPERADORAS NORMAIS */}
+            {operadoras.map((op, index) => (
+              <Link key={index} to="/contato" state={{ operadora: op.nome }} style={{
+                textDecoration: 'none',
+                display: 'block'
+              }}>
+                <div style={{
+                  position: 'relative',
+                  background: '#FFFFFF',
+                  border: `1px solid ${op.cor}15`,
+                  borderRadius: '16px',
+                  padding: '0',
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.04)',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = `0 20px 50px ${op.cor}25`;
+                  e.currentTarget.style.borderColor = `${op.cor}40`;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.borderColor = `${op.cor}15`;
+                }}
+                >
+                  <div style={{
+                    background: op.corSecundaria !== '#FFFFFF' 
+                      ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
+                      : op.cor,
+                    padding: 'clamp(32px, 4vw, 40px)',
+                    borderBottom: `1px solid ${op.cor}10`
+                  }}>
+                    <h3 style={{
+                      fontSize: 'clamp(22px, 2.8vw, 28px)',
+                      color: '#FFFFFF',
+                      fontWeight: '600',
+                      margin: 0,
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      lineHeight: 1.2,
+                      letterSpacing: '-0.02em',
+                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}>
+                      {op.nome}
+                    </h3>
+                  </div>
+
+                  <div style={{
+                    padding: 'clamp(28px, 3.5vw, 36px)',
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <p style={{
+                      fontSize: 'clamp(14px, 1.6vw, 15px)',
+                      color: '#4A4A4A',
+                      lineHeight: 1.7,
+                      fontWeight: '400',
+                      marginBottom: 'clamp(24px, 3vw, 28px)',
+                      flex: 1
+                    }}>
+                      {op.descricao}
+                    </p>
+
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      marginBottom: 'clamp(24px, 3vw, 28px)',
+                      paddingTop: 'clamp(20px, 2.5vw, 24px)',
+                      borderTop: '1px solid rgba(0, 0, 0, 0.06)'
+                    }}>
+                      {op.diferenciais.map((dif, i) => (
+                        <div key={i} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          fontSize: 'clamp(13px, 1.5vw, 14px)',
+                          color: '#333',
+                          fontWeight: '500'
+                        }}>
+                          <span style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            background: `${op.cor}12`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '12px',
+                            color: op.cor,
+                            fontWeight: 'bold',
+                            flexShrink: 0
+                          }}>✓</span>
+                          {dif}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{
+                      background: op.corSecundaria !== '#FFFFFF'
+                        ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
+                        : op.cor,
+                      padding: '14px 24px',
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      fontSize: 'clamp(13px, 1.5vw, 14px)',
+                      color: '#FFFFFF',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      borderRadius: '10px',
+                      boxShadow: `0 4px 16px ${op.cor}20`,
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = `0 8px 24px ${op.cor}35`;
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = `0 4px 16px ${op.cor}20`;
+                    }}
+                    >
+                      Solicitar Cotação
+                      <span style={{ fontSize: '14px' }}>→</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+
+            {/* CARD ESPECIAL: NÃO ENCONTROU? */}
+            <Link to="/contato" style={{
               textDecoration: 'none',
               display: 'block'
             }}>
               <div style={{
                 position: 'relative',
-                background: '#FFFFFF',
-                border: `1px solid ${op.cor}15`,
+                background: 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '16px',
                 padding: '0',
                 transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: '0 2px 12px rgba(0, 0, 0, 0.04)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
                 cursor: 'pointer',
                 overflow: 'hidden',
                 height: '100%',
@@ -136,101 +284,147 @@ function PaginaOperadoras() {
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = `0 20px 50px ${op.cor}25`;
-                e.currentTarget.style.borderColor = `${op.cor}40`;
+                e.currentTarget.style.boxShadow = '0 24px 60px rgba(0, 0, 0, 0.3)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.04)';
-                e.currentTarget.style.borderColor = `${op.cor}15`;
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)';
               }}
               >
                 <div style={{
-                  background: op.corSecundaria !== '#FFFFFF' 
-                    ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
-                    : op.cor,
-                  padding: 'clamp(32px, 4vw, 40px)',
-                  borderBottom: `1px solid ${op.cor}10`
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  fontSize: 'clamp(9px, 1.1vw, 10px)',
+                  color: '#FFFFFF',
+                  fontWeight: '600',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase'
                 }}>
-                  <h3 style={{
-                    fontSize: 'clamp(22px, 2.8vw, 28px)',
-                    color: '#FFFFFF',
-                    fontWeight: '600',
-                    margin: 0,
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    lineHeight: 1.2,
-                    letterSpacing: '-0.02em',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                  }}>
-                    {op.nome}
-                  </h3>
+                  Todas as Operadoras
                 </div>
 
                 <div style={{
-                  padding: 'clamp(28px, 3.5vw, 36px)',
+                  padding: 'clamp(40px, 5vw, 52px)',
                   flex: 1,
                   display: 'flex',
-                  flexDirection: 'column'
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  textAlign: 'center'
                 }}>
+                  {/* Ícone SVG grande */}
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto clamp(24px, 3vw, 32px)',
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    position: 'relative'
+                  }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      ircle cx="="12" cy="7" r="4"/>
+                    </svg>
+                    
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      right: '8px',
+                      height: '35%',
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%)',
+                      borderRadius: '14px 14px 0 0',
+                      pointerEvents: 'none'
+                    }}/>
+                  </div>
+
+                  <h3 style={{
+                    fontSize: 'clamp(24px, 3vw, 32px)',
+                    color: '#FFFFFF',
+                    fontWeight: '600',
+                    margin: '0 0 clamp(16px, 2vw, 20px)',
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    lineHeight: 1.2,
+                    letterSpacing: '-0.02em'
+                  }}>
+                    Não Encontrou?
+                  </h3>
+
                   <p style={{
-                    fontSize: 'clamp(14px, 1.6vw, 15px)',
-                    color: '#4A4A4A',
+                    fontSize: 'clamp(14px, 1.6vw, 16px)',
+                    color: 'rgba(255, 255, 255, 0.8)',
                     lineHeight: 1.7,
                     fontWeight: '400',
-                    marginBottom: 'clamp(24px, 3vw, 28px)',
-                    flex: 1
+                    marginBottom: 'clamp(28px, 3.5vw, 36px)'
                   }}>
-                    {op.descricao}
+                    Trabalho com <strong style={{ color: '#FFFFFF' }}>todas as operadoras</strong> credenciadas pela ANS. 
+                    Entre em contato para consultar outras opções disponíveis.
                   </p>
 
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '12px',
-                    marginBottom: 'clamp(24px, 3vw, 28px)',
+                    marginBottom: 'clamp(28px, 3.5vw, 36px)',
                     paddingTop: 'clamp(20px, 2.5vw, 24px)',
-                    borderTop: '1px solid rgba(0, 0, 0, 0.06)'
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)'
                   }}>
-                    {op.diferenciais.map((dif, i) => (
+                    {[
+                      'Atendimento personalizado',
+                      'Cotação sem compromisso',
+                      'Resposta em até 24h'
+                    ].map((item, i) => (
                       <div key={i} style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
                         fontSize: 'clamp(13px, 1.5vw, 14px)',
-                        color: '#333',
+                        color: 'rgba(255, 255, 255, 0.9)',
                         fontWeight: '500'
                       }}>
                         <span style={{
                           width: '20px',
                           height: '20px',
                           borderRadius: '50%',
-                          background: `${op.cor}12`,
+                          background: 'rgba(255, 255, 255, 0.15)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: '12px',
-                          color: op.cor,
+                          color: '#FFFFFF',
                           fontWeight: 'bold',
                           flexShrink: 0
                         }}>✓</span>
-                        {dif}
+                        {item}
                       </div>
                     ))}
                   </div>
 
                   <div style={{
-                    background: op.corSecundaria !== '#FFFFFF'
-                      ? `linear-gradient(135deg, ${op.cor} 0%, ${op.corSecundaria} 100%)`
-                      : op.cor,
-                    padding: '14px 24px',
+                    background: '#FFFFFF',
+                    padding: '16px 24px',
                     textAlign: 'center',
                     fontWeight: '600',
                     fontSize: 'clamp(13px, 1.5vw, 14px)',
-                    color: '#FFFFFF',
+                    color: '#1A1A1A',
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
                     borderRadius: '10px',
-                    boxShadow: `0 4px 16px ${op.cor}20`,
+                    boxShadow: '0 8px 24px rgba(255, 255, 255, 0.15)',
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     alignItems: 'center',
@@ -239,344 +433,236 @@ function PaginaOperadoras() {
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = `0 8px 24px ${op.cor}35`;
+                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 255, 255, 0.25)';
+                    e.currentTarget.style.background = '#F5F5F5';
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = `0 4px 16px ${op.cor}20`;
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.background = '#FFFFFF';
                   }}
                   >
-                    Solicitar Cotação
+                    Falar com Especialista
                     <span style={{ fontSize: '14px' }}>→</span>
                   </div>
                 </div>
               </div>
             </Link>
-          ))}
+          </div>
+        </section>
 
-          {/* CARD ESPECIAL: NÃO ENCONTROU? */}
-          <Link to="/contato" style={{
-            textDecoration: 'none',
-            display: 'block'
-          }}>
+        {/* SEÇÃO: DIFERENCIAIS COM SVG */}
+        <section style={{
+          padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
+          background: '#FAF8F5',
+          borderTop: '1px solid rgba(197, 188, 181, 0.15)',
+          borderBottom: '1px solid rgba(197, 188, 181, 0.15)'
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <h2 style={{
+              fontSize: 'clamp(28px, 4.5vw, 42px)',
+              fontWeight: '300',
+              color: '#8B7E74',
+              textAlign: 'center',
+              marginBottom: 'clamp(48px, 6vw, 72px)',
+              letterSpacing: '-0.02em',
+              fontFamily: "'Playfair Display', serif"
+            }}>
+              Por Que Contratar Comigo?
+            </h2>
+
             <div style={{
-              position: 'relative',
-              background: 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
-              padding: '0',
-              transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
-              cursor: 'pointer',
-              overflow: 'hidden',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 24px 60px rgba(0, 0, 0, 0.3)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%)';
-            }}
-            >
-              {/* Badge "Outras Operadoras" */}
-              <div style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                fontSize: 'clamp(9px, 1.1vw, 10px)',
-                color: '#FFFFFF',
-                fontWeight: '600',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase'
-              }}>
-                Todas as Operadoras
-              </div>
-
-              <div style={{
-                padding: 'clamp(40px, 5vw, 52px)',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                textAlign: 'center'
-              }}>
-                {/* Ícone grande */}
-                <div style={{
-                  fontSize: 'clamp(48px, 6vw, 64px)',
-                  marginBottom: 'clamp(24px, 3vw, 32px)'
-                }}>
-                  💼
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
+              gap: 'clamp(32px, 4vw, 48px)'
+            }}>
+              {[
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                  ),
+                  title: 'Análise Personalizada', 
+                  desc: 'Avalio seu perfil para encontrar o plano ideal com melhor custo-benefício.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="1" x2="12" y2="23"/>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                  ),
+                  title: 'Economia Garantida', 
+                  desc: 'Negocio os melhores preços diretamente com as operadoras.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                  ),
+                  title: 'Suporte Vitalício', 
+                  desc: 'Estou disponível para ajudá-lo sempre que precisar, mesmo após a contratação.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                  ),
+                  title: 'Agilidade', 
+                  desc: 'Processo rápido e sem burocracia. Resposta em até 24 horas.' 
+                }
+              ].map((item, i) => (
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto clamp(20px, 2.5vw, 24px)',
+                    background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 12px 32px rgba(139, 126, 116, 0.25)',
+                    position: 'relative'
+                  }}>
+                    {item.svg}
+                    
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      right: '8px',
+                      height: '35%',
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%)',
+                      borderRadius: '14px 14px 0 0',
+                      pointerEvents: 'none'
+                    }}/>
+                  </div>
+                  
+                  <h3 style={{
+                    fontSize: 'clamp(17px, 2vw, 20px)',
+                    color: '#8B7E74',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    letterSpacing: '-0.01em'
+                  }}>
+                    {item.title}
+                  </h3>
+                  
+                  <p style={{
+                    fontSize: 'clamp(14px, 1.6vw, 15px)',
+                    color: '#6B6662',
+                    lineHeight: 1.7,
+                    fontWeight: '400'
+                  }}>
+                    {item.desc}
+                  </p>
                 </div>
-
-                {/* Título */}
-                <h3 style={{
-                  fontSize: 'clamp(24px, 3vw, 32px)',
-                  color: '#FFFFFF',
-                  fontWeight: '600',
-                  margin: '0 0 clamp(16px, 2vw, 20px)',
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  lineHeight: 1.2,
-                  letterSpacing: '-0.02em'
-                }}>
-                  Não Encontrou?
-                </h3>
-
-                {/* Descrição */}
-                <p style={{
-                  fontSize: 'clamp(14px, 1.6vw, 16px)',
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  lineHeight: 1.7,
-                  fontWeight: '400',
-                  marginBottom: 'clamp(28px, 3.5vw, 36px)'
-                }}>
-                  Trabalho com <strong style={{ color: '#FFFFFF' }}>todas as operadoras</strong> credenciadas pela ANS. 
-                  Entre em contato para consultar outras opções disponíveis.
-                </p>
-
-                {/* Lista de benefícios */}
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  marginBottom: 'clamp(28px, 3.5vw, 36px)',
-                  paddingTop: 'clamp(20px, 2.5vw, 24px)',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.1)'
-                }}>
-                  {[
-                    'Atendimento personalizado',
-                    'Cotação sem compromisso',
-                    'Resposta em até 24h'
-                  ].map((item, i) => (
-                    <div key={i} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      fontSize: 'clamp(13px, 1.5vw, 14px)',
-                      color: 'rgba(255, 255, 255, 0.9)',
-                      fontWeight: '500'
-                    }}>
-                      <span style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        background: 'rgba(255, 255, 255, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '12px',
-                        color: '#FFFFFF',
-                        fontWeight: 'bold',
-                        flexShrink: 0
-                      }}>✓</span>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Botão CTA */}
-                <div style={{
-                  background: '#FFFFFF',
-                  padding: '16px 24px',
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  fontSize: 'clamp(13px, 1.5vw, 14px)',
-                  color: '#1A1A1A',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  borderRadius: '10px',
-                  boxShadow: '0 8px 24px rgba(255, 255, 255, 0.15)',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 255, 255, 0.25)';
-                  e.currentTarget.style.background = '#F5F5F5';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.background = '#FFFFFF';
-                }}
-                >
-                  Falar com Especialista
-                  <span style={{ fontSize: '14px' }}>→</span>
-                </div>
-              </div>
+              ))}
             </div>
-          </Link>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* SEÇÃO: DIFERENCIAIS */}
-      <section style={{
-        padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
-        background: '#FAFAFA',
-        borderTop: '1px solid rgba(0, 0, 0, 0.06)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.06)'
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {/* CTA FINAL */}
+        <section style={{
+          padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
+          maxWidth: '900px',
+          margin: '0 auto',
+          textAlign: 'center'
+        }}>
           <h2 style={{
             fontSize: 'clamp(28px, 4.5vw, 42px)',
             fontWeight: '300',
-            color: '#1A1A1A',
-            textAlign: 'center',
-            marginBottom: 'clamp(48px, 6vw, 72px)',
-            letterSpacing: '-0.02em'
+            color: '#8B7E74',
+            marginBottom: 'clamp(20px, 2.5vw, 28px)',
+            letterSpacing: '-0.02em',
+            fontFamily: "'Playfair Display', serif"
           }}>
-            Por Que Contratar Comigo?
+            Pronto Para Encontrar Seu Plano Ideal?
           </h2>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
-            gap: 'clamp(32px, 4vw, 48px)'
+          <p style={{
+            fontSize: 'clamp(15px, 1.8vw, 17px)',
+            color: '#6B6662',
+            lineHeight: 1.7,
+            fontWeight: '400',
+            marginBottom: 'clamp(40px, 5vw, 56px)'
           }}>
-            {[
-              { emoji: '🎯', title: 'Análise Personalizada', desc: 'Avalio seu perfil para encontrar o plano ideal com melhor custo-benefício.' },
-              { emoji: '💰', title: 'Economia Garantida', desc: 'Negocio os melhores preços diretamente com as operadoras.' },
-              { emoji: '📞', title: 'Suporte Vitalício', desc: 'Estou disponível para ajudá-lo sempre que precisar, mesmo após a contratação.' },
-              { emoji: '⚡', title: 'Agilidade', desc: 'Processo rápido e sem burocracia. Resposta em até 24 horas.' }
-            ].map((item, i) => (
-              <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  fontSize: '44px', 
-                  marginBottom: '16px',
-                  filter: 'grayscale(0.2)'
-                }}>{item.emoji}</div>
-                <h3 style={{
-                  fontSize: 'clamp(17px, 2vw, 20px)',
-                  color: '#1A1A1A',
-                  fontWeight: '600',
-                  marginBottom: '10px',
-                  letterSpacing: '-0.01em'
-                }}>
-                  {item.title}
-                </h3>
-                <p style={{
-                  fontSize: 'clamp(14px, 1.6vw, 15px)',
-                  color: '#666',
-                  lineHeight: 1.7,
-                  fontWeight: '400'
-                }}>
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+            Solicite uma cotação gratuita e sem compromisso. 
+            Vou analisar as melhores opções para você!
+          </p>
+
+          <div style={{
+            display: 'flex',
+            gap: '16px',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            <Link to="/contato" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: 'clamp(16px, 2vw, 18px) clamp(36px, 5vw, 48px)',
+              background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+              color: 'white',
+              textDecoration: 'none',
+              fontSize: 'clamp(14px, 1.7vw, 15px)',
+              fontWeight: '600',
+              borderRadius: '10px',
+              transition: 'all 0.4s ease',
+              boxShadow: '0 4px 16px rgba(139, 126, 116, 0.25)',
+              letterSpacing: '0.02em'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 12px 32px rgba(139, 126, 116, 0.35)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 126, 116, 0.25)';
+            }}
+            >
+              Solicitar Cotação
+              <span style={{ fontSize: '16px' }}>→</span>
+            </Link>
+
+            <a href="https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20cotar%20um%20plano%20de%20saúde." target="_blank" rel="noopener noreferrer" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: 'clamp(16px, 2vw, 18px) clamp(36px, 5vw, 48px)',
+              background: '#25D366',
+              color: 'white',
+              textDecoration: 'none',
+              fontSize: 'clamp(14px, 1.7vw, 15px)',
+              fontWeight: '600',
+              borderRadius: '10px',
+              transition: 'all 0.4s ease',
+              boxShadow: '0 4px 16px rgba(37, 211, 102, 0.3)',
+              letterSpacing: '0.02em'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 12px 32px rgba(37, 211, 102, 0.45)';
+              e.currentTarget.style.background = '#1EBE57';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(37, 211, 102, 0.3)';
+              e.currentTarget.style.background = '#25D366';
+            }}
+            >
+              WhatsApp Direto
+            </a>
           </div>
-        </div>
-      </section>
-
-      {/* CTA FINAL */}
-      <section style={{
-        padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
-        maxWidth: '900px',
-        margin: '0 auto',
-        textAlign: 'center'
-      }}>
-        <h2 style={{
-          fontSize: 'clamp(28px, 4.5vw, 42px)',
-          fontWeight: '300',
-          color: '#1A1A1A',
-          marginBottom: 'clamp(20px, 2.5vw, 28px)',
-          letterSpacing: '-0.02em'
-        }}>
-          Pronto Para Encontrar Seu Plano Ideal?
-        </h2>
-
-        <p style={{
-          fontSize: 'clamp(15px, 1.8vw, 17px)',
-          color: '#666',
-          lineHeight: 1.7,
-          fontWeight: '400',
-          marginBottom: 'clamp(40px, 5vw, 56px)'
-        }}>
-          Solicite uma cotação gratuita e sem compromisso. 
-          Vou analisar as melhores opções para você!
-        </p>
-
-        <div style={{
-          display: 'flex',
-          gap: '16px',
-          justifyContent: 'center',
-          flexWrap: 'wrap'
-        }}>
-          <Link to="/contato" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            padding: 'clamp(16px, 2vw, 18px) clamp(36px, 5vw, 48px)',
-            background: '#1A1A1A',
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: 'clamp(14px, 1.7vw, 15px)',
-            fontWeight: '600',
-            borderRadius: '10px',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-            letterSpacing: '0.02em'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-3px)';
-            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 0, 0, 0.25)';
-            e.currentTarget.style.background = '#000000';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.15)';
-            e.currentTarget.style.background = '#1A1A1A';
-          }}
-          >
-            Solicitar Cotação
-            <span style={{ fontSize: '16px' }}>→</span>
-          </Link>
-
-          <a href="https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20cotar%20um%20plano%20de%20saúde." target="_blank" rel="noopener noreferrer" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            padding: 'clamp(16px, 2vw, 18px) clamp(36px, 5vw, 48px)',
-            background: '#25D366',
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: 'clamp(14px, 1.7vw, 15px)',
-            fontWeight: '600',
-            borderRadius: '10px',
-            transition: 'all 0.4s ease',
-            boxShadow: '0 4px 16px rgba(37, 211, 102, 0.3)',
-            letterSpacing: '0.02em'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-3px)';
-            e.currentTarget.style.boxShadow = '0 12px 32px rgba(37, 211, 102, 0.45)';
-            e.currentTarget.style.background = '#1EBE57';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(37, 211, 102, 0.3)';
-            e.currentTarget.style.background = '#25D366';
-          }}
-          >
-            WhatsApp Direto
-          </a>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }
 

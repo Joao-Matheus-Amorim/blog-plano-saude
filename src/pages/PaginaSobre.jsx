@@ -1,19 +1,21 @@
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 
-
 function PaginaSobre() {
   return (
-    <><SEO
-      title="Sobre Nós - Nossa História"
-      description="Conheça a Maisa Valentim e sua trajetória em consultoria de planos de saúde. Mais de 5 anos de experiência, 100+ famílias atendidas e 98% de satisfação."
-      keywords="sobre consultoria, experiência planos saúde, maisa valentim, histórico empresa, confiança"
-      url="https://consultoriadesaude.vercel.app/sobre" /><div style={{
+    <>
+      <SEO
+        title="Sobre Nós - Nossa História"
+        description="Conheça a Maisa Valentim e sua trajetória em consultoria de planos de saúde. Mais de 5 anos de experiência, 100+ famílias atendidas e 98% de satisfação."
+        keywords="sobre consultoria, experiência planos saúde, maisa valentim, histórico empresa, confiança"
+        url="https://consultoriadesaude.vercel.app/sobre"
+      />
+      
+      <div style={{
         paddingTop: 'clamp(100px, 12vh, 140px)',
         background: 'linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 50%, #FAF8F5 100%)',
         minHeight: '100vh'
       }}>
-
         {/* HERO SECTION */}
         <section style={{
           padding: 'clamp(60px, 10vh, 100px) clamp(40px, 8vw, 100px)',
@@ -103,27 +105,27 @@ function PaginaSobre() {
                 letterSpacing: '0.03em',
                 transform: 'perspective(500px) rotateX(0deg)'
               }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'perspective(500px) rotateX(-4deg) translateY(-3px)';
-                  e.currentTarget.style.boxShadow = '0 16px 48px rgba(168, 135, 122, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                } }
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'perspective(500px) rotateX(0deg) translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 28px rgba(168, 135, 122, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
-                } }
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'perspective(500px) rotateX(-4deg) translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(168, 135, 122, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'perspective(500px) rotateX(0deg) translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 28px rgba(168, 135, 122, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+              }}
               >
                 Agende uma Consultoria
                 <span style={{ fontSize: '16px' }}>→</span>
               </Link>
             </div>
 
-            {/* Coluna Imagem/Card COM FOTO MAIOR E MELHORADA ✨ */}
+            {/* Coluna Imagem/Card */}
             <div style={{
               background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.1) 0%, rgba(168, 135, 122, 0.05) 100%)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(197, 188, 181, 0.2)',
               borderRadius: '24px',
-              padding: 'clamp(48px, 7vw, 72px)', // ✅ PADDING MAIOR
+              padding: 'clamp(48px, 7vw, 72px)',
               boxShadow: '0 20px 60px rgba(139, 126, 116, 0.15)',
               position: 'relative',
               overflow: 'hidden'
@@ -138,40 +140,39 @@ function PaginaSobre() {
                 borderRadius: '50%',
                 filter: 'blur(80px)',
                 pointerEvents: 'none'
-              }} />
+              }}/>
 
               <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                {/* FOTO DA MAISA - MUITO MAIOR ✨ */}
                 <div style={{
-                  width: '280px', // ✅ 27% MAIOR (era 220px)
+                  width: '280px',
                   height: '280px',
                   margin: '0 auto clamp(32px, 4.5vw, 48px)',
                   borderRadius: '50%',
                   overflow: 'hidden',
                   boxShadow: `
-                  0 16px 60px rgba(168, 135, 122, 0.35),
-                  0 0 0 6px rgba(255, 255, 255, 0.9),
-                  0 0 0 7px rgba(197, 188, 181, 0.25)
-                `,
-                  border: '4px solid white', // ✅ BORDA MAIS GROSSA
+                    0 16px 60px rgba(168, 135, 122, 0.35),
+                    0 0 0 6px rgba(255, 255, 255, 0.9),
+                    0 0 0 7px rgba(197, 188, 181, 0.25)
+                  `,
+                  border: '4px solid white',
                   transition: 'all 0.4s ease'
                 }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = `
-                  0 20px 80px rgba(168, 135, 122, 0.45),
-                  0 0 0 6px rgba(255, 255, 255, 1),
-                  0 0 0 7px rgba(197, 188, 181, 0.3)
-                `;
-                  } }
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = `
-                  0 16px 60px rgba(168, 135, 122, 0.35),
-                  0 0 0 6px rgba(255, 255, 255, 0.9),
-                  0 0 0 7px rgba(197, 188, 181, 0.25)
-                `;
-                  } }
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.boxShadow = `
+                    0 20px 80px rgba(168, 135, 122, 0.45),
+                    0 0 0 6px rgba(255, 255, 255, 1),
+                    0 0 0 7px rgba(197, 188, 181, 0.3)
+                  `;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = `
+                    0 16px 60px rgba(168, 135, 122, 0.35),
+                    0 0 0 6px rgba(255, 255, 255, 0.9),
+                    0 0 0 7px rgba(197, 188, 181, 0.25)
+                  `;
+                }}
                 >
                   <img
                     src="/images/maisa1.jpg"
@@ -183,12 +184,13 @@ function PaginaSobre() {
                       objectPosition: 'center 30%',
                       transform: 'scale(1.15)',
                       transition: 'all 0.4s ease',
-                      filter: 'brightness(1.02) contrast(1.05)' // ✨ MELHOR CONTRASTE
-                    }} />
+                      filter: 'brightness(1.02) contrast(1.05)'
+                    }}
+                  />
                 </div>
 
                 <h3 style={{
-                  fontSize: 'clamp(26px, 3.5vw, 32px)', // ✅ NOME MAIOR
+                  fontSize: 'clamp(26px, 3.5vw, 32px)',
                   color: '#8B7E74',
                   fontWeight: '400',
                   marginBottom: '14px',
@@ -198,7 +200,7 @@ function PaginaSobre() {
                 </h3>
 
                 <p style={{
-                  fontSize: 'clamp(15px, 1.9vw, 17px)', // ✅ CARGO MAIOR
+                  fontSize: 'clamp(15px, 1.9vw, 17px)',
                   color: '#9B9289',
                   marginBottom: 'clamp(28px, 3.5vw, 36px)',
                   fontWeight: '300'
@@ -216,24 +218,24 @@ function PaginaSobre() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    padding: '14px 28px', // ✅ BOTÕES MAIORES
+                    padding: '14px 28px',
                     background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                     color: 'white',
                     textDecoration: 'none',
-                    fontSize: '15px', // ✅ TEXTO MAIOR
+                    fontSize: '15px',
                     fontWeight: '500',
                     borderRadius: '10px',
                     transition: 'all 0.3s ease',
                     boxShadow: '0 4px 16px rgba(37, 211, 102, 0.3)'
                   }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(37, 211, 102, 0.4)';
-                    } }
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(37, 211, 102, 0.3)';
-                    } }
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(37, 211, 102, 0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(37, 211, 102, 0.3)';
+                  }}
                   >
                     WhatsApp
                   </a>
@@ -242,24 +244,24 @@ function PaginaSobre() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    padding: '14px 28px', // ✅ BOTÕES MAIORES
+                    padding: '14px 28px',
                     background: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)',
                     color: 'white',
                     textDecoration: 'none',
-                    fontSize: '15px', // ✅ TEXTO MAIOR
+                    fontSize: '15px',
                     fontWeight: '500',
                     borderRadius: '10px',
                     transition: 'all 0.3s ease',
                     boxShadow: '0 4px 16px rgba(228, 64, 95, 0.3)'
                   }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(228, 64, 95, 0.4)';
-                    } }
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(228, 64, 95, 0.3)';
-                    } }
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(228, 64, 95, 0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(228, 64, 95, 0.3)';
+                  }}
                   >
                     Instagram
                   </a>
@@ -281,134 +283,54 @@ function PaginaSobre() {
             gap: 'clamp(24px, 4vw, 40px)',
             flexWrap: 'wrap'
           }}>
-            {/* Badge Famílias */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
-              background: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(197, 188, 181, 0.2)',
-              borderRadius: '16px',
-              boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
-              transition: 'all 0.3s ease'
-            }}
+            {[
+              { num: '100+', label: 'Famílias\nBeneficiadas', color: '#A8877A' },
+              { num: '20+', label: 'Empresas\nAtendidas', color: '#8B7E74' },
+              { num: '24h', label: 'Resposta\nGarantida', color: '#9B9289' }
+            ].map((badge, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(197, 188, 181, 0.2)',
+                borderRadius: '16px',
+                boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
+                transition: 'all 0.3s ease'
+              }}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
                 e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-              } }
+              }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
-              } }
-            >
-              <div style={{
-                fontSize: 'clamp(32px, 4.5vw, 44px)',
-                fontWeight: '300',
-                color: '#A8877A',
-                fontFamily: "'Playfair Display', serif",
-                letterSpacing: '-0.02em',
-                lineHeight: 1
-              }}>
-                100<span style={{ fontSize: '0.6em' }}>+</span>
+              }}
+              >
+                <div style={{
+                  fontSize: 'clamp(32px, 4.5vw, 44px)',
+                  fontWeight: '300',
+                  color: badge.color,
+                  fontFamily: "'Playfair Display', serif",
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1
+                }}>
+                  {badge.num}
+                </div>
+                <div style={{
+                  fontSize: 'clamp(13px, 1.6vw, 15px)',
+                  color: '#6B6662',
+                  fontWeight: '500',
+                  letterSpacing: '0.02em',
+                  lineHeight: 1.4,
+                  whiteSpace: 'pre-line'
+                }}>
+                  {badge.label}
+                </div>
               </div>
-              <div style={{
-                fontSize: 'clamp(13px, 1.6vw, 15px)',
-                color: '#6B6662',
-                fontWeight: '500',
-                letterSpacing: '0.02em',
-                lineHeight: 1.4
-              }}>
-                Famílias<br />Beneficiadas
-              </div>
-            </div>
-
-            {/* Badge Empresas */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
-              background: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(197, 188, 181, 0.2)',
-              borderRadius: '16px',
-              boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
-              transition: 'all 0.3s ease'
-            }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-              } }
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
-              } }
-            >
-              <div style={{
-                fontSize: 'clamp(32px, 4.5vw, 44px)',
-                fontWeight: '300',
-                color: '#8B7E74',
-                fontFamily: "'Playfair Display', serif",
-                letterSpacing: '-0.02em',
-                lineHeight: 1
-              }}>
-                20<span style={{ fontSize: '0.6em' }}>+</span>
-              </div>
-              <div style={{
-                fontSize: 'clamp(13px, 1.6vw, 15px)',
-                color: '#6B6662',
-                fontWeight: '500',
-                letterSpacing: '0.02em',
-                lineHeight: 1.4
-              }}>
-                Empresas<br />Atendidas
-              </div>
-            </div>
-
-            {/* Badge Resposta */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
-              background: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(197, 188, 181, 0.2)',
-              borderRadius: '16px',
-              boxShadow: '0 8px 32px rgba(139, 126, 116, 0.12)',
-              transition: 'all 0.3s ease'
-            }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-              } }
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.12)';
-              } }
-            >
-              <div style={{
-                fontSize: 'clamp(32px, 4.5vw, 44px)',
-                fontWeight: '300',
-                color: '#9B9289',
-                fontFamily: "'Playfair Display', serif",
-                letterSpacing: '-0.02em',
-                lineHeight: 1
-              }}>
-                24<span style={{ fontSize: '0.7em' }}>h</span>
-              </div>
-              <div style={{
-                fontSize: 'clamp(13px, 1.6vw, 15px)',
-                color: '#6B6662',
-                fontWeight: '500',
-                letterSpacing: '0.02em',
-                lineHeight: 1.4
-              }}>
-                Resposta<br />Garantida
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -520,14 +442,14 @@ function PaginaSobre() {
                 transition: 'all 0.4s ease',
                 boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1)'
               }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
-                } }
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
-                } }
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(139, 126, 116, 0.2)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1)';
+              }}
               >
                 <div style={{
                   fontSize: 'clamp(48px, 7vw, 72px)',
@@ -554,7 +476,7 @@ function PaginaSobre() {
           </div>
         </section>
 
-        {/* SEÇÃO: VALORES */}
+        {/* SEÇÃO: VALORES COM SVG */}
         <section style={{
           padding: 'clamp(80px, 12vh, 120px) clamp(40px, 8vw, 100px)',
           background: 'rgba(250, 248, 245, 0.5)',
@@ -578,13 +500,74 @@ function PaginaSobre() {
               gap: 'clamp(32px, 4vw, 48px)'
             }}>
               {[
-                { emoji: '🤝', title: 'Transparência', desc: 'Informações claras e honestas sobre todos os planos, sem letras miúdas ou surpresas.' },
-                { emoji: '💙', title: 'Comprometimento', desc: 'Acompanhamento completo antes, durante e após a contratação do seu plano.' },
-                { emoji: '⚖️', title: 'Ética', desc: 'Sempre recomendo o que é melhor para você, não o que rende mais comissão.' },
-                { emoji: '🎯', title: 'Personalização', desc: 'Cada cliente é único. Analiso seu perfil para encontrar o plano ideal.' }
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                  ),
+                  title: 'Transparência', 
+                  desc: 'Informações claras e honestas sobre todos os planos, sem letras miúdas ou surpresas.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                  ),
+                  title: 'Comprometimento', 
+                  desc: 'Acompanhamento completo antes, durante e após a contratação do seu plano.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  ),
+                  title: 'Ética', 
+                  desc: 'Sempre recomendo o que é melhor para você, não o que rende mais comissão.' 
+                },
+                { 
+                  svg: (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                      <line x1="9" y1="9" x2="9.01" y2="9"/>
+                      <line x1="15" y1="9" x2="15.01" y2="9"/>
+                    </svg>
+                  ),
+                  title: 'Personalização', 
+                  desc: 'Cada cliente é único. Analiso seu perfil para encontrar o plano ideal.' 
+                }
               ].map((valor, i) => (
-                <div key={i}>
-                  <div style={{ fontSize: '48px', marginBottom: '20px' }}>{valor.emoji}</div>
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto clamp(20px, 2.5vw, 24px)',
+                    background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 12px 32px rgba(139, 126, 116, 0.25)',
+                    position: 'relative'
+                  }}>
+                    {valor.svg}
+                    
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      right: '8px',
+                      height: '35%',
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%)',
+                      borderRadius: '14px 14px 0 0',
+                      pointerEvents: 'none'
+                    }}/>
+                  </div>
+                  
                   <h3 style={{
                     fontSize: 'clamp(20px, 2.5vw, 24px)',
                     color: '#8B7E74',
@@ -594,6 +577,7 @@ function PaginaSobre() {
                   }}>
                     {valor.title}
                   </h3>
+                  
                   <p style={{
                     fontSize: 'clamp(14px, 1.7vw, 16px)',
                     color: '#6B6662',
@@ -657,14 +641,14 @@ function PaginaSobre() {
               boxShadow: '0 8px 28px rgba(168, 135, 122, 0.3)',
               letterSpacing: '0.03em'
             }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(168, 135, 122, 0.4)';
-              } }
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 28px rgba(168, 135, 122, 0.3)';
-              } }
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 16px 48px rgba(168, 135, 122, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 28px rgba(168, 135, 122, 0.3)';
+            }}
             >
               Solicitar Cotação
               <span style={{ fontSize: '18px' }}>→</span>
@@ -685,20 +669,21 @@ function PaginaSobre() {
               boxShadow: '0 8px 28px rgba(37, 211, 102, 0.3)',
               letterSpacing: '0.03em'
             }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(37, 211, 102, 0.4)';
-              } }
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 28px rgba(37, 211, 102, 0.3)';
-              } }
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 16px 48px rgba(37, 211, 102, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 28px rgba(37, 211, 102, 0.3)';
+            }}
             >
               WhatsApp Direto
             </a>
           </div>
         </section>
-      </div></>
+      </div>
+    </>
   );
 }
 
