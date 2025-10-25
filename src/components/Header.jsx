@@ -80,7 +80,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* ✅ MENU DESKTOP */}
+          {/* ✅ MENU DESKTOP COM BLOG */}
           <nav style={{
             display: window.innerWidth >= 768 ? 'flex' : 'none',
             gap: 'clamp(20px, 3vw, 40px)',
@@ -91,6 +91,7 @@ export default function Header() {
               { to: '/sobre', label: 'Sobre' },
               { to: '/operadoras', label: 'Operadoras' },
               { to: '/depoimentos', label: 'Depoimentos' },
+              { to: '/blog', label: 'Blog' },
               { to: '/faq', label: 'FAQ' }
             ].map((link) => (
               <Link
@@ -195,7 +196,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* ✅ MENU MOBILE (FULLSCREEN) */}
+      {/* ✅ MENU MOBILE COM BLOG */}
       {mobileMenuOpen && (
         <div style={{
           position: 'fixed',
@@ -218,6 +219,7 @@ export default function Header() {
             { to: '/sobre', label: 'Sobre' },
             { to: '/operadoras', label: 'Operadoras' },
             { to: '/depoimentos', label: 'Depoimentos' },
+            { to: '/blog', label: 'Blog' },
             { to: '/faq', label: 'FAQ' },
             { to: '/contato', label: 'Contato' }
           ].map((link) => (

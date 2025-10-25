@@ -12,10 +12,10 @@ import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
 import PaginaAdmin from './pages/PaginaAdmin.jsx';
+import PaginaBlog2 from './pages/PaginaBlog2.jsx';
+import PaginaBlogPost from './pages/PaginaBlogPost.jsx';
 
-
-
-// ✅ COMPONENTE GOOGLE ANALYTICSs
+// ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {
   const location = useLocation();
   const GA_TRACKING_ID = 'G-FY4Z9HBPD2';
@@ -82,6 +82,8 @@ function AnimatedRoutes() {
         <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
         <Route path="/depoimentos" element={<PageTransition><PaginaDepoimentos /></PageTransition>} />
         <Route path="/admin" element={<PageTransition><PaginaAdmin /></PageTransition>} />
+        <Route path="/blog" element={<PageTransition><PaginaBlog2 /></PageTransition>} />
+        <Route path="/blog/:slug" element={<PageTransition><PaginaBlogPost /></PageTransition>} />
         <Route path="/faq" element={<PageTransition><PaginaFAQ /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -237,6 +239,7 @@ function App() {
                     { to: '/operadoras', label: 'Operadoras' },
                     { to: '/depoimentos', label: 'Depoimentos' },
                     { to: '/faq', label: 'FAQ' },
+                    { to: '/blog', label: 'Blog' },
                     { to: '/contato', label: 'Contato' }
                   ].map((link, i) => (
                     <Link 
