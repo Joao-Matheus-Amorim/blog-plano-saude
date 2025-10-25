@@ -10,7 +10,7 @@ import PaginaSobre from './pages/PaginaSobre.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
-
+import PopUp from './components/Simulador.jsx';
 // ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {
   const location = useLocation();

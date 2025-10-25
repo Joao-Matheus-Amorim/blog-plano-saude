@@ -1,7 +1,9 @@
 import Hero from '../components/Hero.jsx';
 import Operadoras from '../components/Operadoras.jsx';
+import Simulador from '../components/Simulador.jsx';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+
 
 function PaginaBlog() {
   const beneficios = [
@@ -22,10 +24,62 @@ function PaginaBlog() {
     }
   ];
 
+
   return (
     <>
       <Hero />
       
+      {/* ✅ NOVA SEÇÃO: SIMULADOR */}
+      <section style={{
+        padding: 'clamp(60px, 10vw, 100px) clamp(20px, 5vw, 40px)',
+        background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%)'
+      }}>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          style={{
+            textAlign: 'center',
+            marginBottom: '40px'
+          }}
+        >
+          <p style={{
+            fontSize: 'clamp(11px, 1.3vw, 13px)',
+            fontWeight: '500',
+            color: '#A8877A',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginBottom: '20px'
+          }}>
+            ✦ Faça sua simulação
+          </p>
+          
+          <h2 style={{
+            fontSize: 'clamp(32px, 5vw, 48px)',
+            fontWeight: '300',
+            color: '#8B7E74',
+            marginBottom: '16px',
+            fontFamily: "'Playfair Display', serif",
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2
+          }}>
+            Descubra o Valor do Seu Plano
+          </h2>
+          
+          <p style={{
+            fontSize: 'clamp(14px, 1.8vw, 18px)',
+            color: '#6B6662',
+            maxWidth: '600px',
+            margin: '0 auto'
+          }}>
+            Preencha os dados e receba uma cotação personalizada em até 24 horas
+          </p>
+        </motion.div>
+
+        <Simulador />
+      </section>
+
       {/* ✅ Seção de Benefícios (EXISTENTE) */}
       <section style={{
         padding: 'clamp(100px, 12vw, 160px) clamp(40px, 8vw, 100px)',
@@ -65,6 +119,7 @@ function PaginaBlog() {
             Benefícios
           </h2>
         </motion.div>
+
 
         <div style={{
           display: 'grid',
@@ -136,6 +191,7 @@ function PaginaBlog() {
         </div>
       </section>
 
+
       {/* ✅ NOVA SEÇÃO: COMO FUNCIONA */}
       <section style={{
         padding: 'clamp(100px, 12vw, 160px) clamp(40px, 8vw, 100px)',
@@ -175,6 +231,7 @@ function PaginaBlog() {
             Como Funciona
           </h2>
         </motion.div>
+
 
         <div style={{
           display: 'grid',
@@ -244,6 +301,7 @@ function PaginaBlog() {
                 {item.icone}
               </div>
 
+
               <div style={{
                 fontSize: '13px',
                 fontWeight: '700',
@@ -254,6 +312,7 @@ function PaginaBlog() {
                 PASSO {item.step}
               </div>
 
+
               <h3 style={{
                 fontSize: 'clamp(20px, 2.8vw, 26px)',
                 fontWeight: '400',
@@ -263,6 +322,7 @@ function PaginaBlog() {
               }}>
                 {item.titulo}
               </h3>
+
 
               <p style={{
                 fontSize: 'clamp(14px, 1.7vw, 16px)',
@@ -277,6 +337,7 @@ function PaginaBlog() {
         </div>
       </section>
 
+
       {/* ✅ NOVA SEÇÃO: NÚMEROS E RESULTADOS */}
       <section style={{
         padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px)',
@@ -286,7 +347,6 @@ function PaginaBlog() {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Decoração de fundo */}
         <div style={{
           position: 'absolute',
           top: '-20%',
@@ -298,6 +358,7 @@ function PaginaBlog() {
           filter: 'blur(80px)',
           pointerEvents: 'none'
         }}/>
+
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -320,6 +381,7 @@ function PaginaBlog() {
           }}>
             Números que Comprovam Nossa Excelência
           </h2>
+
 
           <div style={{
             display: 'grid',
@@ -362,7 +424,9 @@ function PaginaBlog() {
         </motion.div>
       </section>
 
+
       <Operadoras />
+
 
       {/* ✅ NOVA SEÇÃO: POR QUE ESCOLHER */}
       <section style={{
@@ -401,6 +465,7 @@ function PaginaBlog() {
             Por Que Escolher Nossa Consultoria?
           </h2>
         </motion.div>
+
 
         <div style={{
           display: 'grid',
@@ -472,6 +537,7 @@ function PaginaBlog() {
                 {item.icone}
               </div>
 
+
               <h3 style={{
                 fontSize: 'clamp(20px, 2.8vw, 26px)',
                 fontWeight: '400',
@@ -481,6 +547,7 @@ function PaginaBlog() {
               }}>
                 {item.titulo}
               </h3>
+
 
               <p style={{
                 fontSize: 'clamp(14px, 1.7vw, 16px)',
@@ -495,6 +562,7 @@ function PaginaBlog() {
         </div>
       </section>
 
+
       {/* ✅ NOVA SEÇÃO: CTA FINAL */}
       <section style={{
         padding: 'clamp(100px, 12vw, 140px) clamp(40px, 8vw, 100px)',
@@ -504,7 +572,6 @@ function PaginaBlog() {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Decoração */}
         <div style={{
           position: 'absolute',
           bottom: '-20%',
@@ -516,6 +583,7 @@ function PaginaBlog() {
           filter: 'blur(100px)',
           pointerEvents: 'none'
         }}/>
+
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -540,6 +608,7 @@ function PaginaBlog() {
             Pronto Para Encontrar o Plano Perfeito?
           </h2>
 
+
           <p style={{
             fontSize: 'clamp(16px, 2.2vw, 20px)',
             marginBottom: 'clamp(40px, 6vw, 60px)',
@@ -550,6 +619,7 @@ function PaginaBlog() {
             Receba uma cotação personalizada em minutos.<br />
             Atendimento gratuito e sem compromisso.
           </p>
+
 
           <div style={{
             display: 'flex',
@@ -593,6 +663,7 @@ function PaginaBlog() {
               Falar no WhatsApp
             </a>
 
+
             <Link
               to="/contato"
               style={{
@@ -622,6 +693,7 @@ function PaginaBlog() {
             </Link>
           </div>
 
+
           <p style={{
             fontSize: 'clamp(12px, 1.6vw, 14px)',
             opacity: 0.75,
@@ -635,5 +707,6 @@ function PaginaBlog() {
     </>
   );
 }
+
 
 export default PaginaBlog;
