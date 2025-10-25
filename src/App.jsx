@@ -15,7 +15,7 @@ import PaginaAdmin from './pages/PaginaAdmin.jsx';
 
 
 
-// ✅ COMPONENTE GOOGLE ANALYTICS
+// ✅ COMPONENTE GOOGLE ANALYTICSs
 function GoogleAnalytics() {
   const location = useLocation();
   const GA_TRACKING_ID = 'G-FY4Z9HBPD2';
