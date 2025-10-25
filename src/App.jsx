@@ -11,6 +11,7 @@ import PaginaSobre from './pages/PaginaSobre.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
+import PaginaAdmin from './pages/PaginaAdmin.jsx';
 
 
 
@@ -80,6 +81,7 @@ function AnimatedRoutes() {
         <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
         <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
         <Route path="/depoimentos" element={<PageTransition><PaginaDepoimentos /></PageTransition>} />
+        <Route path="/admin" element={<PageTransition><PaginaAdmin /></PageTransition>} />
         <Route path="/faq" element={<PageTransition><PaginaFAQ /></PageTransition>} />
       </Routes>
     </AnimatePresence>
