@@ -14,6 +14,7 @@ import PaginaFAQ from './pages/PaginaFAQ.jsx';
 import PaginaAdmin from './pages/PaginaAdmin.jsx';
 import PaginaBlog2 from './pages/PaginaBlog2.jsx';
 import PaginaBlogPost from './pages/PaginaBlogPost.jsx';
+import AdminLogin from './components/AdminLogin.jsx';
 
 // ✅ COMPONENTE GOOGLE ANALYTICS
 function GoogleAnalytics() {
