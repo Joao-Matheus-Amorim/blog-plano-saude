@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 .env.local
 .env
+
+# Binários e executáveis (nunca versionar)
+*.exe
+*.dll
+*.bin
+ngrok.exe
+ngrok
