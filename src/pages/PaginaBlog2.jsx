@@ -1,11 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import SEO from '../components/SEO.jsx';
 
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-const supabase = createClient(supabaseUrl, supabaseKey);
+function slugify(text = '') {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function normalizePost(post, index) {
+  const rawDate = post.data_publicacao || post.data || new Date().toISOString();
+  return {
+    ...post,
+    id: post.id || `${index}`,
+    titulo: post.titulo || 'Sem titulo',
+    slug: post.slug || slugify(post.titulo || `post-${index}`),
+    categoria: post.categoria || 'Geral',
+    resumo: post.resumo || (post.conteudo ? `${post.conteudo.slice(0, 140)}...` : ''),
+    data_publicacao: rawDate,
+    ativo: post.ativo !== false,
+  };
+}
 
 export default function PaginaBlog2() {
   const [posts, setPosts] = useState([]);
@@ -19,14 +38,18 @@ export default function PaginaBlog2() {
 
   const carregarPosts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('blog_post')
-        .select('*')
-        .eq('ativo', true)
-        .order('data_publicacao', { ascending: false });
+      const response = await fetch('/data/db.json');
+      if (!response.ok) {
+        throw new Error('Falha ao carregar posts');
+      }
 
-      if (error) throw error;
-      setPosts(data || []);
+      const db = await response.json();
+      const normalizedPosts = (db.posts || [])
+        .map(normalizePost)
+        .filter(post => post.ativo)
+        .sort((a, b) => new Date(b.data_publicacao) - new Date(a.data_publicacao));
+
+      setPosts(normalizedPosts);
     } catch (error) {
       console.error('Erro ao carregar posts:', error);
     } finally {

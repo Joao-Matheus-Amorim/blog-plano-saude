@@ -13,7 +13,7 @@ Plataforma completa de captacão e conversão de leads para venda de planos de s
 - **Página de Operadoras** — Bradesco, Unimed, SulAmérica, Amil, Notre Dame
 - **Depoimentos** — Prova social de clientes
 - **FAQ** — Dúvidas frequentes
-- **Formulario de Contato** — Integrado ao Supabase
+- **Formulario de Contato** — Integrado via API serverless com Neon
 - **Painel Admin** — Gestão de leads e posts
 - **Popup de Saída** — Recuperacão de visitantes
 - **WhatsApp Flutuante** — CTA permanente em todas as páginas
@@ -25,7 +25,7 @@ Plataforma completa de captacão e conversão de leads para venda de planos de s
 | React 18 + Vite 5 | Frontend |
 | React Router DOM v6 | Navegacão SPA |
 | Framer Motion | Animacões |
-| Supabase | Backend / Banco de dados |
+| Neon + Vercel Functions | Backend / Banco de dados |
 | React Helmet Async | SEO dinâmico |
 | Google Analytics | Rastreamento |
 | Vercel | Deploy |

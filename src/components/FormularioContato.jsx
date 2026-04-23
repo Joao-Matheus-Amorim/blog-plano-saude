@@ -1,12 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { createClient } from '@supabase/supabase-js';
-
-// ✅ CONFIGURAÇÃO SUPABASE
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 function FormularioContato() {
   const [nome, setNome] = useState('');
@@ -22,31 +15,24 @@ function FormularioContato() {
     evento.preventDefault();
     setEnviando(true);
     setErro('');
-    
-    console.log('📤 Enviando lead para Supabase...');
 
     try {
-      // ✅ INSERIR NO SUPABASE (tabela 'lead')
-      const { data, error: insertError } = await supabase
-        .from('lead')
-        .insert([
-          {
-            nome: nome,
-            email: email,
-            telefone: telefone,
-            operadora: operadora || null, // ✅ CAMPO OPERADORA
-            mensagem: mensagem || '',
-            data_envio: new Date().toISOString()
-          }
-        ])
-        .select();
+      const response = await fetch('/api/leads/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome,
+          email,
+          telefone,
+          operadora: operadora || null,
+          mensagem: mensagem || '',
+        }),
+      });
 
-      if (insertError) {
-        console.error('❌ Erro Supabase:', insertError);
-        throw new Error(insertError.message);
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error || 'Erro ao enviar lead');
       }
-
-      console.log('✅ Lead salvo com sucesso:', data);
       
       // ✅ SUCESSO
       setSucesso(true);

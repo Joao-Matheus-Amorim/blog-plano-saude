@@ -1,11 +1,32 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import SEO from '../components/SEO.jsx';
 
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-const supabase = createClient(supabaseUrl, supabaseKey);
+function slugify(text = '') {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function normalizePost(post, index) {
+  const rawDate = post.data_publicacao || post.data || new Date().toISOString();
+  return {
+    ...post,
+    id: post.id || `${index}`,
+    titulo: post.titulo || 'Sem titulo',
+    slug: post.slug || slugify(post.titulo || `post-${index}`),
+    categoria: post.categoria || 'Geral',
+    resumo: post.resumo || (post.conteudo ? `${post.conteudo.slice(0, 140)}...` : ''),
+    autor: post.autor || 'Maisa Valentim',
+    data_publicacao: rawDate,
+    ativo: post.ativo !== false,
+    visualizacoes: post.visualizacoes || 0,
+  };
+}
 
 export default function PaginaBlogPost() {
   const { slug } = useParams();
@@ -19,33 +40,33 @@ export default function PaginaBlogPost() {
 
   const carregarPost = async () => {
     try {
-      // Buscar post
-      const { data: postData, error: postError } = await supabase
-        .from('blog_post')
-        .select('*')
-        .eq('slug', slug)
-        .eq('ativo', true)
-        .single();
+      const response = await fetch('/data/db.json');
+      if (!response.ok) {
+        throw new Error('Falha ao carregar post');
+      }
 
-      if (postError) throw postError;
-      setPost(postData);
+      const db = await response.json();
+      const allPosts = (db.posts || []).map(normalizePost).filter(item => item.ativo);
+      const postData = allPosts.find(item => item.slug === slug);
 
-      // Incrementar visualizações
-      await supabase
-        .from('blog_post')
-        .update({ visualizacoes: (postData.visualizacoes || 0) + 1 })
-        .eq('id', postData.id);
+      if (!postData) {
+        setPost(null);
+        setPostsRelacionados([]);
+        return;
+      }
 
-      // Buscar posts relacionados
-      const { data: relacionados } = await supabase
-        .from('blog_post')
-        .select('*')
-        .eq('categoria', postData.categoria)
-        .neq('id', postData.id)
-        .eq('ativo', true)
-        .limit(3);
+      const key = `post_views_${postData.slug}`;
+      const storedViews = Number(localStorage.getItem(key) || '0');
+      const nextViews = storedViews + 1;
+      localStorage.setItem(key, String(nextViews));
 
-      setPostsRelacionados(relacionados || []);
+      setPost({ ...postData, visualizacoes: (postData.visualizacoes || 0) + nextViews });
+
+      const relacionados = allPosts
+        .filter(item => item.id !== postData.id && item.categoria === postData.categoria)
+        .slice(0, 3);
+
+      setPostsRelacionados(relacionados);
     } catch (error) {
       console.error('Erro ao carregar post:', error);
     } finally {

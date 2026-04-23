@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import SEO from '../components/SEO.jsx';
-
-
-// ✅ CONFIGURAÇÃO SUPABASE
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ✅ LISTA DE OPERADORAS
 const OPERADORAS = [
@@ -57,22 +49,21 @@ export default function PaginaContato() {
     }
 
     try {
-      const { data, error: insertError } = await supabase
-        .from('lead')
-        .insert([
-          {
-            nome: formData.nome,
-            email: formData.email,
-            telefone: formData.telefone,
-            operadora: formData.operadora,
-            mensagem: formData.mensagem || '',
-            data_envio: new Date().toISOString()
-          }
-        ])
-        .select();
+      const response = await fetch('/api/leads/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: formData.nome,
+          email: formData.email,
+          telefone: formData.telefone,
+          operadora: formData.operadora,
+          mensagem: formData.mensagem || '',
+        }),
+      });
 
-      if (insertError) {
-        throw new Error(insertError.message);
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error || 'Erro ao enviar lead');
       }
 
       const nomeAtual = formData.nome;

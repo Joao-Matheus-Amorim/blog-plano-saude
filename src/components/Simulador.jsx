@@ -1,10 +1,5 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function Simulador() {
   const [vidas, setVidas] = useState(1);
@@ -33,19 +28,26 @@ export default function Simulador() {
 
     setEnviando(true);
 
-    const { error } = await supabase.from('lead').insert([{
-      nome,
-      email,
-      telefone,
-      vidas,
-      tipo,
-      operadora,
-      mensagem: `Simulação: ${tipo} - ${vidas} vidas - ${operadora}`,
-      data_envio: new Date().toISOString()
-    }]);
+    try {
+      const response = await fetch('/api/leads/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome,
+          email,
+          telefone,
+          vidas,
+          operadora,
+          mensagem: `Simulação: ${tipo} - ${vidas} vidas - ${operadora}`,
+        }),
+      });
 
-    if (error) {
-      console.error('Erro ao salvar lead:', error.message);
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error || 'Erro ao salvar lead');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar lead:', error);
       alert('Erro ao enviar. Tente novamente.');
       setEnviando(false);
       return;
