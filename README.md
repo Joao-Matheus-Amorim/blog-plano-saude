@@ -1,16 +1,61 @@
-# React + Vite
+# Maisa Valentim — Consultoria de Planos de Saúde
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Site institucional e blog da corretora **Maisa Valentim**, especializada em planos de saúde no Rio de Janeiro. Desenvolvido com React + Vite e hospedado na Vercel.
 
-Currently, two official plugins are available:
+## 📌 Sobre o Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Plataforma completa de captacão e conversão de leads para venda de planos de saúde. Inclui simulador de cotacão, blog informativo, página de operadoras, depoimentos e painel administrativo.
 
-## React Compiler
+## ✨ Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Simulador de Cotacão** — Captura leads com nome, email e WhatsApp antes de mostrar o resultado
+- **Blog** — Artigos educativos para SEO e nutricão de leads
+- **Página de Operadoras** — Bradesco, Unimed, SulAmérica, Amil, Notre Dame
+- **Depoimentos** — Prova social de clientes
+- **FAQ** — Dúvidas frequentes
+- **Formulario de Contato** — Integrado ao Supabase
+- **Painel Admin** — Gestão de leads e posts
+- **Popup de Saída** — Recuperacão de visitantes
+- **WhatsApp Flutuante** — CTA permanente em todas as páginas
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologias
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Tecnologia | Uso |
+|---|---|
+| React 18 + Vite 5 | Frontend |
+| React Router DOM v6 | Navegacão SPA |
+| Framer Motion | Animacões |
+| Supabase | Backend / Banco de dados |
+| React Helmet Async | SEO dinâmico |
+| Google Analytics | Rastreamento |
+| Vercel | Deploy |
+
+## 🚀 Instalacão e Uso
+
+```bash
+# Instalar dependências
+npm install
+
+# Rodar em desenvolvimento
+npm run dev
+
+# Build para producão
+npm run build
+
+# Preview do build
+npm run preview
+```
+
+## 🌍 Deploy
+
+O projeto está configurado para deploy automático na Vercel via `vercel.json`.
+
+## 📞 Contato
+
+- **WhatsApp:** [(21) 97747-2141](https://wa.me/5521977472141)
+- **Instagram:** [@planosdesaudemaisavalentim](https://www.instagram.com/planosdesaudemaisavalentim/)
+- **E-mail:** maisarvalentim@gmail.com
+
+---
+
+> Desenvolvido por [Joao Matheus Amorim](https://github.com/Joao-Matheus-Amorim)
