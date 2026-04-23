@@ -23,6 +23,7 @@ export default function PaginaContato() {
     email: '',
     telefone: '',
     operadora: operadoraSelecionada,
+    vidas: '',
     mensagem: ''
   });
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,7 @@ export default function PaginaContato() {
           email: formData.email,
           telefone: formData.telefone,
           operadora: formData.operadora,
+          vidas: formData.vidas ? Number(formData.vidas) : null,
           mensagem: formData.mensagem || '',
         }),
       });
@@ -67,7 +69,14 @@ export default function PaginaContato() {
 
       const nomeAtual = formData.nome;
       setSuccess(true);
-      setFormData({ nome: '', email: '', telefone: '', operadora: '', mensagem: '' });
+      setFormData({
+        nome: '',
+        email: '',
+        telefone: '',
+        operadora: operadoraSelecionada || '',
+        vidas: '',
+        mensagem: '',
+      });
       
       setTimeout(() => {
         window.open(
@@ -281,6 +290,38 @@ export default function PaginaContato() {
               </select>
             </div>
 
+            {/* Vidas */}
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                color: '#2D3748',
+                fontWeight: '600',
+                marginBottom: '12px'
+              }}>
+                Número de Vidas (opcional)
+              </label>
+              <input
+                type="number"
+                name="vidas"
+                min="1"
+                value={formData.vidas}
+                onChange={handleChange}
+                placeholder="Ex: 1, 2, 4, 10..."
+                style={{
+                  width: '100%',
+                  padding: '16px 20px',
+                  fontSize: '16px',
+                  border: '2px solid rgba(197, 188, 181, 0.3)',
+                  borderRadius: '12px',
+                  transition: 'all 0.3s ease',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)'}
+              />
+            </div>
+
             {/* Mensagem */}
             <div style={{ marginBottom: '32px' }}>
               <label style={{
@@ -324,7 +365,7 @@ export default function PaginaContato() {
                 fontSize: '14px',
                 textAlign: 'center'
               }}>
-                ✅ Mensagem enviada com sucesso! Redirecionando para o WhatsApp...
+                ✅ Recebemos seus dados. O WhatsApp será aberto em seguida.
               </div>
             )}
 
@@ -340,7 +381,7 @@ export default function PaginaContato() {
                 fontSize: '14px',
                 textAlign: 'center'
               }}>
-                ❌ {error}
+                {error}
               </div>
             )}
 
