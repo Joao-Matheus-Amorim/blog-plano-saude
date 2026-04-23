@@ -1,10 +1,5 @@
-// QuotationForm.jsx — Fase 1
-// Substitua WEBHOOK_URL pela URL do seu webhook no Make.com
-// Fluxo: Nome + WhatsApp → Detalhes do Plano → Google Sheets + WhatsApp
-
 import { useState } from "react";
 
-const WEBHOOK_URL = "https://hook.eu2.make.com/SEU_WEBHOOK_AQUI";
 const WA = "5521977472141";
 
 const C = {
@@ -126,13 +121,12 @@ function buildWAMessage(f) {
   );
 }
 
-async function sendToWebhook(payload) {
+async function saveLeadToNeon(payload) {
   try {
-    await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/leads/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-      mode: "no-cors",
     });
   } catch (_) {
     // silently fail — não bloquear o fluxo do usuário
@@ -325,14 +319,15 @@ export default function QuotationForm() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const payload = {
-      ...form,
-      timestamp: new Date().toISOString(),
-      source: window.location.href,
-      utm: new URLSearchParams(window.location.search).toString(),
-    };
 
-    await sendToWebhook(payload);
+    // Salva no NeonDB via API serverless
+    await saveLeadToNeon({
+      nome: form.name,
+      telefone: form.whatsapp,
+      operadora: form.operator,
+      vidas: parseInt(form.lives) || 1,
+      mensagem: `Tipo de plano: ${form.planType}`,
+    });
 
     if (window.fbq) window.fbq('track', 'Contact');
     if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });

@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import AdminLogin from '../components/AdminLogin.jsx';
-
-const supabaseUrl = "https://jdrglgiyyjxyytjcfzbj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcmdsZ2l5eWp4eXl0amNmemJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNDA2NTQsImV4cCI6MjA3NTkxNjY1NH0.RPoOtFDmxGSscfn1tIET055miHdOW25w0K7vqA7NT98";
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function PaginaAdmin() {
   const [autenticado, setAutenticado] = useState(false);
@@ -24,12 +19,9 @@ export default function PaginaAdmin() {
 
   const carregarLeads = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lead')
-        .select('*')
-        .order('data_envio', { ascending: false });
-
-      if (error) throw error;
+      const res = await fetch('/api/leads/get');
+      if (!res.ok) throw new Error('Erro ao buscar leads');
+      const data = await res.json();
       setLeads(data || []);
     } catch (error) {
       console.error('Erro ao carregar leads:', error);
@@ -45,14 +37,10 @@ export default function PaginaAdmin() {
 
   const deletarLead = async (id) => {
     if (!confirm('Tem certeza que deseja deletar este lead?')) return;
-    
-    try {
-      const { error } = await supabase
-        .from('lead')
-        .delete()
-        .eq('id', id);
 
-      if (error) throw error;
+    try {
+      const res = await fetch(`/api/leads/delete?id=${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Erro ao deletar');
       setLeads(leads.filter(lead => lead.id !== id));
     } catch (error) {
       console.error('Erro ao deletar lead:', error);
