@@ -1,11 +1,29 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+// ─── DEDUPLICAÇÃO META CAPI ───────────────────────────────────────────────────
+// Gera um UUID único por submissão.
+// O MESMO id é passado para:
+//   1. fbq('track', 'Lead', {}, { eventID })   ← Pixel no browser
+//   2. payload.event_id → /api/leads            ← CAPI server-side
+// A Meta compara os dois e descarta o duplicado → conta apenas 1 conversão.
+// Ref: https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events
+function generateEventId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // fallback para browsers antigos
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
 function FormularioContato() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [operadora, setOperadora] = useState(''); // ✅ NOVO ESTADO
+  const [operadora, setOperadora] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
@@ -16,8 +34,13 @@ function FormularioContato() {
     setEnviando(true);
     setErro('');
 
+    // 1. Gera o eventId ANTES de qualquer disparo
+    const eventId = generateEventId();
+    const utm_source = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
+
     try {
-      const response = await fetch('/api/leads/create', {
+      // 2. Salva no banco via endpoint correto E passa o eventId para a CAPI
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -26,22 +49,32 @@ function FormularioContato() {
           telefone,
           operadora: operadora || null,
           mensagem: mensagem || '',
+          origem: utm_source,
+          event_id: eventId,  // ← backend usa na CAPI server-side
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Não foi possível enviar agora. Tente novamente em instantes ou fale conosco pelo WhatsApp.');
+        throw new Error('Erro ao enviar.');
       }
-      
-      // ✅ SUCESSO
+
+      // 3. Dispara o Pixel com o MESMO eventId → Meta deduplica
+      if (window.fbq) {
+        window.fbq('track', 'Lead', {}, { eventID: eventId });
+      }
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'lead_completo', event_id: eventId });
+      }
+
+      // 4. Limpa formulário e mostra sucesso
       setSucesso(true);
       setNome('');
       setEmail('');
       setTelefone('');
-      setOperadora(''); // ✅ LIMPAR OPERADORA
+      setOperadora('');
       setMensagem('');
-      
-      // ✅ REDIRECIONAR PARA WHATSAPP
+
+      // 5. Redireciona para WhatsApp após 3s
       setTimeout(() => {
         const mensagemWhatsApp = `Olá! Meu nome é ${nome}. Acabei de preencher o formulário no site.`;
         window.open(
@@ -82,11 +115,11 @@ function FormularioContato() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      style={{ 
+      style={{
         maxWidth: '650px',
         margin: '0 auto',
         padding: 'clamp(32px, 5vw, 56px)',
@@ -101,43 +134,31 @@ function FormularioContato() {
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          style={{
-            textAlign: 'center',
-            padding: '50px 20px'
-          }}
+          style={{ textAlign: 'center', padding: '50px 20px' }}
         >
-          <motion.div 
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            style={{ 
-              fontSize: '80px', 
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            style={{
+              fontSize: '80px',
               marginBottom: '24px',
               filter: 'drop-shadow(0 4px 12px rgba(129, 195, 183, 0.3))'
             }}
           >
             ✓
           </motion.div>
-          <h3 style={{ 
-            fontSize: '28px', 
-            color: '#81C3B7',
-            marginBottom: '16px',
-            fontWeight: '700'
-          }}>
+          <h3 style={{ fontSize: '28px', color: '#81C3B7', marginBottom: '16px', fontWeight: '700' }}>
             Mensagem Enviada!
           </h3>
-          <p style={{ 
-            fontSize: '17px', 
-            color: '#457B9D',
-            lineHeight: 1.6
-          }}>
+          <p style={{ fontSize: '17px', color: '#457B9D', lineHeight: 1.6 }}>
             Recebi sua solicitação! Entrarei em contato em até 24 horas. Redirecionando para WhatsApp... 💚
           </p>
         </motion.div>
       ) : (
         <form onSubmit={enviarFormulario}>
           <div style={{ marginBottom: '36px', textAlign: 'center' }}>
-            <h2 style={{ 
+            <h2 style={{
               fontSize: 'clamp(28px, 4vw, 36px)',
               fontWeight: '700',
               background: 'linear-gradient(135deg, #1D3557 0%, #457B9D 100%)',
@@ -149,13 +170,7 @@ function FormularioContato() {
             }}>
               Solicite uma Cotação
             </h2>
-            
-            <p style={{ 
-              fontSize: '16px', 
-              color: '#457B9D',
-              lineHeight: 1.7,
-              fontWeight: '400'
-            }}>
+            <p style={{ fontSize: '16px', color: '#457B9D', lineHeight: 1.7, fontWeight: '400' }}>
               Preencha seus dados e receba uma proposta personalizada em até 24 horas!
             </p>
           </div>
@@ -163,21 +178,15 @@ function FormularioContato() {
           {/* Nome */}
           <div style={{ marginBottom: '24px' }}>
             <label style={labelStyle}>Nome Completo *</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               required
               disabled={enviando}
               style={inputStyle}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#81C3B7';
-                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
-                e.target.style.boxShadow = 'none';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = '#81C3B7'; e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)'; }}
+              onBlur={(e)  => { e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)'; e.target.style.boxShadow = 'none'; }}
               placeholder="Digite seu nome completo"
             />
           </div>
@@ -185,21 +194,15 @@ function FormularioContato() {
           {/* Email */}
           <div style={{ marginBottom: '24px' }}>
             <label style={labelStyle}>E-mail *</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={enviando}
               style={inputStyle}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#81C3B7';
-                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
-                e.target.style.boxShadow = 'none';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = '#81C3B7'; e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)'; }}
+              onBlur={(e)  => { e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)'; e.target.style.boxShadow = 'none'; }}
               placeholder="seu@email.com"
             />
           </div>
@@ -207,42 +210,30 @@ function FormularioContato() {
           {/* Telefone */}
           <div style={{ marginBottom: '24px' }}>
             <label style={labelStyle}>Telefone/WhatsApp *</label>
-            <input 
-              type="tel" 
+            <input
+              type="tel"
               value={telefone}
               onChange={(e) => setTelefone(e.target.value)}
               required
               disabled={enviando}
               style={inputStyle}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#81C3B7';
-                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
-                e.target.style.boxShadow = 'none';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = '#81C3B7'; e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)'; }}
+              onBlur={(e)  => { e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)'; e.target.style.boxShadow = 'none'; }}
               placeholder="(00) 00000-0000"
             />
           </div>
 
-          {/* ✅ OPERADORA (NOVO CAMPO) */}
+          {/* Operadora */}
           <div style={{ marginBottom: '24px' }}>
             <label style={labelStyle}>Operadora Atual (opcional)</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={operadora}
               onChange={(e) => setOperadora(e.target.value)}
               disabled={enviando}
               style={inputStyle}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#81C3B7';
-                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
-                e.target.style.boxShadow = 'none';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = '#81C3B7'; e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)'; }}
+              onBlur={(e)  => { e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)'; e.target.style.boxShadow = 'none'; }}
               placeholder="Ex: Unimed, Amil, SulAmérica..."
             />
           </div>
@@ -250,83 +241,61 @@ function FormularioContato() {
           {/* Mensagem */}
           <div style={{ marginBottom: '32px' }}>
             <label style={labelStyle}>Mensagem (opcional)</label>
-            <textarea 
+            <textarea
               value={mensagem}
               onChange={(e) => setMensagem(e.target.value)}
               rows="5"
               disabled={enviando}
-              style={{
-                ...inputStyle, 
-                resize: 'vertical', 
-                minHeight: '120px',
-                fontFamily: 'Inter, sans-serif'
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#81C3B7';
-                e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)';
-                e.target.style.boxShadow = 'none';
-              }}
+              style={{ ...inputStyle, resize: 'vertical', minHeight: '120px', fontFamily: 'Inter, sans-serif' }}
+              onFocus={(e) => { e.target.style.borderColor = '#81C3B7'; e.target.style.boxShadow = '0 0 0 4px rgba(129, 195, 183, 0.1)'; }}
+              onBlur={(e)  => { e.target.style.borderColor = 'rgba(168, 218, 220, 0.3)'; e.target.style.boxShadow = 'none'; }}
               placeholder="Conte-me sobre suas necessidades..."
             />
           </div>
 
-          {/* MENSAGEM DE ERRO */}
+          {/* Erro */}
           {erro && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               style={{
-                padding: '16px',
-                marginBottom: '24px',
+                padding: '16px', marginBottom: '24px',
                 background: 'rgba(239, 68, 68, 0.1)',
                 border: '1px solid rgba(239, 68, 68, 0.3)',
-                borderRadius: '12px',
-                color: '#dc2626',
-                fontSize: '14px',
-                textAlign: 'center'
+                borderRadius: '12px', color: '#dc2626',
+                fontSize: '14px', textAlign: 'center'
               }}
             >
               ❌ {erro}
             </motion.div>
           )}
 
-          {/* BOTÃO */}
-          <motion.button 
-            type="submit" 
+          {/* Botão */}
+          <motion.button
+            type="submit"
             disabled={enviando}
             whileHover={{ scale: enviando ? 1 : 1.02 }}
             whileTap={{ scale: enviando ? 1 : 0.98 }}
-            style={{ 
-              width: '100%',
-              padding: '20px',
-              fontSize: '18px',
-              fontWeight: '700',
-              color: 'white',
-              background: enviando 
+            style={{
+              width: '100%', padding: '20px',
+              fontSize: '18px', fontWeight: '700', color: 'white',
+              background: enviando
                 ? 'linear-gradient(135deg, #A8DADC 0%, #6B7280 100%)'
                 : 'linear-gradient(135deg, #81C3B7 0%, #457B9D 100%)',
-              border: 'none',
-              borderRadius: '14px',
+              border: 'none', borderRadius: '14px',
               cursor: enviando ? 'not-allowed' : 'pointer',
               boxShadow: enviando ? 'none' : '0 10px 30px rgba(129, 195, 183, 0.4)',
-              fontFamily: 'Inter, sans-serif',
-              letterSpacing: '0.02em',
+              fontFamily: 'Inter, sans-serif', letterSpacing: '0.02em',
               transition: 'all 0.3s ease'
             }}
           >
             {enviando ? (
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-                <span style={{ 
-                  width: '20px', 
-                  height: '20px', 
-                  border: '3px solid white',
-                  borderTop: '3px solid transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 0.8s linear infinite'
-                }}/>
+                <span style={{
+                  width: '20px', height: '20px',
+                  border: '3px solid white', borderTop: '3px solid transparent',
+                  borderRadius: '50%', animation: 'spin 0.8s linear infinite'
+                }} />
                 Enviando...
               </span>
             ) : (
@@ -334,23 +303,13 @@ function FormularioContato() {
             )}
           </motion.button>
 
-          <p style={{
-            marginTop: '20px',
-            textAlign: 'center',
-            fontSize: '13px',
-            color: '#6B7280',
-            lineHeight: 1.6
-          }}>
+          <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: '#6B7280', lineHeight: 1.6 }}>
             Seus dados estão seguros e não serão compartilhados. 🔒
           </p>
         </form>
       )}
 
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </motion.div>
   );
 }
