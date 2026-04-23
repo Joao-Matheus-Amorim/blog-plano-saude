@@ -80,7 +80,7 @@ export default function PaginaContato() {
       
       setTimeout(() => {
         window.open(
-          `https://wa.me/5521977472141?text=${encodeURIComponent(`Olá! Meu nome é ${nomeAtual}. Acabei de preencher o formulário no site.`)}`,
+          `https://wa.me/5521977472141?text=${encodeURIComponent(`Olá! Meu nome é ${nomeAtual}. Pode me ajudar com duvidas sobre seguro de saúde?`)}`,
           '_blank'
         );
       }, 2000);

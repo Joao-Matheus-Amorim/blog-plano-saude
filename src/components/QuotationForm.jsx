@@ -146,15 +146,14 @@ function Step1({ form, setForm, onNext }) {
     return e;
   };
 
-  const handleNext = () => {
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    setErrors({});
-    if (window.fbq) window.fbq('track', 'Lead');
-    if (window.dataLayer) window.dataLayer.push({ event: 'lead_captured' });
-    onNext();
-  };
-
+ const handleNext = () => {
+  const e = validate();
+  if (Object.keys(e).length) { setErrors(e); return; }
+  setErrors({});
+  if (window.fbq) window.fbq('track', 'InitiateCheckout'); // ✅ "iniciou o processo"
+  if (window.dataLayer) window.dataLayer.push({ event: 'lead_step1' });
+  onNext();
+};
   return (
     <>
       <div style={{ marginBottom: 20 }}>
@@ -318,16 +317,27 @@ export default function QuotationForm() {
   });
 
   const handleSubmit = async () => {
-    setLoading(true);
+  setLoading(true);
 
-    // Salva no NeonDB via API serverless
-    await saveLeadToNeon({
-      nome: form.name,
-      telefone: form.whatsapp,
-      operadora: form.operator,
-      vidas: parseInt(form.lives) || 1,
-      mensagem: `Tipo de plano: ${form.planType}`,
-    });
+  await saveLeadToNeon({
+    nome: form.name,
+    telefone: form.whatsapp,
+    operadora: form.operator,
+    vidas: parseInt(form.lives) || 1,
+    mensagem: `Tipo de plano: ${form.planType}`,
+  });
+
+  if (window.fbq) window.fbq('track', 'Lead');
+  if (window.fbq) window.fbq('track', 'Contact');
+  if (window.dataLayer) window.dataLayer.push({ event: 'lead_completo' });
+  if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
+
+  const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
+  window.open(waUrl, '_blank');
+
+  setLoading(false);
+  setStep(3);
+};
 
     if (window.fbq) window.fbq('track', 'Contact');
     if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
@@ -394,4 +404,3 @@ export default function QuotationForm() {
       )}
     </div>
   );
-}
