@@ -5,9 +5,39 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { nome, email, telefone, operadora, mensagem, vidas } = req.body;
+  let body = req.body;
 
-  if (!nome || !String(nome).trim()) {
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      body = {};
+    }
+  }
+
+  if (body && typeof body === 'object' && Buffer.isBuffer(body)) {
+    try {
+      body = JSON.parse(body.toString('utf8'));
+    } catch {
+      body = {};
+    }
+  }
+
+  const {
+    nome,
+    name,
+    email,
+    telefone,
+    whatsapp,
+    operadora,
+    mensagem,
+    vidas,
+  } = body || {};
+
+  const nomeFinal = String(nome || name || '').trim();
+  const telefoneFinal = telefone || whatsapp || null;
+
+  if (!nomeFinal) {
     return res.status(400).json({ error: 'Informe seu nome para continuar.' });
   }
 
@@ -16,7 +46,7 @@ export default async function handler(req, res) {
     const dataEnvio = new Date().toISOString();
     const result = await sql`
       INSERT INTO lead (nome, email, telefone, operadora, mensagem, vidas, data_envio)
-      VALUES (${String(nome).trim()}, ${email || null}, ${telefone || null}, ${operadora || null}, ${mensagem || null}, ${vidas || null}, ${dataEnvio})
+      VALUES (${nomeFinal}, ${email || null}, ${telefoneFinal}, ${operadora || null}, ${mensagem || null}, ${vidas || null}, ${dataEnvio})
       RETURNING *
     `;
 
