@@ -16,6 +16,18 @@ const C = {
 
 const font = "'Playfair Display', serif";
 
+function generateEventId() {
+  // UUID v4 simples — compatível com todos os browsers modernos
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // fallback
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
 function input(hasError, filled) {
   return {
     width: "100%",
@@ -123,13 +135,15 @@ function buildWAMessage(f) {
 
 async function saveLeadToNeon(payload) {
   try {
-    await fetch('/api/leads', {
+    const response = await fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    if (!response.ok) return null;
+    return await response.json();
   } catch (_) {
-    // silently fail — não bloquear o fluxo do usuário
+    return null;
   }
 }
 
@@ -320,8 +334,23 @@ export default function QuotationForm() {
   const handleSubmit = async () => {
     setLoading(true);
 
+    // ── Deduplicação Meta CAPI ────────────────────────────────────────────────
+    // O mesmo eventId é enviado para o Pixel (browser) e para a CAPI (servidor).
+    // A Meta usa esse ID para eliminar o evento duplicado e contar apenas 1 conversão.
+    const eventId = generateEventId();
     const utm_source = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
 
+    // 1. Dispara o Pixel no browser COM o eventId
+    if (window.fbq) {
+      window.fbq('track', 'Lead', {}, { eventID: eventId });
+      window.fbq('track', 'Contact', {}, { eventID: `contact-${eventId}` });
+    }
+    if (window.dataLayer) {
+      window.dataLayer.push({ event: 'lead_completo', event_id: eventId });
+      window.dataLayer.push({ event: 'whatsapp_opened' });
+    }
+
+    // 2. Salva no banco E dispara CAPI server-side com o MESMO eventId
     await saveLeadToNeon({
       nome: form.name,
       telefone: form.whatsapp,
@@ -329,13 +358,10 @@ export default function QuotationForm() {
       vidas: parseInt(form.lives) || 1,
       mensagem: `Tipo de plano: ${form.planType}`,
       origem: utm_source,
+      event_id: eventId,   // ← backend usa esse valor no campo event_id da CAPI
     });
 
-    if (window.fbq) window.fbq('track', 'Lead');
-    if (window.fbq) window.fbq('track', 'Contact');
-    if (window.dataLayer) window.dataLayer.push({ event: 'lead_completo' });
-    if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
-
+    // 3. Abre WhatsApp
     const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
     window.open(waUrl, '_blank');
 

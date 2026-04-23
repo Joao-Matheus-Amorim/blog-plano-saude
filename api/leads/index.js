@@ -74,8 +74,14 @@ async function sendWhatsapp(lead) {
 }
 
 // ─── META CAPI ────────────────────────────────────────────────────────────────
-
-async function sendMetaCapi(lead) {
+//
+// DEDUPLICAÇÃO:
+// O frontend gera um UUID (eventId) e o passa no fbq('track', 'Lead', {}, { eventID })
+// O mesmo UUID é enviado aqui no payload como `event_id`.
+// A Meta compara os dois e descarta o duplicado — conta apenas 1 conversão.
+// Referência: https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events
+//
+async function sendMetaCapi(lead, eventId) {
   const pixelId      = process.env.META_PIXEL_ID;
   const accessToken  = process.env.META_ACCESS_TOKEN;
 
@@ -90,12 +96,16 @@ async function sendMetaCapi(lead) {
   if (lead.email)    userData.em = [sha256(lead.email)];
   if (lead.telefone) userData.ph = [sha256(normalizePhone(lead.telefone))];
 
+  // event_id deve ser IDÊNTICO ao passado no fbq({ eventID }) no browser.
+  // Se o frontend não enviou um eventId, geramos um aleatório — mas sem deduplicação.
+  const resolvedEventId = eventId || `lead-fallback-${lead.id}-${eventTime}`;
+
   const payload = {
     data: [{
       event_name:    'Lead',
       event_time:    eventTime,
       action_source: 'website',
-      event_id:      `lead-${lead.id}-${eventTime}`,
+      event_id:      resolvedEventId,
       user_data:     userData,
       custom_data: {
         content_name: lead.operadora || 'Plano de Saúde',
@@ -140,6 +150,7 @@ export default async function handler(req, res) {
     vidas,
     mensagem,
     origem,
+    event_id,   // ← UUID gerado no frontend para deduplicação CAPI
   } = body || {};
 
   const nomeFinal      = String(nome || name || '').trim();
@@ -149,6 +160,7 @@ export default async function handler(req, res) {
   const mensagemFinal  = String(mensagem  || '').trim() || null;
   const origemFinal    = String(origem    || 'Direto').trim() || 'Direto';
   const vidasFinal     = Number.isFinite(Number(vidas)) ? Number(vidas) : null;
+  const eventIdFinal   = String(event_id || '').trim() || null;
 
   if (!nomeFinal) {
     return res.status(400).json({ error: 'Informe seu nome para continuar.' });
@@ -181,9 +193,10 @@ export default async function handler(req, res) {
   }
 
   // ── 2. Notificações (não bloqueiam a resposta se falharem) ─────────────────
+  // Passa o eventId do frontend para a CAPI — chave da deduplicação
   const [whatsappResult, metaResult] = await Promise.allSettled([
     sendWhatsapp(lead),
-    sendMetaCapi(lead),
+    sendMetaCapi(lead, eventIdFinal),
   ]);
 
   // ── 3. Resposta ────────────────────────────────────────────────────────────
