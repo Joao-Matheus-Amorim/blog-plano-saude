@@ -35,6 +35,15 @@ export default function PaginaAdmin() {
     setAutenticado(false);
   };
 
+  const getLeadDateValue = (lead) => lead.data_envio || lead.created_at || lead.data || null;
+
+  const formatLeadDate = (lead) => {
+    const dateValue = getLeadDateValue(lead);
+    if (!dateValue) return 'Sem data';
+    const date = new Date(dateValue);
+    return Number.isNaN(date.getTime()) ? 'Sem data' : date.toLocaleString('pt-BR');
+  };
+
   const deletarLead = async (id) => {
     if (!confirm('Tem certeza que deseja deletar este lead?')) return;
 
@@ -58,7 +67,7 @@ export default function PaginaAdmin() {
         lead.operadora || '',
         lead.mensagem || '',
         lead.vidas || '',
-        new Date(lead.data_envio).toLocaleString('pt-BR')
+        formatLeadDate(lead)
       ])
     ].map(row => row.join(';')).join('\n');
 
@@ -231,9 +240,9 @@ export default function PaginaAdmin() {
           }}>
             <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
               {leads.filter(l => {
-                const date = new Date(l.data_envio);
+                const date = new Date(getLeadDateValue(l));
                 const today = new Date();
-                return date.toDateString() === today.toDateString();
+                return !Number.isNaN(date.getTime()) && date.toDateString() === today.toDateString();
               }).length}
             </div>
             <div style={{ fontSize: '14px', opacity: 0.9 }}>Hoje</div>
@@ -248,10 +257,10 @@ export default function PaginaAdmin() {
           }}>
             <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
               {leads.filter(l => {
-                const date = new Date(l.data_envio);
+                const date = new Date(getLeadDateValue(l));
                 const weekAgo = new Date();
                 weekAgo.setDate(weekAgo.getDate() - 7);
-                return date >= weekAgo;
+                return !Number.isNaN(date.getTime()) && date >= weekAgo;
               }).length}
             </div>
             <div style={{ fontSize: '14px', opacity: 0.9 }}>Últimos 7 dias</div>
@@ -338,7 +347,7 @@ export default function PaginaAdmin() {
                     </td>
                     <td style={{ padding: '16px', color: '#9B9289', fontSize: '13px', textAlign: 'center' }}>{lead.vidas || '-'}</td>
                     <td style={{ padding: '16px', color: '#9B9289', fontSize: '12px', whiteSpace: 'nowrap' }}>
-                      {new Date(lead.data_envio).toLocaleString('pt-BR')}
+                      {formatLeadDate(lead)}
                     </td>
                     <td style={{ padding: '16px', textAlign: 'center' }}>
                       <button

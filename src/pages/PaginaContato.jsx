@@ -62,8 +62,7 @@ export default function PaginaContato() {
       });
 
       if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        throw new Error(payload.error || 'Erro ao enviar lead');
+        throw new Error('Não foi possível enviar agora. Tente novamente em instantes ou fale conosco pelo WhatsApp.');
       }
 
       const nomeAtual = formData.nome;
@@ -78,7 +77,8 @@ export default function PaginaContato() {
       }, 2000);
 
     } catch (err) {
-      setError(err.message || 'Erro ao enviar. Tente novamente.');
+      console.error('Erro ao enviar lead:', err);
+      setError('Não foi possível enviar agora. Você ainda pode falar conosco pelo WhatsApp.');
     } finally {
       setLoading(false);
     }

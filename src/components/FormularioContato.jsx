@@ -30,8 +30,7 @@ function FormularioContato() {
       });
 
       if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        throw new Error(payload.error || 'Erro ao enviar lead');
+        throw new Error('Não foi possível enviar agora. Tente novamente em instantes ou fale conosco pelo WhatsApp.');
       }
       
       // ✅ SUCESSO
@@ -53,8 +52,8 @@ function FormularioContato() {
       }, 3000);
 
     } catch (error) {
-      console.error('❌ Erro completo:', error);
-      setErro('Erro ao enviar. Tente novamente.');
+      console.error('❌ Erro ao enviar lead:', error);
+      setErro('Não foi possível enviar agora. Você ainda pode falar conosco pelo WhatsApp.');
     } finally {
       setEnviando(false);
     }

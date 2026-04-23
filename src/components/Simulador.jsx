@@ -10,6 +10,7 @@ export default function Simulador() {
   const [telefone, setTelefone] = useState('');
   const [etapa, setEtapa] = useState(1);
   const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState('');
 
   const avancarParaDados = () => {
     if (vidas < 1) { alert('Informe o número de vidas'); return; }
@@ -17,12 +18,13 @@ export default function Simulador() {
   };
 
   const salvarLead = async () => {
+    setErro('');
     if (!nome || !email || !telefone) {
-      alert('Preencha todos os dados para receber sua cotação!');
+      setErro('Preencha nome, e-mail e WhatsApp para continuar.');
       return;
     }
     if (telefone.replace(/\D/g, '').length < 10) {
-      alert('Informe um WhatsApp válido com DDD');
+      setErro('Informe um WhatsApp válido com DDD.');
       return;
     }
 
@@ -43,12 +45,11 @@ export default function Simulador() {
       });
 
       if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        throw new Error(payload.error || 'Erro ao salvar lead');
+        throw new Error('Não foi possível enviar agora. Tente novamente em instantes ou chame no WhatsApp.');
       }
     } catch (error) {
       console.error('Erro ao salvar lead:', error);
-      alert('Erro ao enviar. Tente novamente.');
+      setErro('Não foi possível enviar agora. Você ainda pode falar conosco pelo WhatsApp.');
       setEnviando(false);
       return;
     }
@@ -212,6 +213,12 @@ export default function Simulador() {
                 {enviando ? 'Enviando...' : 'Receber Cotação →'}
               </motion.button>
             </div>
+
+              {erro && (
+                <p style={{ marginTop: '16px', fontSize: '13px', color: '#9B9289', lineHeight: 1.6, textAlign: 'center' }}>
+                  {erro}
+                </p>
+              )}
           </motion.div>
         )}
 
