@@ -2,35 +2,47 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    
+
+    <!-- ✅ VIEWPORT OTIMIZADO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- ✅ PWA MOBILE -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Maisa Valentim" />
+
+    <!-- ✅ TEMA COLOR -->
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="msapplication-TileColor" content="#A8877A" />
+
     <!-- ✅ FAVICON -->
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- ✅ SEO META TAGS -->
     <meta name="description" content="Consultoria especializada em planos de saúde com Maisa Valentim. Atendimento humanizado, suporte vitalício e as melhores opções de planos para você e sua família." />
     <meta name="keywords" content="plano de saúde, consultoria de saúde, Maisa Valentim, planos de saúde Rio de Janeiro, convênio médico, corretora de planos de saúde" />
     <meta name="author" content="Maisa Valentim" />
-    
-    <!-- ✅ OPEN GRAPH (REDES SOCIAIS) -->
+
+    <!-- ✅ OPEN GRAPH -->
     <meta property="og:title" content="Maisa Valentim | Consultoria de Planos de Saúde" />
     <meta property="og:description" content="Atendimento humanizado e suporte vitalício para encontrar o plano de saúde perfeito para você." />
     <meta property="og:image" content="/logo.png" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
-    
+
     <!-- ✅ TWITTER CARD -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Maisa Valentim | Consultoria de Planos de Saúde" />
     <meta name="twitter:description" content="Atendimento humanizado e suporte vitalício" />
     <meta name="twitter:image" content="/logo.png" />
-    
+
     <!-- ✅ TITLE -->
     <title>💎 Maisa Valentim | Consultoria de Planos de Saúde</title>
-    
-    <!-- ✅ SCHEMA.ORG (SEO AVANÇADO) -->
+
+    <!-- ✅ SCHEMA.ORG -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -63,50 +75,31 @@
       }
     }
     </script>
+
+    <!-- ✅ META PIXEL -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1633789104489731');
+    fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
+
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    
-    <!-- ✅ VIEWPORT OTIMIZADO PARA MOBILE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    
-    <!-- ✅ PREVENIR ZOOM AUTOMÁTICO EM iOS -->
-    <meta name="format-detection" content="telephone=no" />
-    
-    <!-- ✅ PWA MOBILE -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Maisa Valentim" />
-    
-    <!-- ✅ TEMA COLOR (barra de status mobile) -->
-    <meta name="theme-color" content="#FFFFFF" />
-    <meta name="msapplication-TileColor" content="#A8877A" />
-    
-    <!-- ✅ FAVICON -->
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
-    
-    <!-- ✅ SEO -->
-    <meta name="description" content="Consultoria especializada em planos de saúde com Maisa Valentim. Atendimento humanizado, suporte vitalício e as melhores opções de planos para você e sua família." />
-    <meta name="keywords" content="plano de saúde, consultoria de saúde, Maisa Valentim, planos de saúde Rio de Janeiro, convênio médico, corretora de planos de saúde" />
-    
-    <!-- ✅ OPEN GRAPH -->
-    <meta property="og:title" content="Maisa Valentim | Consultoria de Planos de Saúde" />
-    <meta property="og:description" content="Atendimento humanizado e suporte vitalício" />
-    <meta property="og:image" content="/logo.png" />
-    <meta property="og:type" content="website" />
-    
-    <title>💎 Maisa Valentim | Consultoria de Planos de Saúde</title>
-  </head>
-  <body>
+    <!-- Meta Pixel noscript (deve ficar no body) -->
+    <noscript>
+      <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1633789104489731&ev=PageView&noscript=1"
+      />
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

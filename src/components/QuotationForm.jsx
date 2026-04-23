@@ -139,7 +139,6 @@ async function sendToWebhook(payload) {
   }
 }
 
-// ─── Passo 1: Dados de Contato ────────────────────────────────────────────────
 function Step1({ form, setForm, onNext }) {
   const [errors, setErrors] = useState({});
 
@@ -157,6 +156,8 @@ function Step1({ form, setForm, onNext }) {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
     setErrors({});
+    if (window.fbq) window.fbq('track', 'Lead');
+    if (window.dataLayer) window.dataLayer.push({ event: 'lead_captured' });
     onNext();
   };
 
@@ -195,7 +196,6 @@ function Step1({ form, setForm, onNext }) {
   );
 }
 
-// ─── Passo 2: Detalhes do Plano ───────────────────────────────────────────────
 function Step2({ form, setForm, onBack, onSubmit, loading }) {
   return (
     <>
@@ -244,7 +244,6 @@ function Step2({ form, setForm, onBack, onSubmit, loading }) {
         </select>
       </div>
 
-      {/* Prova social perto do botão de submit */}
       <div style={{
         display: "flex", gap: 12, marginBottom: 20, padding: "12px 16px",
         background: "#F0FFF4", borderRadius: 10,
@@ -279,7 +278,6 @@ function Step2({ form, setForm, onBack, onSubmit, loading }) {
   );
 }
 
-// ─── Passo 3: Sucesso ─────────────────────────────────────────────────────────
 function Step3({ form }) {
   const firstName = form.name.split(" ")[0];
   const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
@@ -314,7 +312,6 @@ function Step3({ form }) {
   );
 }
 
-// ─── Componente Principal ─────────────────────────────────────────────────────
 export default function QuotationForm() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -337,7 +334,9 @@ export default function QuotationForm() {
 
     await sendToWebhook(payload);
 
-    // Abre WhatsApp com dados pré-preenchidos
+    if (window.fbq) window.fbq('track', 'Contact');
+    if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
+
     const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
     window.open(waUrl, "_blank");
 
