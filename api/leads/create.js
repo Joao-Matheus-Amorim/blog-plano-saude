@@ -1,5 +1,27 @@
 import { neon } from '@neondatabase/serverless';
 
+function getSqlClient() {
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL não configurada no ambiente');
+  }
+
+  let normalizedUrl = String(databaseUrl).trim();
+
+  if (
+    (normalizedUrl.startsWith('"') && normalizedUrl.endsWith('"')) ||
+    (normalizedUrl.startsWith("'") && normalizedUrl.endsWith("'"))
+  ) {
+    normalizedUrl = normalizedUrl.slice(1, -1);
+  }
+
+  const parsedUrl = new URL(normalizedUrl);
+  parsedUrl.searchParams.delete('channel_binding');
+
+  return neon(parsedUrl.toString());
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
@@ -42,11 +64,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = getSqlClient();
     const dataEnvio = new Date().toISOString();
     const result = await sql`
-      INSERT INTO lead (nome, email, telefone, operadora, mensagem, vidas, data_envio)
-      VALUES (${nomeFinal}, ${email || null}, ${telefoneFinal}, ${operadora || null}, ${mensagem || null}, ${vidas || null}, ${dataEnvio})
+      INSERT INTO lead (nome, email, telefone, operadora, mensagem, vidas)
+      VALUES (${nomeFinal}, ${email || null}, ${telefoneFinal}, ${operadora || null}, ${mensagem || null}, ${vidas || null})
       RETURNING *
     `;
 
