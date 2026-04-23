@@ -7,7 +7,11 @@ export default async function handler(req, res) {
 
   try {
     const sql = neon(process.env.DATABASE_URL);
-    const leads = await sql`SELECT * FROM lead ORDER BY data_envio DESC NULLS LAST`;
+    const leads = await sql`
+      SELECT *
+      FROM lead
+      ORDER BY data_envio DESC NULLS LAST, id DESC
+    `;
     return res.status(200).json(leads);
   } catch (error) {
     console.error('Erro ao buscar leads:', error);

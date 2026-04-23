@@ -28,7 +28,12 @@ export default async function handler(req, res) {
         : null,
     });
   } catch (error) {
-    console.error('Erro ao criar lead:', error);
+    console.error('Erro ao criar lead:', {
+      message: error?.message,
+      code: error?.code,
+      detail: error?.detail,
+      hint: error?.hint,
+    });
     return res.status(500).json({
       error: 'Não foi possível registrar seu pedido agora. Tente novamente em instantes ou fale conosco pelo WhatsApp.',
     });
