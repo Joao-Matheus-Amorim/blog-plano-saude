@@ -123,7 +123,7 @@ function buildWAMessage(f) {
 
 async function saveLeadToNeon(payload) {
   try {
-    await fetch('/api/leads/create', {
+    await fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -146,14 +146,15 @@ function Step1({ form, setForm, onNext }) {
     return e;
   };
 
- const handleNext = () => {
-  const e = validate();
-  if (Object.keys(e).length) { setErrors(e); return; }
-  setErrors({});
-  if (window.fbq) window.fbq('track', 'InitiateCheckout'); // ✅ "iniciou o processo"
-  if (window.dataLayer) window.dataLayer.push({ event: 'lead_step1' });
-  onNext();
-};
+  const handleNext = () => {
+    const e = validate();
+    if (Object.keys(e).length) { setErrors(e); return; }
+    setErrors({});
+    if (window.fbq) window.fbq('track', 'InitiateCheckout');
+    if (window.dataLayer) window.dataLayer.push({ event: 'lead_step1' });
+    onNext();
+  };
+
   return (
     <>
       <div style={{ marginBottom: 20 }}>
@@ -317,33 +318,26 @@ export default function QuotationForm() {
   });
 
   const handleSubmit = async () => {
-  setLoading(true);
+    setLoading(true);
 
-  await saveLeadToNeon({
-    nome: form.name,
-    telefone: form.whatsapp,
-    operadora: form.operator,
-    vidas: parseInt(form.lives) || 1,
-    mensagem: `Tipo de plano: ${form.planType}`,
-  });
+    const utm_source = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
 
-  if (window.fbq) window.fbq('track', 'Lead');
-  if (window.fbq) window.fbq('track', 'Contact');
-  if (window.dataLayer) window.dataLayer.push({ event: 'lead_completo' });
-  if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
+    await saveLeadToNeon({
+      nome: form.name,
+      telefone: form.whatsapp,
+      operadora: form.operator,
+      vidas: parseInt(form.lives) || 1,
+      mensagem: `Tipo de plano: ${form.planType}`,
+      origem: utm_source,
+    });
 
-  const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
-  window.open(waUrl, '_blank');
-
-  setLoading(false);
-  setStep(3);
-};
-
+    if (window.fbq) window.fbq('track', 'Lead');
     if (window.fbq) window.fbq('track', 'Contact');
+    if (window.dataLayer) window.dataLayer.push({ event: 'lead_completo' });
     if (window.dataLayer) window.dataLayer.push({ event: 'whatsapp_opened' });
 
     const waUrl = `https://wa.me/${WA}?text=${buildWAMessage(form)}`;
-    window.open(waUrl, "_blank");
+    window.open(waUrl, '_blank');
 
     setLoading(false);
     setStep(3);
@@ -404,3 +398,4 @@ export default function QuotationForm() {
       )}
     </div>
   );
+}

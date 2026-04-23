@@ -49,8 +49,12 @@ export default function PaginaContato() {
       return;
     }
 
+    const utm_source = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
+
+    if (window.fbq) window.fbq('track', 'Lead');
+
     try {
-      const response = await fetch('/api/leads/create', {
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,6 +64,7 @@ export default function PaginaContato() {
           operadora: formData.operadora,
           vidas: formData.vidas ? Number(formData.vidas) : null,
           mensagem: formData.mensagem || '',
+          origem: utm_source,
         }),
       });
 
@@ -77,7 +82,7 @@ export default function PaginaContato() {
         vidas: '',
         mensagem: '',
       });
-      
+
       setTimeout(() => {
         window.open(
           `https://wa.me/5521977472141?text=${encodeURIComponent(`Olá! Meu nome é ${nomeAtual}. Pode me ajudar com duvidas sobre seguro de saúde?`)}`,
@@ -98,8 +103,7 @@ export default function PaginaContato() {
   };
 
   return (
-    
-     <><SEO
+    <><SEO
       title="Contato - Fale Conosco"
       description="Entre em contato com a Maisa Valentim Consultoria. Atendimento personalizado para planos de saúde. WhatsApp (21) 97747-2141. Resposta em até 2 horas."
       keywords="contato plano saúde, whatsapp plano saúde, falar consultor, atendimento 24h, cotação urgente"
@@ -410,11 +414,11 @@ export default function PaginaContato() {
                   e.currentTarget.style.transform = 'translateY(-2px)';
                   e.currentTarget.style.boxShadow = '0 12px 36px rgba(139, 126, 116, 0.4)';
                 }
-              } }
+              }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 8px 28px rgba(139, 126, 116, 0.3)';
-              } }
+              }}
             >
               {loading ? '⏳ Enviando...' : '📩 Enviar Mensagem →'}
             </button>
