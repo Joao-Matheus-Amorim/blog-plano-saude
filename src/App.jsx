@@ -415,7 +415,7 @@ function App() {
                 margin: 0,
                 letterSpacing: '0.02em'
               }}>
-                © 2025 Maisa Valentim. Todos os direitos reservados.
+                © 2026 Maisa Valentim. Todos os direitos reservados.
               </p>
               <p style={{ 
                 fontSize: 'clamp(11px, 1.4vw, 13px)', 
