@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/leads/index.js": {
+      "maxDuration": 30
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",

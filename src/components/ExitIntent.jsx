@@ -1,11 +1,9 @@
-// ExitIntent.jsx — Fase 2
+// ExitIntent.jsx
 // Popup que aparece quando o usuário tenta fechar a aba
-// Recupera ~10–15% dos visitantes que iam embora sem converter
 
 import { useState, useEffect, useRef } from "react";
 
 const WA = "5521977472141";
-const WEBHOOK_URL = "https://hook.eu2.make.com/SEU_WEBHOOK_AQUI";
 
 const C = {
   primary:   "#8B7E74",
@@ -17,6 +15,36 @@ const C = {
   green:     "#25D366",
 };
 const font = "'Playfair Display', serif";
+
+function generateEventId() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+async function saveLead(payload) {
+  const eventId = generateEventId();
+  const utm_source = new URLSearchParams(window.location.search).get("utm_source") || "direct";
+
+  try {
+    await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, origem: payload.origem || utm_source, event_id: eventId }),
+    });
+  } catch (_) {}
+
+  if (window.fbq) {
+    window.fbq("track", "Lead", {}, { eventID: eventId });
+  }
+  if (window.dataLayer) {
+    window.dataLayer.push({ event: "lead_completo", event_id: eventId, source: payload.source });
+  }
+}
 
 const formatPhone = (v) => {
   const n = v.replace(/\D/g, "").slice(0, 11);
@@ -35,20 +63,16 @@ export default function ExitIntent() {
   const dismissedKey = "exit_popup_dismissed";
 
   useEffect(() => {
-    // Não mostrar se já foi dispensado nesta sessão
     if (sessionStorage.getItem(dismissedKey)) return;
 
     const handleMouseLeave = (e) => {
       if (triggered.current) return;
-      // Só ativa quando o mouse vai para fora do topo da janela
       if (e.clientY <= 10) {
         triggered.current = true;
-        // Delay pequeno para não ser agressivo
         setTimeout(() => setVisible(true), 200);
       }
     };
 
-    // Mobile: ativa após 40 segundos de inatividade
     let mobileTimer;
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     if (isMobile) {
@@ -76,18 +100,9 @@ export default function ExitIntent() {
     const nums = whatsapp.replace(/\D/g, "");
     if (nums.length < 10 || !name.trim()) return;
     setLoading(true);
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name, whatsapp,
-          source: "exit_intent",
-          timestamp: new Date().toISOString(),
-        }),
-        mode: "no-cors",
-      });
-    } catch (_) {}
+
+    await saveLead({ nome: name, telefone: whatsapp, origem: "exit_intent", source: "exit_intent" });
+
     const msg = encodeURIComponent(
       `Olá Maisa! Me chamo ${name}.\n` +
       `Estava no seu site e quero receber a comparação das operadoras.\n` +
@@ -103,7 +118,6 @@ export default function ExitIntent() {
 
   return (
     <>
-      {/* Overlay */}
       <div
         onClick={dismiss}
         style={{
@@ -114,7 +128,6 @@ export default function ExitIntent() {
         }}
       />
 
-      {/* Modal */}
       <div style={{
         position: "fixed",
         top: "50%", left: "50%",
@@ -155,7 +168,6 @@ export default function ExitIntent() {
               </p>
             </div>
 
-            {/* Benefícios rápidos */}
             <div style={{
               display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center",
               marginBottom: 24,
