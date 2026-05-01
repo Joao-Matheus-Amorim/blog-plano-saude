@@ -72,11 +72,12 @@ export default function Simulador() {
     border: '1px solid rgba(37, 70, 35, 0.16)',
     borderRadius: '16px',
     fontSize: '15px',
-    background: '#FFFCF6',
+    background: 'rgba(255, 252, 246, 0.78)',
     transition: 'all 0.25s ease',
     fontWeight: '700',
     color: '#254623',
-    outline: 'none'
+    outline: 'none',
+    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.78)'
   };
 
   const labelStyle = {
@@ -114,26 +115,22 @@ export default function Simulador() {
 
   return (
     <motion.div
+      className="float-mirror"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55 }}
       style={{
         padding: 'clamp(28px, 4.4vw, 42px)',
-        background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFCF6 100%)',
         borderRadius: '30px',
-        boxShadow: '0 34px 90px rgba(24, 53, 31, 0.18)',
         maxWidth: '540px',
-        margin: '0 auto',
-        border: '1px solid rgba(37, 70, 35, 0.16)',
-        position: 'relative',
-        overflow: 'hidden'
+        margin: '0 auto'
       }}
     >
-      <div style={{ position: 'absolute', inset: '0 0 auto 0', height: '7px', background: 'linear-gradient(90deg, #254623, #8FA185, #C2B280)' }} />
+      <div style={{ position: 'absolute', inset: '0 0 auto 0', height: '7px', background: 'linear-gradient(90deg, #254623, #8FA185, #C2B280)', zIndex: 2 }} />
 
       <AnimatePresence mode="wait">
         {etapa === 1 && (
-          <motion.div key="etapa1" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
+          <motion.div key="etapa1" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }} style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Pré-análise gratuita
             </p>
@@ -179,7 +176,7 @@ export default function Simulador() {
         )}
 
         {etapa === 2 && (
-          <motion.div key="etapa2" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
+          <motion.div key="etapa2" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }} style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Dados para contato
             </p>
@@ -210,7 +207,7 @@ export default function Simulador() {
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => setEtapa(1)} style={{ flex: 1, padding: '16px', background: '#F5F0E6', color: '#254623', border: '1px solid rgba(37, 70, 35, 0.16)', borderRadius: '999px', fontSize: '13px', fontWeight: '900', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <button onClick={() => setEtapa(1)} style={{ flex: 1, padding: '16px', background: 'rgba(245,240,230,0.74)', color: '#254623', border: '1px solid rgba(37, 70, 35, 0.16)', borderRadius: '999px', fontSize: '13px', fontWeight: '900', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Voltar
               </button>
 
@@ -224,7 +221,7 @@ export default function Simulador() {
         )}
 
         {etapa === 3 && (
-          <motion.div key="etapa3" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }}>
+          <motion.div key="etapa3" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Solicitação recebida
             </p>
@@ -232,7 +229,7 @@ export default function Simulador() {
               Sua pré-análise foi enviada.
             </h3>
 
-            <div style={{ background: '#F5F0E6', border: '1px solid rgba(37, 70, 35, 0.12)', borderRadius: '20px', padding: '22px', marginBottom: '22px' }}>
+            <div style={{ background: 'rgba(245,240,230,0.76)', border: '1px solid rgba(37, 70, 35, 0.12)', borderRadius: '20px', padding: '22px', marginBottom: '22px' }}>
               <p style={{ fontSize: '15px', color: '#4C5A45', lineHeight: 1.75, margin: 0 }}>
                 Recebemos seus dados. A consultoria vai avaliar o perfil informado e entrar em contato pelo WhatsApp para orientar os próximos passos.
               </p>
