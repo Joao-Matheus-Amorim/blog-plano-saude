@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Simulador from './Simulador.jsx';
 
 function Hero() {
   return (
@@ -14,11 +14,18 @@ function Hero() {
       background: '#F6F1EA'
     }}>
       <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(circle at 12% 14%, rgba(138, 111, 90, 0.18), transparent 28rem), radial-gradient(circle at 88% 18%, rgba(16, 24, 32, 0.10), transparent 30rem)',
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
         maxWidth: '1280px',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))',
-        gap: 'clamp(48px, 8vw, 96px)',
+        gridTemplateColumns: 'minmax(0, 1.08fr) minmax(380px, 0.92fr)',
+        gap: 'clamp(44px, 7vw, 88px)',
         alignItems: 'center',
         position: 'relative',
         zIndex: 1
@@ -31,7 +38,7 @@ function Hero() {
           <p style={{
             color: '#8A6F5A',
             fontSize: '12px',
-            fontWeight: '700',
+            fontWeight: '800',
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             marginBottom: '28px'
@@ -54,7 +61,7 @@ function Hero() {
 
           <p style={{
             fontSize: 'clamp(16px, 2vw, 20px)',
-            marginBottom: '42px',
+            marginBottom: '34px',
             lineHeight: 1.75,
             color: '#4A5565',
             maxWidth: '660px'
@@ -62,42 +69,37 @@ function Hero() {
             Envie seus dados para uma pré-análise. A cotação é preparada por uma consultora, considerando perfil, operadoras e regras comerciais vigentes.
           </p>
 
-          <Link to="/contato" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '14px',
-            fontWeight: '700',
-            textDecoration: 'none',
-            padding: '18px 34px',
-            background: '#101820',
-            color: '#FFFFFF',
-            borderRadius: '999px',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase'
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gap: '12px',
+            maxWidth: '640px'
           }}>
-            Solicitar pré-análise
-          </Link>
+            {[
+              ['50+', 'empresas atendidas'],
+              ['100+', 'famílias orientadas'],
+              ['24h', 'retorno médio']
+            ].map(([value, label]) => (
+              <div key={label} style={{
+                padding: '18px 16px',
+                background: 'rgba(255,255,255,0.58)',
+                border: '1px solid rgba(16,24,32,0.08)',
+                borderRadius: '18px'
+              }}>
+                <strong style={{ display: 'block', color: '#101820', fontSize: '28px', lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>{value}</strong>
+                <span style={{ display: 'block', marginTop: '8px', color: '#667085', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 800 }}>{label}</span>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
           style={{ position: 'relative' }}
         >
-          <img
-            src="/images/maisa-perfil.jpg"
-            alt="Maisa Valentim"
-            style={{
-              width: '100%',
-              height: 'clamp(460px, 66vh, 680px)',
-              borderRadius: '28px',
-              objectFit: 'cover',
-              objectPosition: 'center 20%',
-              boxShadow: '0 36px 90px rgba(16, 24, 32, 0.18)'
-            }}
-          />
+          <Simulador />
         </motion.div>
       </div>
     </section>
