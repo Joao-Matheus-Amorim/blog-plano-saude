@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Simulador() {
   const [vidas, setVidas] = useState(1);
   const [tipo, setTipo] = useState('PJ');
-  const [operadora, setOperadora] = useState('Bradesco');
+  const [operadora, setOperadora] = useState('Sem preferência');
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -13,16 +13,23 @@ export default function Simulador() {
   const [erro, setErro] = useState('');
 
   const avancarParaDados = () => {
-    if (vidas < 1) { alert('Informe o número de vidas'); return; }
+    if (vidas < 1) {
+      setErro('Informe o número de vidas para continuar.');
+      return;
+    }
+
+    setErro('');
     setEtapa(2);
   };
 
   const salvarLead = async () => {
     setErro('');
+
     if (!nome || !email || !telefone) {
       setErro('Preencha nome, e-mail e WhatsApp para continuar.');
       return;
     }
+
     if (telefone.replace(/\D/g, '').length < 10) {
       setErro('Informe um WhatsApp válido com DDD.');
       return;
@@ -31,7 +38,7 @@ export default function Simulador() {
     setEnviando(true);
 
     try {
-      const response = await fetch('/api/leads/create', {
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,12 +47,13 @@ export default function Simulador() {
           telefone,
           vidas,
           operadora,
-          mensagem: `Simulação: ${tipo} - ${vidas} vidas - ${operadora}`,
+          mensagem: `Pré-análise: ${tipo} - ${vidas} vidas - ${operadora}`,
+          origem: 'Site - formulário de pré-análise',
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Não foi possível enviar agora. Tente novamente em instantes ou chame no WhatsApp.');
+        throw new Error('Não foi possível enviar agora.');
       }
     } catch (error) {
       console.error('Erro ao salvar lead:', error);
@@ -60,233 +68,166 @@ export default function Simulador() {
 
   const inputStyle = {
     width: '100%',
-    padding: '14px 16px',
-    border: '2px solid #E5E5E5',
-    borderRadius: '12px',
-    fontSize: '16px',
-    background: 'white',
-    transition: 'all 0.3s ease',
+    padding: '15px 16px',
+    border: '1px solid rgba(16, 24, 32, 0.14)',
+    borderRadius: '14px',
+    fontSize: '15px',
+    background: '#FFFFFF',
+    transition: 'all 0.25s ease',
     fontWeight: '500',
-    color: '#2D3748'
+    color: '#101820',
+    outline: 'none'
   };
 
   const labelStyle = {
     display: 'block',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#6B6662',
-    marginBottom: '8px'
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#516070',
+    marginBottom: '8px',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase'
   };
 
   const whatsappMsg = encodeURIComponent(
-    `Olá, Maisa! 👋\nSolicitei uma cotação pelo site:\n\n` +
-    `📋 Tipo: ${tipo}\n` +
-    `👥 Vidas: ${vidas}\n` +
-    `🏥 Operadora preferida: ${operadora}\n\n` +
-    `Pode me enviar a cotação personalizada?`
+    `Olá, Maisa. Solicitei uma pré-análise pelo site.\n\n` +
+    `Tipo: ${tipo}\n` +
+    `Vidas: ${vidas}\n` +
+    `Operadora de interesse: ${operadora}\n\n` +
+    `Pode seguir com a análise do meu perfil?`
   );
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.55 }}
       style={{
-        padding: 'clamp(32px, 5vw, 48px)',
-        background: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '24px',
-        boxShadow: '0 20px 60px rgba(139,126,116,0.15)',
-        maxWidth: '550px',
+        padding: 'clamp(28px, 4.4vw, 42px)',
+        background: '#FFFFFF',
+        borderRadius: '28px',
+        boxShadow: '0 34px 90px rgba(16, 24, 32, 0.16)',
+        maxWidth: '540px',
         margin: '0 auto',
-        border: '1px solid rgba(197,188,181,0.2)'
+        border: '1px solid rgba(16, 24, 32, 0.08)'
       }}
     >
       <AnimatePresence mode="wait">
-
-        {/* ETAPA 1 — Dados da simulação */}
         {etapa === 1 && (
-          <motion.div key="etapa1"
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.4 }}
-          >
-            <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '600', marginBottom: '8px', color: '#8B7E74', fontFamily: "'Playfair Display', serif", textAlign: 'center' }}>
-              📋 Configure Sua Cotação
+          <motion.div key="etapa1" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
+            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+              Pré-análise gratuita
+            </p>
+            <h3 style={{ fontSize: 'clamp(26px, 3vw, 34px)', fontWeight: 600, marginBottom: '10px', color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08 }}>
+              Receba uma recomendação consultiva.
             </h3>
-            <p style={{ textAlign: 'center', color: '#9B9289', fontSize: '14px', marginBottom: '28px' }}>
-              Preencha abaixo e receba sua cotação real em até 24h
+            <p style={{ color: '#667085', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
+              Não exibimos preço automático. Uma consultora avalia o perfil e retorna com as melhores possibilidades.
             </p>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={labelStyle}>Tipo de Plano</label>
-              <select value={tipo} onChange={e => setTipo(e.target.value)} style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'}>
-                <option value="PJ">Pessoa Jurídica (PJ)</option>
-                <option value="Familiar">Plano Familiar</option>
-                <option value="Individual">Individual / MEI</option>
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Tipo de plano</label>
+              <select value={tipo} onChange={e => setTipo(e.target.value)} style={inputStyle}>
+                <option value="PJ">Pessoa Jurídica</option>
+                <option value="Familiar">Familiar</option>
+                <option value="Individual">Individual ou MEI</option>
               </select>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={labelStyle}>Número de Vidas</label>
-              <input type="number" value={vidas} onChange={e => setVidas(Number(e.target.value))}
-                placeholder="Quantas pessoas?" min="1" max="99" style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'} />
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Número de vidas</label>
+              <input type="number" value={vidas} onChange={e => setVidas(Number(e.target.value))} placeholder="Quantas pessoas?" min="1" max="99" style={inputStyle} />
             </div>
 
-            <div style={{ marginBottom: '28px' }}>
-              <label style={labelStyle}>Operadora de Interesse</label>
-              <select value={operadora} onChange={e => setOperadora(e.target.value)} style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'}>
+            <div style={{ marginBottom: '26px' }}>
+              <label style={labelStyle}>Operadora de interesse</label>
+              <select value={operadora} onChange={e => setOperadora(e.target.value)} style={inputStyle}>
+                <option value="Sem preferência">Sem preferência</option>
                 <option value="Bradesco">Bradesco Saúde</option>
                 <option value="Unimed">Unimed</option>
                 <option value="SulAmerica">SulAmérica</option>
                 <option value="Amil">Amil</option>
                 <option value="NotreDame">Notre Dame Intermédica</option>
-                <option value="Sem preferência">Sem preferência — quero a melhor opção</option>
               </select>
             </div>
 
-            <motion.button onClick={avancarParaDados}
-              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '18px', background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: '700', cursor: 'pointer', boxShadow: '0 8px 24px rgba(139,126,116,0.3)' }}>
-              Continuar →
-            </motion.button>
+            <button onClick={avancarParaDados} style={{ width: '100%', padding: '17px', background: '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '14px', fontWeight: '800', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Continuar análise
+            </button>
+
+            {erro && <p style={{ marginTop: '14px', fontSize: '13px', color: '#8A4B3D', lineHeight: 1.5, textAlign: 'center' }}>{erro}</p>}
           </motion.div>
         )}
 
-        {/* ETAPA 2 — Dados de contato */}
         {etapa === 2 && (
-          <motion.div key="etapa2"
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.4 }}
-          >
-            <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '600', marginBottom: '8px', color: '#8B7E74', fontFamily: "'Playfair Display', serif", textAlign: 'center' }}>
-              📞 Onde enviamos sua cotação?
+          <motion.div key="etapa2" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
+            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+              Dados para contato
+            </p>
+            <h3 style={{ fontSize: 'clamp(26px, 3vw, 34px)', fontWeight: 600, marginBottom: '10px', color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08 }}>
+              Para onde enviamos o retorno?
             </h3>
-            <p style={{ textAlign: 'center', color: '#9B9289', fontSize: '14px', marginBottom: '28px' }}>
-              Cotação gratuita e personalizada — sem compromisso
+            <p style={{ color: '#667085', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
+              Usaremos seus dados apenas para contato sobre a pré-análise solicitada.
             </p>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={labelStyle}>Nome Completo *</label>
-              <input type="text" value={nome} onChange={e => setNome(e.target.value)}
-                placeholder="Seu nome" style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'} />
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Nome completo</label>
+              <input type="text" value={nome} onChange={e => setNome(e.target.value)} placeholder="Seu nome" style={inputStyle} />
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={labelStyle}>E-mail *</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="seu@email.com" style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'} />
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>E-mail</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="seu@email.com" style={inputStyle} />
             </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <label style={labelStyle}>WhatsApp *</label>
-              <input type="tel" value={telefone} onChange={e => setTelefone(e.target.value)}
-                placeholder="(21) 99999-9999" style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#A8877A'}
-                onBlur={e => e.target.style.borderColor = '#E5E5E5'} />
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>WhatsApp</label>
+              <input type="tel" value={telefone} onChange={e => setTelefone(e.target.value)} placeholder="(21) 99999-9999" style={inputStyle} />
             </div>
 
-            {/* Aviso LGPD */}
-            <p style={{ fontSize: '12px', color: '#B0AAA5', marginBottom: '24px', lineHeight: 1.5 }}>
-              🔒 Seus dados são protegidos pela LGPD e usados apenas para envio da cotação. Sem spam.
+            <p style={{ fontSize: '12px', color: '#8A94A6', marginBottom: '22px', lineHeight: 1.6 }}>
+              Seus dados são tratados com confidencialidade e usados somente para atendimento da solicitação.
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
-              <motion.button onClick={() => setEtapa(1)}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                style={{ flex: 1, padding: '18px', background: 'rgba(139,126,116,0.1)', color: '#8B7E74', border: '2px solid #E5E5E5', borderRadius: '12px', fontSize: '16px', fontWeight: '700', cursor: 'pointer' }}>
-                ← Voltar
-              </motion.button>
+              <button onClick={() => setEtapa(1)} style={{ flex: 1, padding: '16px', background: '#F4F1ED', color: '#101820', border: '1px solid rgba(16, 24, 32, 0.1)', borderRadius: '999px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                Voltar
+              </button>
 
-              <motion.button onClick={salvarLead} disabled={enviando}
-                whileHover={{ scale: enviando ? 1 : 1.02 }} whileTap={{ scale: enviando ? 1 : 0.98 }}
-                style={{ flex: 2, padding: '18px', background: enviando ? '#9B9289' : 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: '700', cursor: enviando ? 'not-allowed' : 'pointer', boxShadow: '0 8px 24px rgba(139,126,116,0.3)' }}>
-                {enviando ? 'Enviando...' : 'Receber Cotação →'}
-              </motion.button>
+              <button onClick={salvarLead} disabled={enviando} style={{ flex: 2, padding: '16px', background: enviando ? '#8A94A6' : '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '13px', fontWeight: '800', cursor: enviando ? 'not-allowed' : 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                {enviando ? 'Enviando' : 'Solicitar contato'}
+              </button>
             </div>
 
-              {erro && (
-                <p style={{ marginTop: '16px', fontSize: '13px', color: '#9B9289', lineHeight: 1.6, textAlign: 'center' }}>
-                  {erro}
-                </p>
-              )}
+            {erro && <p style={{ marginTop: '14px', fontSize: '13px', color: '#8A4B3D', lineHeight: 1.5, textAlign: 'center' }}>{erro}</p>}
           </motion.div>
         )}
 
-        {/* ETAPA 3 — Confirmação */}
         {etapa === 3 && (
-          <motion.div key="etapa3"
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Ícone de sucesso animado */}
-            <motion.div
-              initial={{ scale: 0 }} animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
-              style={{ textAlign: 'center', marginBottom: '24px' }}
-            >
-              <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 12px 32px rgba(139,126,116,0.3)' }}>
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </div>
-              <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '600', color: '#8B7E74', fontFamily: "'Playfair Display', serif" }}>
-                Cotação Solicitada!
-              </h3>
-            </motion.div>
+          <motion.div key="etapa3" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }}>
+            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+              Solicitação recebida
+            </p>
+            <h3 style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 600, color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08, marginBottom: '16px' }}>
+              Sua pré-análise foi enviada.
+            </h3>
 
-            {/* Card de confirmação */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-              style={{ background: '#FAF8F6', border: '1px solid #EDE9E5', borderRadius: '16px', padding: '20px 24px', marginBottom: '24px' }}
-            >
-              <p style={{ fontSize: '15px', color: '#5A5450', lineHeight: 1.7, margin: 0 }}>
-                Recebemos seu pedido! A <strong>Maisa Valentim</strong> vai analisar seu perfil e enviar uma cotação personalizada com os <strong>melhores planos e preços reais</strong> para você.
+            <div style={{ background: '#F7F3EE', border: '1px solid rgba(16, 24, 32, 0.08)', borderRadius: '20px', padding: '22px', marginBottom: '22px' }}>
+              <p style={{ fontSize: '15px', color: '#4A5565', lineHeight: 1.75, margin: 0 }}>
+                Recebemos seus dados. A consultoria vai avaliar o perfil informado e entrar em contato pelo WhatsApp para orientar os próximos passos.
               </p>
-              <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: '#8B7E74', fontWeight: '600' }}>
-                  <span>⏱</span> Resposta em até 24h úteis
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: '#8B7E74', fontWeight: '600' }}>
-                  <span>🎯</span> Cotação personalizada para seu perfil
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: '#8B7E74', fontWeight: '600' }}>
-                  <span>💸</span> 100% gratuito e sem compromisso
-                </div>
-              </div>
-            </motion.div>
+            </div>
 
-            {/* Botão WhatsApp */}
-            <motion.a
-              href={`https://wa.me/5521977472141?text=${whatsappMsg}`}
-              target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', width: '100%', padding: '18px', background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '17px', fontWeight: '700', cursor: 'pointer', boxShadow: '0 8px 24px rgba(37,211,102,0.3)', textDecoration: 'none' }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              Falar com a Maisa agora
-            </motion.a>
+            <a href={`https://wa.me/5521977472141?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '17px', background: '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '14px', fontWeight: '800', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Falar agora pelo WhatsApp
+            </a>
 
-            <p style={{ marginTop: '16px', fontSize: '13px', color: '#B0AAA5', textAlign: 'center', lineHeight: 1.5 }}>
-              Prefere esperar? Entraremos em contato pelo WhatsApp <strong>{telefone || 'informado'}</strong>
+            <p style={{ marginTop: '16px', fontSize: '13px', color: '#8A94A6', textAlign: 'center', lineHeight: 1.5 }}>
+              Também entraremos em contato pelo número informado.
             </p>
           </motion.div>
         )}
-
       </AnimatePresence>
     </motion.div>
   );
