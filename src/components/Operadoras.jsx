@@ -2,109 +2,85 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 
-
 function Operadoras() {
   const operadoras = [
-    { nome: 'Bradesco Saúde', cor: '#CC092F', destaque: true },
-    { nome: 'Porto Seguro', cor: '#005CA9', destaque: true },
-    { nome: 'SulAmérica', cor: '#003087', corSecundaria: '#FF6B35', destaque: true },
-    { nome: 'Amil', cor: '#7B2CBF', destaque: true },
-    { nome: 'Assim Saúde', cor: '#0075C9', destaque: false },
-    { nome: 'Prevent Senior', cor: '#0066CC', corSecundaria: '#7FD13B', destaque: false }, // AZUL + VERDE
-    { nome: 'Unimed', cor: '#00953B', destaque: false }
+    { nome: 'Bradesco Saúde', destaque: true },
+    { nome: 'Porto Seguro', destaque: true },
+    { nome: 'SulAmérica', destaque: true },
+    { nome: 'Amil', destaque: true },
+    { nome: 'Assim Saúde', destaque: false },
+    { nome: 'Prevent Senior', destaque: false },
+    { nome: 'Unimed', destaque: false }
   ];
 
   return (
-     <><SEO
-      title="Operadoras - Bradesco, Unimed, SulAmérica"
-      description="Trabalhamos com as melhores operadoras de planos de saúde do Brasil: Bradesco, Unimed Rio, SulAmérica, Amil e Notre Dame Intermédica. Compare e escolha."
-      keywords="bradesco saúde, unimed rio, sulamerica, amil, notre dame, operadoras plano saúde, rede credenciada"
-      url="https://consultoriadesaude.vercel.app/operadoras" /><section style={{
-        padding: 'clamp(100px, 12vw, 160px) clamp(40px, 8vw, 100px)',
+    <>
+      <SEO
+        title="Operadoras - Bradesco, Unimed, SulAmérica"
+        description="Trabalhamos com operadoras de planos de saúde como Bradesco, Unimed, SulAmérica, Amil e outras. Solicite uma pré-análise consultiva."
+        keywords="bradesco saúde, unimed rio, sulamerica, amil, operadoras plano saúde, rede credenciada"
+        url="https://consultoriadesaude.vercel.app/operadoras"
+      />
+
+      <section style={{
+        padding: 'clamp(96px, 12vw, 160px) clamp(20px, 7vw, 100px)',
         position: 'relative',
-        background: 'linear-gradient(180deg, #EDE9E3 0%, #F5F2ED 50%, #FAF8F5 100%)'
+        overflow: 'hidden',
+        background: 'linear-gradient(180deg, #FFFCF6 0%, #F5F0E6 52%, #FFFFFF 100%)'
       }}>
-        {/* Orbes flutuantes de fundo */}
-        <motion.div
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0.08, 0.15, 0.08]
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          style={{
-            position: 'absolute',
-            top: '10%',
-            right: '5%',
-            width: '500px',
-            height: '500px',
-            background: 'radial-gradient(circle, rgba(197, 188, 181, 0.2) 0%, transparent 70%)',
-            borderRadius: '50%',
-            filter: 'blur(80px)',
-            pointerEvents: 'none'
-          }} />
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background: 'radial-gradient(circle at 15% 18%, rgba(143,161,133,0.24), transparent 28rem), radial-gradient(circle at 82% 22%, rgba(194,178,128,0.22), transparent 30rem)'
+        }} />
+
+        <span className="water-orb" style={{ width: '92px', height: '92px', right: '9%', top: '18%', opacity: 0.28 }} />
+        <span className="water-orb" style={{ width: '68px', height: '68px', left: '12%', bottom: '18%', opacity: 0.22, animationDelay: '2.2s' }} />
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: 'clamp(60px, 8vw, 100px)' }}
+          transition={{ duration: 0.65 }}
+          style={{
+            textAlign: 'center',
+            marginBottom: 'clamp(56px, 8vw, 92px)',
+            position: 'relative',
+            zIndex: 1
+          }}
         >
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            style={{
-              fontSize: 'clamp(11px, 1.3vw, 13px)',
-              fontWeight: '500',
-              color: '#A8877A',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              marginBottom: 'clamp(20px, 3vw, 28px)'
-            }}
-          >
-            ✦ Trabalho com as melhores
-          </motion.p>
+          <p style={{
+            fontSize: '12px',
+            fontWeight: '900',
+            color: '#6B7C53',
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            marginBottom: 'clamp(18px, 3vw, 26px)'
+          }}>
+            Curadoria de operadoras
+          </p>
 
           <h2 style={{
-            fontSize: 'clamp(40px, 7vw, 72px)',
-            fontWeight: '300',
-            marginBottom: 'clamp(24px, 3vw, 32px)',
+            fontSize: 'clamp(44px, 7vw, 78px)',
+            fontWeight: '600',
+            marginBottom: 'clamp(18px, 3vw, 26px)',
             fontFamily: "'Playfair Display', serif",
-            letterSpacing: '-0.02em',
-            lineHeight: 1.2
+            letterSpacing: '-0.055em',
+            lineHeight: 0.96,
+            color: '#254623'
           }}>
-            <span style={{
-              color: '#8B7E74'
-            }}>
-              Operadoras
-            </span>
-            <br />
-            <span style={{
-              background: 'linear-gradient(135deg, #A8877A 0%, #C5BCB5 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              display: 'inline-block'
-            }}>
-              Parceiras
-            </span>
+            Operadoras parceiras
           </h2>
 
           <p style={{
-            fontSize: 'clamp(14px, 1.7vw, 16px)',
-            color: '#6B6662',
-            maxWidth: '620px',
+            fontSize: 'clamp(14px, 1.7vw, 17px)',
+            color: '#67715F',
+            maxWidth: '650px',
             margin: '0 auto',
-            lineHeight: 2,
-            fontWeight: '300'
+            lineHeight: 1.85
           }}>
-            Clique na operadora de sua preferência para solicitar uma cotação personalizada
+            Selecione uma operadora de interesse ou solicite uma análise sem preferência. A recomendação é feita por atendimento humano.
           </p>
         </motion.div>
 
@@ -112,13 +88,15 @@ function Operadoras() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.7, delay: 0.12 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
-            gap: 'clamp(20px, 3vw, 32px)',
-            maxWidth: '1100px',
-            margin: '0 auto'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 230px), 1fr))',
+            gap: 'clamp(18px, 3vw, 30px)',
+            maxWidth: '1080px',
+            margin: '0 auto',
+            position: 'relative',
+            zIndex: 1
           }}
         >
           {operadoras.map((operadora, index) => (
@@ -126,218 +104,144 @@ function Operadoras() {
               key={operadora.nome}
               to="/contato"
               state={{ operadora: operadora.nome }}
-              style={{
-                textDecoration: 'none'
-              }}
+              style={{ textDecoration: 'none' }}
             >
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                className="float-mirror"
+                initial={{ opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.06 }}
-                whileHover={{
-                  y: -12,
-                  transition: { duration: 0.4 }
-                }}
+                transition={{ duration: 0.45, delay: index * 0.05 }}
+                whileHover={{ y: -8, scale: 1.015 }}
                 style={{
-                  padding: operadora.destaque
-                    ? 'clamp(36px, 5vw, 52px)'
-                    : 'clamp(28px, 4vw, 40px)',
-                  background: operadora.destaque
-                    ? 'rgba(255, 255, 255, 0.95)'
-                    : 'rgba(255, 255, 255, 0.7)',
-                  backdropFilter: 'blur(30px)',
-                  WebkitBackdropFilter: 'blur(30px)',
-                  border: operadora.destaque
-                    ? `2px solid ${operadora.cor}30`
-                    : `1px solid ${operadora.cor}15`,
-                  borderRadius: '20px',
+                  minHeight: operadora.destaque ? '184px' : '150px',
+                  padding: operadora.destaque ? 'clamp(34px, 4vw, 46px)' : 'clamp(28px, 3vw, 36px)',
+                  borderRadius: '26px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minHeight: operadora.destaque ? '180px' : '140px',
-                  boxShadow: operadora.destaque
-                    ? `0 12px 48px ${operadora.cor}20, inset 0 1px 0 rgba(255, 255, 255, 0.8)`
-                    : '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
-                  cursor: 'pointer',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transform: 'perspective(1000px) rotateX(0deg)'
+                  textAlign: 'center',
+                  animationDelay: `${index * 0.35}s`,
+                  transformStyle: 'preserve-3d'
                 }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.boxShadow = operadora.corSecundaria
-                    ? `0 20px 60px ${operadora.cor}30, 0 20px 60px ${operadora.corSecundaria}20, inset 0 1px 0 rgba(255, 255, 255, 0.9)`
-                    : `0 20px 60px ${operadora.cor}30, inset 0 1px 0 rgba(255, 255, 255, 0.9)`;
-                  e.currentTarget.style.borderColor = `${operadora.cor}50`;
-                  e.currentTarget.style.transform = 'perspective(1000px) rotateX(-5deg)';
-                  const shine = e.currentTarget.querySelector('.shine-effect');
-                  if (shine) shine.style.opacity = '1';
-                } }
-                onMouseOut={(e) => {
-                  e.currentTarget.style.boxShadow = operadora.destaque
-                    ? `0 12px 48px ${operadora.cor}20, inset 0 1px 0 rgba(255, 255, 255, 0.8)`
-                    : '0 8px 32px rgba(139, 126, 116, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)';
-                  e.currentTarget.style.borderColor = operadora.destaque
-                    ? `${operadora.cor}30`
-                    : `${operadora.cor}15`;
-                  e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg)';
-                  const shine = e.currentTarget.querySelector('.shine-effect');
-                  if (shine) shine.style.opacity = '0';
-                } }
               >
-                {/* Badge "Destaque" */}
                 {operadora.destaque && (
-                  <div style={{
+                  <span style={{
                     position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    background: operadora.corSecundaria
-                      ? `linear-gradient(135deg, ${operadora.cor}20, ${operadora.corSecundaria}20)`
-                      : `linear-gradient(135deg, ${operadora.cor}20, ${operadora.cor}10)`,
-                    color: operadora.cor,
-                    fontSize: 'clamp(9px, 1.1vw, 10px)',
-                    fontWeight: '600',
-                    padding: '4px 10px',
-                    borderRadius: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    border: `1px solid ${operadora.cor}30`
+                    top: '14px',
+                    right: '14px',
+                    zIndex: 2,
+                    padding: '5px 10px',
+                    borderRadius: '999px',
+                    background: 'rgba(37,70,35,0.08)',
+                    color: '#254623',
+                    border: '1px solid rgba(37,70,35,0.14)',
+                    fontSize: '9px',
+                    fontWeight: 900,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase'
                   }}>
-                    ⭐ Destaque
-                  </div>
+                    Prioridade
+                  </span>
                 )}
 
-                {/* Linha decorativa no topo */}
                 <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '20%',
-                  right: '20%',
-                  height: operadora.destaque ? '4px' : '3px',
-                  background: operadora.corSecundaria
-                    ? `linear-gradient(90deg, transparent, ${operadora.cor}70, ${operadora.corSecundaria}70, transparent)`
-                    : `linear-gradient(90deg, transparent, ${operadora.cor}70, transparent)`,
-                  opacity: operadora.destaque ? 0.8 : 0.6,
-                  borderRadius: '0 0 8px 8px'
-                }} />
+                  position: 'relative',
+                  zIndex: 1,
+                  width: operadora.destaque ? '48px' : '40px',
+                  height: operadora.destaque ? '48px' : '40px',
+                  borderRadius: '50%',
+                  marginBottom: '18px',
+                  background: 'linear-gradient(145deg, #254623, #6B7C53)',
+                  boxShadow: '0 16px 34px rgba(37,70,35,0.22), inset 0 1px 0 rgba(255,255,255,0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '50%',
+                    background: '#FFFCF6',
+                    boxShadow: '0 0 0 6px rgba(255,252,246,0.18)'
+                  }} />
+                </div>
 
                 <span style={{
-                  fontSize: operadora.destaque
-                    ? 'clamp(20px, 2.8vw, 26px)'
-                    : 'clamp(17px, 2.4vw, 22px)',
-                  fontWeight: operadora.destaque ? '500' : '400',
-                  color: operadora.cor,
-                  textAlign: 'center',
-                  letterSpacing: '0.02em',
-                  lineHeight: 1.3,
-                  marginBottom: 'clamp(12px, 2vw, 16px)',
+                  position: 'relative',
+                  zIndex: 1,
+                  fontSize: operadora.destaque ? 'clamp(22px, 2.8vw, 29px)' : 'clamp(18px, 2.3vw, 23px)',
+                  fontWeight: '600',
+                  color: '#254623',
+                  lineHeight: 1.12,
+                  marginBottom: '16px',
                   fontFamily: "'Playfair Display', serif",
-                  ...(operadora.corSecundaria && {
-                    background: `linear-gradient(135deg, ${operadora.cor} 0%, ${operadora.corSecundaria} 100%)`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  })
+                  letterSpacing: '-0.035em'
                 }}>
                   {operadora.nome}
                 </span>
 
                 <span style={{
-                  fontSize: operadora.destaque
-                    ? 'clamp(12px, 1.5vw, 14px)'
-                    : 'clamp(11px, 1.4vw, 13px)',
-                  color: operadora.destaque ? operadora.cor : '#9B9289',
-                  fontWeight: operadora.destaque ? '600' : '500',
+                  position: 'relative',
+                  zIndex: 1,
+                  fontSize: '11px',
+                  color: '#6B7C53',
+                  fontWeight: 900,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  transition: 'all 0.3s ease'
-                }}
-                  className="cta-text"
-                >
-                  {operadora.destaque ? 'Solicitar Agora →' : 'Solicitar →'}
+                  letterSpacing: '0.11em'
+                }}>
+                  Solicitar pré-análise
                 </span>
-
-                {/* Efeito de brilho no hover */}
-                <div
-                  className="shine-effect"
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: operadora.corSecundaria
-                      ? `linear-gradient(135deg, ${operadora.cor}12, ${operadora.corSecundaria}08, transparent)`
-                      : `linear-gradient(135deg, ${operadora.cor}12, transparent)`,
-                    opacity: 0,
-                    transition: 'opacity 0.4s ease',
-                    pointerEvents: 'none'
-                  }} />
               </motion.div>
             </Link>
           ))}
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.55, delay: 0.28 }}
           style={{
             textAlign: 'center',
-            marginTop: 'clamp(60px, 8vw, 100px)'
+            marginTop: 'clamp(54px, 7vw, 88px)',
+            position: 'relative',
+            zIndex: 1
           }}
         >
           <p style={{
             fontSize: 'clamp(13px, 1.6vw, 15px)',
-            color: '#9B9289',
-            fontStyle: 'italic',
-            marginBottom: 'clamp(32px, 4vw, 48px)',
-            fontWeight: '300'
+            color: '#67715F',
+            marginBottom: 'clamp(26px, 4vw, 38px)'
           }}>
-            E muitas outras operadoras credenciadas pela ANS
+            Também avaliamos outras opções conforme cidade, rede desejada e perfil de contratação.
           </p>
 
-          <Link to="/contato" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '12px',
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(20px)',
-            color: '#8B7E74',
-            padding: 'clamp(16px, 2.5vw, 20px) clamp(40px, 5vw, 56px)',
-            fontSize: 'clamp(13px, 1.6vw, 15px)',
-            fontWeight: '500',
-            textDecoration: 'none',
-            borderRadius: '12px',
-            border: '1px solid rgba(197, 188, 181, 0.3)',
-            boxShadow: '0 8px 32px rgba(139, 126, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            letterSpacing: '0.03em',
-            transform: 'perspective(1000px) rotateX(0deg)'
-          }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)';
-              e.currentTarget.style.color = '#FFFFFF';
-              e.currentTarget.style.borderColor = 'transparent';
-              e.currentTarget.style.transform = 'perspective(1000px) rotateX(-4deg) translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 16px 48px rgba(168, 135, 122, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-            } }
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)';
-              e.currentTarget.style.color = '#8B7E74';
-              e.currentTarget.style.borderColor = 'rgba(197, 188, 181, 0.3)';
-              e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 126, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)';
-            } }
+          <Link
+            to="/contato"
+            className="float-mirror"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              color: '#254623',
+              padding: '17px 34px',
+              fontSize: '12px',
+              fontWeight: 900,
+              textDecoration: 'none',
+              borderRadius: '999px',
+              letterSpacing: '0.10em',
+              textTransform: 'uppercase'
+            }}
           >
-            Não encontrou? Fale Comigo
-            <span style={{ fontSize: '16px' }}>→</span>
+            Analisar sem preferência
+            <span style={{ color: '#6B7C53', fontSize: '18px', lineHeight: 1 }}>→</span>
           </Link>
         </motion.div>
-      </section></>
+      </section>
+    </>
   );
 }
 
