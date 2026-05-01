@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { requireAdmin } from '../_lib/security.js';
 
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -27,10 +28,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const admin = requireAdmin(req, res);
+  if (!admin) return;
+
   try {
     const sql = getSqlClient();
     const leads = await sql`
-      SELECT *
+      SELECT id, nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status
       FROM lead
       ORDER BY id DESC
     `;
