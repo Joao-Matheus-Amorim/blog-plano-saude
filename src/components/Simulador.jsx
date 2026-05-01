@@ -69,24 +69,39 @@ export default function Simulador() {
   const inputStyle = {
     width: '100%',
     padding: '15px 16px',
-    border: '1px solid rgba(16, 24, 32, 0.14)',
-    borderRadius: '14px',
+    border: '1px solid rgba(37, 70, 35, 0.16)',
+    borderRadius: '16px',
     fontSize: '15px',
-    background: '#FFFFFF',
+    background: '#FFFCF6',
     transition: 'all 0.25s ease',
-    fontWeight: '500',
-    color: '#101820',
+    fontWeight: '700',
+    color: '#254623',
     outline: 'none'
   };
 
   const labelStyle = {
     display: 'block',
-    fontSize: '12px',
-    fontWeight: '700',
-    color: '#516070',
+    fontSize: '11px',
+    fontWeight: '900',
+    color: '#6B7C53',
     marginBottom: '8px',
-    letterSpacing: '0.08em',
+    letterSpacing: '0.10em',
     textTransform: 'uppercase'
+  };
+
+  const primaryButtonStyle = {
+    width: '100%',
+    padding: '17px',
+    background: '#254623',
+    color: '#FFFCF6',
+    border: '1px solid rgba(255, 252, 246, 0.20)',
+    borderRadius: '999px',
+    fontSize: '13px',
+    fontWeight: '900',
+    cursor: 'pointer',
+    letterSpacing: '0.10em',
+    textTransform: 'uppercase',
+    boxShadow: '0 18px 36px rgba(37, 70, 35, 0.24)'
   };
 
   const whatsappMsg = encodeURIComponent(
@@ -104,24 +119,28 @@ export default function Simulador() {
       transition={{ duration: 0.55 }}
       style={{
         padding: 'clamp(28px, 4.4vw, 42px)',
-        background: '#FFFFFF',
-        borderRadius: '28px',
-        boxShadow: '0 34px 90px rgba(16, 24, 32, 0.16)',
+        background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFCF6 100%)',
+        borderRadius: '30px',
+        boxShadow: '0 34px 90px rgba(24, 53, 31, 0.18)',
         maxWidth: '540px',
         margin: '0 auto',
-        border: '1px solid rgba(16, 24, 32, 0.08)'
+        border: '1px solid rgba(37, 70, 35, 0.16)',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
+      <div style={{ position: 'absolute', inset: '0 0 auto 0', height: '7px', background: 'linear-gradient(90deg, #254623, #8FA185, #C2B280)' }} />
+
       <AnimatePresence mode="wait">
         {etapa === 1 && (
           <motion.div key="etapa1" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
-            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+            <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Pré-análise gratuita
             </p>
-            <h3 style={{ fontSize: 'clamp(26px, 3vw, 34px)', fontWeight: 600, marginBottom: '10px', color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08 }}>
+            <h3 style={{ fontSize: 'clamp(27px, 3vw, 36px)', fontWeight: 600, marginBottom: '10px', color: '#254623', fontFamily: "'Playfair Display', serif", lineHeight: 1.02 }}>
               Receba uma recomendação consultiva.
             </h3>
-            <p style={{ color: '#667085', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
+            <p style={{ color: '#67715F', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
               Não exibimos preço automático. Uma consultora avalia o perfil e retorna com as melhores possibilidades.
             </p>
 
@@ -151,7 +170,7 @@ export default function Simulador() {
               </select>
             </div>
 
-            <button onClick={avancarParaDados} style={{ width: '100%', padding: '17px', background: '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '14px', fontWeight: '800', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <button onClick={avancarParaDados} style={primaryButtonStyle}>
               Continuar análise
             </button>
 
@@ -161,13 +180,13 @@ export default function Simulador() {
 
         {etapa === 2 && (
           <motion.div key="etapa2" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.3 }}>
-            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+            <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Dados para contato
             </p>
-            <h3 style={{ fontSize: 'clamp(26px, 3vw, 34px)', fontWeight: 600, marginBottom: '10px', color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08 }}>
+            <h3 style={{ fontSize: 'clamp(27px, 3vw, 36px)', fontWeight: 600, marginBottom: '10px', color: '#254623', fontFamily: "'Playfair Display', serif", lineHeight: 1.02 }}>
               Para onde enviamos o retorno?
             </h3>
-            <p style={{ color: '#667085', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
+            <p style={{ color: '#67715F', fontSize: '14px', lineHeight: 1.7, marginBottom: '28px' }}>
               Usaremos seus dados apenas para contato sobre a pré-análise solicitada.
             </p>
 
@@ -186,16 +205,16 @@ export default function Simulador() {
               <input type="tel" value={telefone} onChange={e => setTelefone(e.target.value)} placeholder="(21) 99999-9999" style={inputStyle} />
             </div>
 
-            <p style={{ fontSize: '12px', color: '#8A94A6', marginBottom: '22px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '12px', color: '#7B846F', marginBottom: '22px', lineHeight: 1.6 }}>
               Seus dados são tratados com confidencialidade e usados somente para atendimento da solicitação.
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => setEtapa(1)} style={{ flex: 1, padding: '16px', background: '#F4F1ED', color: '#101820', border: '1px solid rgba(16, 24, 32, 0.1)', borderRadius: '999px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <button onClick={() => setEtapa(1)} style={{ flex: 1, padding: '16px', background: '#F5F0E6', color: '#254623', border: '1px solid rgba(37, 70, 35, 0.16)', borderRadius: '999px', fontSize: '13px', fontWeight: '900', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Voltar
               </button>
 
-              <button onClick={salvarLead} disabled={enviando} style={{ flex: 2, padding: '16px', background: enviando ? '#8A94A6' : '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '13px', fontWeight: '800', cursor: enviando ? 'not-allowed' : 'pointer', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <button onClick={salvarLead} disabled={enviando} style={{ ...primaryButtonStyle, flex: 2, background: enviando ? '#8FA185' : '#254623' }}>
                 {enviando ? 'Enviando' : 'Solicitar contato'}
               </button>
             </div>
@@ -206,24 +225,24 @@ export default function Simulador() {
 
         {etapa === 3 && (
           <motion.div key="etapa3" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }}>
-            <p style={{ fontSize: '12px', color: '#8A6F5A', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
+            <p style={{ fontSize: '11px', color: '#6B7C53', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Solicitação recebida
             </p>
-            <h3 style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 600, color: '#101820', fontFamily: "'Playfair Display', serif", lineHeight: 1.08, marginBottom: '16px' }}>
+            <h3 style={{ fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 600, color: '#254623', fontFamily: "'Playfair Display', serif", lineHeight: 1.04, marginBottom: '16px' }}>
               Sua pré-análise foi enviada.
             </h3>
 
-            <div style={{ background: '#F7F3EE', border: '1px solid rgba(16, 24, 32, 0.08)', borderRadius: '20px', padding: '22px', marginBottom: '22px' }}>
-              <p style={{ fontSize: '15px', color: '#4A5565', lineHeight: 1.75, margin: 0 }}>
+            <div style={{ background: '#F5F0E6', border: '1px solid rgba(37, 70, 35, 0.12)', borderRadius: '20px', padding: '22px', marginBottom: '22px' }}>
+              <p style={{ fontSize: '15px', color: '#4C5A45', lineHeight: 1.75, margin: 0 }}>
                 Recebemos seus dados. A consultoria vai avaliar o perfil informado e entrar em contato pelo WhatsApp para orientar os próximos passos.
               </p>
             </div>
 
-            <a href={`https://wa.me/5521977472141?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '17px', background: '#101820', color: 'white', border: 'none', borderRadius: '999px', fontSize: '14px', fontWeight: '800', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <a href={`https://wa.me/5521977472141?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer" style={{ ...primaryButtonStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
               Falar agora pelo WhatsApp
             </a>
 
-            <p style={{ marginTop: '16px', fontSize: '13px', color: '#8A94A6', textAlign: 'center', lineHeight: 1.5 }}>
+            <p style={{ marginTop: '16px', fontSize: '13px', color: '#7B846F', textAlign: 'center', lineHeight: 1.5 }}>
               Também entraremos em contato pelo número informado.
             </p>
           </motion.div>
