@@ -8,418 +8,96 @@ function Hero() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 'clamp(100px, 12vh, 140px) clamp(40px, 8vw, 100px)',
+      padding: 'clamp(110px, 12vh, 150px) clamp(24px, 7vw, 100px)',
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(180deg, #FAF8F5 0%, #F5F2ED 50%, #EDE9E3 100%)'
+      background: '#F6F1EA'
     }}>
-      {/* Orbes fluidos gradientes */}
-      <motion.div
-        animate={{
-          y: [0, -40, 0],
-          x: [0, 30, 0],
-          scale: [1, 1.1, 1],
-          opacity: [0.15, 0.25, 0.15]
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        style={{
-          position: 'absolute',
-          top: '15%',
-          right: '8%',
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(168, 135, 122, 0.3) 0%, rgba(216, 194, 178, 0.15) 40%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
-          pointerEvents: 'none'
-        }}
-      />
-
-      <motion.div
-        animate={{
-          y: [0, 50, 0],
-          x: [0, -40, 0],
-          scale: [1, 1.15, 1],
-          opacity: [0.12, 0.22, 0.12]
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        style={{
-          position: 'absolute',
-          bottom: '10%',
-          left: '5%',
-          width: '700px',
-          height: '700px',
-          background: 'radial-gradient(circle, rgba(197, 188, 181, 0.25) 0%, rgba(226, 217, 207, 0.12) 40%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'blur(90px)',
-          pointerEvents: 'none'
-        }}
-      />
-
       <div style={{
-        maxWidth: '1400px',
+        maxWidth: '1280px',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))',
-        gap: 'clamp(60px, 10vw, 120px)',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))',
+        gap: 'clamp(48px, 8vw, 96px)',
         alignItems: 'center',
         position: 'relative',
         zIndex: 1
       }}>
-        
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.7 }}
-            style={{
-              display: 'inline-block',
-              padding: '12px 28px',
-              background: 'rgba(197, 188, 181, 0.12)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(168, 135, 122, 0.2)',
-              borderRadius: '100px',
-              marginBottom: 'clamp(28px, 4vw, 40px)',
-              fontSize: 'clamp(11px, 1.3vw, 13px)',
-              fontWeight: '500',
-              color: '#A8877A',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              boxShadow: '0 4px 20px rgba(168, 135, 122, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
-            }}
-          >
-            ✦ Consultoria Premium
-          </motion.div>
+          <p style={{
+            color: '#8A6F5A',
+            fontSize: '12px',
+            fontWeight: '700',
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            marginBottom: '28px'
+          }}>
+            Consultoria privada em planos de saúde
+          </p>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            style={{ 
-              fontSize: 'clamp(52px, 9vw, 110px)', 
-              fontWeight: '300',
-              marginBottom: 'clamp(28px, 4vw, 40px)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.04em',
-              fontFamily: "'Playfair Display', serif",
-              background: 'linear-gradient(135deg, #8B7E74 0%, #C5BCB5 50%, #A8877A 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 2px 8px rgba(168, 135, 122, 0.15))'
-            }}
-          >
-            Maisa<br/>Valentim
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.7 }}
-            style={{ 
-              fontSize: 'clamp(16px, 2vw, 19px)', 
-              marginBottom: 'clamp(48px, 7vw, 64px)',
-              lineHeight: 2,
-              color: '#6B6662',
-              maxWidth: '580px',
-              fontWeight: '300',
-              letterSpacing: '0.01em'
-            }}
-          >
-            Orientação especializada para encontrar o plano de saúde perfeito. 
-            Atendimento humanizado com suporte vitalício.
-          </motion.p>
+          <h1 style={{
+            fontSize: 'clamp(46px, 7vw, 88px)',
+            fontWeight: '600',
+            marginBottom: '30px',
+            lineHeight: 0.98,
+            letterSpacing: '-0.055em',
+            fontFamily: "'Playfair Display', serif",
+            color: '#101820',
+            maxWidth: '820px'
+          }}>
+            Planos de saúde escolhidos com critério, não no impulso.
+          </h1>
 
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.7 }}
-          >
-            <Link to="/contato" style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '14px',
-              fontSize: 'clamp(14px, 1.7vw, 16px)',
-              fontWeight: '500',
-              textDecoration: 'none',
-              padding: 'clamp(18px, 2.8vw, 24px) clamp(44px, 5.5vw, 60px)',
-              background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
-              color: '#FFFFFF',
-              borderRadius: '12px',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              boxShadow: '0 12px 40px rgba(168, 135, 122, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-              position: 'relative',
-              overflow: 'hidden',
-              transform: 'perspective(1000px) rotateX(0deg)'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'perspective(1000px) rotateX(-6deg) translateY(-6px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 20px 60px rgba(168, 135, 122, 0.4), 0 0 40px rgba(168, 135, 122, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.15) inset';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 12px 40px rgba(168, 135, 122, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
-            }}
-            >
-              Solicitar Cotação
-              <span style={{ fontSize: '18px', fontWeight: '300' }}>→</span>
-            </Link>
-          </motion.div>
+          <p style={{
+            fontSize: 'clamp(16px, 2vw, 20px)',
+            marginBottom: '42px',
+            lineHeight: 1.75,
+            color: '#4A5565',
+            maxWidth: '660px'
+          }}>
+            Envie seus dados para uma pré-análise. A cotação é preparada por uma consultora, considerando perfil, operadoras e regras comerciais vigentes.
+          </p>
+
+          <Link to="/contato" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '14px',
+            fontWeight: '700',
+            textDecoration: 'none',
+            padding: '18px 34px',
+            background: '#101820',
+            color: '#FFFFFF',
+            borderRadius: '999px',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase'
+          }}>
+            Solicitar pré-análise
+          </Link>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          style={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          style={{ position: 'relative' }}
         >
-          <div className="reflect-3d" style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '500px'
-          }}>
-            {/* Frame 3D glassmorphism fluido */}
-            <motion.div
-              animate={{
-                rotate: [0, 5, 0, -5, 0],
-                scale: [1, 1.02, 1]
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              style={{
-                position: 'absolute',
-                top: '-20px',
-                right: '-20px',
-                width: 'calc(100% + 40px)',
-                height: 'calc(100% + 40px)',
-                background: 'linear-gradient(135deg, rgba(197, 188, 181, 0.15), rgba(226, 217, 207, 0.1))',
-                backdropFilter: 'blur(30px)',
-                borderRadius: '32px',
-                border: '1px solid rgba(197, 188, 181, 0.2)',
-                zIndex: 0,
-                boxShadow: '0 16px 48px rgba(139, 126, 116, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
-              }}
-            />
-            
-            <motion.img 
-  whileHover={{ scale: 1.02 }}
-  transition={{ duration: 0.4 }}
-  src="/images/maisa-perfil.jpg"  // ou maisa-hero.jpg
-  alt="Maisa Valentim"
-  style={{
-    width: '100%',
-    height: 'clamp(450px, 65vh, 650px)',
-    borderRadius: '24px',
-    boxShadow: '0 24px 72px rgba(139, 126, 116, 0.2), 0 0 60px rgba(168, 135, 122, 0.1)',
-    position: 'relative',
-    zIndex: 1,
-    border: '1px solid rgba(197, 188, 181, 0.15)',
-    objectFit: 'cover',
-    objectPosition: 'center 20%'
-  }}
-/>
-
-
-            {/* Badge 1: Empresas Atendidas (TOPO DIREITO) - 3D OPACO */}
-            <motion.div
-              initial={{ opacity: 0, x: 25, rotateY: -15 }}
-              animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ delay: 1, duration: 0.8 }}
-              whileHover={{ 
-                scale: 1.08, 
-                x: 6,
-                rotateY: 8,
-                rotateX: -5
-              }}
-              style={{
-                position: 'absolute',
-                top: 'clamp(20px, 3vw, 32px)',
-                right: 'clamp(-28px, -4vw, -36px)',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 248, 245, 0.95) 100%)',
-                backdropFilter: 'blur(40px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-                padding: 'clamp(20px, 3vw, 28px) clamp(32px, 4.5vw, 44px)',
-                borderRadius: '20px',
-                border: '2px solid rgba(139, 126, 116, 0.15)',
-                boxShadow: `
-                  0 20px 60px rgba(139, 126, 116, 0.35),
-                  0 8px 24px rgba(0, 0, 0, 0.12),
-                  inset 0 2px 4px rgba(255, 255, 255, 0.9),
-                  inset 0 -2px 8px rgba(139, 126, 116, 0.08)
-                `,
-                zIndex: 2,
-                whiteSpace: 'nowrap',
-                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                textAlign: 'center',
-                transform: 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              {/* Reflexo superior espelhado */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '50%',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
-                borderRadius: '20px 20px 0 0',
-                pointerEvents: 'none',
-                zIndex: 1
-              }}/>
-
-              {/* Reflexo inferior */}
-              <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '40%',
-                background: 'linear-gradient(0deg, rgba(139, 126, 116, 0.08) 0%, transparent 100%)',
-                borderRadius: '0 0 20px 20px',
-                pointerEvents: 'none',
-                zIndex: 1
-              }}/>
-
-              {/* Conteúdo */}
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <div style={{
-                  fontSize: 'clamp(30px, 4.2vw, 40px)',
-                  fontWeight: '300',
-                  background: 'linear-gradient(135deg, #8B7E74 0%, #6B6662 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  marginBottom: '6px',
-                  fontFamily: "'Playfair Display', serif",
-                  letterSpacing: '-0.02em',
-                  textShadow: '0 2px 8px rgba(139, 126, 116, 0.15)'
-                }}>
-                  50+
-                </div>
-                <div style={{
-                  fontSize: 'clamp(11px, 1.3vw, 13px)',
-                  color: '#8B7E74',
-                  fontWeight: '600',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase'
-                }}>
-                  Empresas Atendidas
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Badge 2: Famílias Beneficiadas (INFERIOR ESQUERDO) - 3D OPACO */}
-            <motion.div
-              initial={{ opacity: 0, x: -25, rotateY: 15 }}
-              animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              whileHover={{ 
-                scale: 1.05, 
-                x: -6,
-                rotateY: -8,
-                rotateX: -5
-              }}
-              style={{
-                position: 'absolute',
-                bottom: 'clamp(20px, 3vw, 32px)',
-                left: 'clamp(-28px, -4vw, -36px)',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 248, 245, 0.95) 100%)',
-                backdropFilter: 'blur(40px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-                padding: 'clamp(22px, 3.2vw, 32px) clamp(36px, 5vw, 52px)',
-                borderRadius: '22px',
-                border: '2px solid rgba(168, 135, 122, 0.15)',
-                boxShadow: `
-                  0 20px 60px rgba(168, 135, 122, 0.4),
-                  0 8px 24px rgba(0, 0, 0, 0.12),
-                  inset 0 2px 4px rgba(255, 255, 255, 0.9),
-                  inset 0 -2px 8px rgba(168, 135, 122, 0.08)
-                `,
-                zIndex: 2,
-                whiteSpace: 'nowrap',
-                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                textAlign: 'center',
-                transform: 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              {/* Reflexo superior espelhado */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '50%',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
-                borderRadius: '22px 22px 0 0',
-                pointerEvents: 'none',
-                zIndex: 1
-              }}/>
-
-              {/* Reflexo inferior */}
-              <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '40%',
-                background: 'linear-gradient(0deg, rgba(168, 135, 122, 0.08) 0%, transparent 100%)',
-                borderRadius: '0 0 22px 22px',
-                pointerEvents: 'none',
-                zIndex: 1
-              }}/>
-
-              {/* Conteúdo */}
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <div style={{
-                  fontSize: 'clamp(32px, 4.5vw, 44px)',
-                  fontWeight: '300',
-                  background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  marginBottom: '6px',
-                  fontFamily: "'Playfair Display', serif",
-                  letterSpacing: '-0.02em',
-                  textShadow: '0 2px 8px rgba(168, 135, 122, 0.15)'
-                }}>
-                  100+
-                </div>
-                <div style={{
-                  fontSize: 'clamp(11px, 1.3vw, 13px)',
-                  color: '#A8877A',
-                  fontWeight: '600',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase'
-                }}>
-                  Famílias Beneficiadas
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <img
+            src="/images/maisa-perfil.jpg"
+            alt="Maisa Valentim"
+            style={{
+              width: '100%',
+              height: 'clamp(460px, 66vh, 680px)',
+              borderRadius: '28px',
+              objectFit: 'cover',
+              objectPosition: 'center 20%',
+              boxShadow: '0 36px 90px rgba(16, 24, 32, 0.18)'
+            }}
+          />
         </motion.div>
       </div>
     </section>
