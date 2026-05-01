@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { requireAdmin } from '../_lib/security.js';
 
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -26,6 +27,9 @@ export default async function handler(req, res) {
   if (req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  const admin = requireAdmin(req, res);
+  if (!admin) return;
 
   const { id } = req.query;
 
