@@ -17,15 +17,21 @@
 
 :root {
   /* Cores do projeto (tema clean/saúde) */
-  --color-primary: #2563eb;
-  --color-secondary: #1e40af;
+  --color-primary: #1d4ed8;
+  --color-secondary: #1e3a8a;
   --color-accent: #A8877A;
   --color-bg-light: #FAF8F5;
   --color-bg-cream: #F0ECE6;
   --color-text-dark: #2D3748;
   --color-text-gray: #6B6662;
   --color-border: rgba(197, 188, 181, 0.2);
+  --surface-elevated: #ffffff;
+  --surface-subtle: #f8fafc;
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --radius-lg: 16px;
+  --radius-md: 12px;
 }
+
 
 /* ========================================
    📄 BODY E HTML
@@ -105,12 +111,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Transições ultra suaves para elementos interativos */
 a, button, input, textarea, select {
-  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Suaviza hover em links e botões */
 a:hover, button:hover {
-  transition-duration: 0.3s;
+  transition-duration: 0.2s;
 }
 
 /* Performance otimizada para imagens */
@@ -173,6 +178,26 @@ img {
 /* ========================================
    📱 RESPONSIVIDADE
    ======================================== */
+
+
+.card-clean {
+  background: var(--surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.section-spacing {
+  padding: clamp(3rem, 5vw, 5rem) 0;
+}
+
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  font-weight: 700;
+}
 
 /* Otimização para mobile */
 @media (max-width: 768px) {
