@@ -1,23 +1,49 @@
 import { useState } from 'react';
 
 export default function AdminLogin({ onLoginSuccess }) {
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState(false);
+  const [erro, setErro] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // ✅ DEFINA SUA SENHA AQUI (altere para algo seguro!)
-  const SENHA_CORRETA = 'maisa2025';
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
-    if (senha === SENHA_CORRETA) {
-      localStorage.setItem('adminAutenticado', 'true');
-      onLoginSuccess();
-    } else {
-      setErro(true);
+    setErro('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: senha }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.token) {
+        throw new Error(data.error || 'Credenciais inválidas.');
+      }
+
+      localStorage.setItem('adminToken', data.token);
+      onLoginSuccess(data.token);
+    } catch (error) {
+      setErro(error.message || 'Não foi possível entrar.');
       setSenha('');
-      setTimeout(() => setErro(false), 3000);
+      setTimeout(() => setErro(''), 4000);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const inputBaseStyle = {
+    width: '100%',
+    padding: '14px 16px',
+    fontSize: '15px',
+    border: erro ? '2px solid #E74C3C' : '2px solid rgba(197, 188, 181, 0.3)',
+    borderRadius: '10px',
+    outline: 'none',
+    transition: 'all 0.3s ease',
+    boxSizing: 'border-box',
   };
 
   return (
@@ -38,19 +64,11 @@ export default function AdminLogin({ onLoginSuccess }) {
         boxShadow: '0 20px 60px rgba(139, 126, 116, 0.15)',
         border: '1px solid rgba(197, 188, 181, 0.2)'
       }}>
-        {/* Logo */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '32px'
-        }}>
-          <img 
-            src="/logo.png" 
-            alt="Logo" 
-            style={{ 
-              width: '60px', 
-              height: '60px',
-              marginBottom: '16px'
-            }} 
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img
+            src="/logo.png"
+            alt="Logo"
+            style={{ width: '60px', height: '60px', marginBottom: '16px' }}
           />
           <h2 style={{
             fontSize: 'clamp(24px, 4vw, 32px)',
@@ -61,17 +79,38 @@ export default function AdminLogin({ onLoginSuccess }) {
           }}>
             Área Admin
           </h2>
-          <p style={{
-            fontSize: '14px',
-            color: '#9B9289',
-            margin: 0
-          }}>
-            Digite a senha para acessar
+          <p style={{ fontSize: '14px', color: '#9B9289', margin: 0 }}>
+            Entre com seu email e senha de administrador
           </p>
         </div>
 
-        {/* Formulário */}
         <form onSubmit={handleLogin}>
+          <div style={{ marginBottom: '18px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '14px',
+              color: '#6B6662',
+              marginBottom: '8px',
+              fontWeight: '500'
+            }}>
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@email.com"
+              autoComplete="username"
+              required
+              style={inputBaseStyle}
+              onFocus={(e) => e.target.style.borderColor = '#A8877A'}
+              onBlur={(e) => {
+                if (!erro) e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)';
+              }}
+              autoFocus
+            />
+          </div>
+
           <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
@@ -87,21 +126,13 @@ export default function AdminLogin({ onLoginSuccess }) {
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="Digite sua senha"
-              style={{
-                width: '100%',
-                padding: '14px 16px',
-                fontSize: '15px',
-                border: erro ? '2px solid #E74C3C' : '2px solid rgba(197, 188, 181, 0.3)',
-                borderRadius: '10px',
-                outline: 'none',
-                transition: 'all 0.3s ease',
-                fontFamily: 'monospace'
-              }}
+              autoComplete="current-password"
+              required
+              style={{ ...inputBaseStyle, fontFamily: 'monospace' }}
               onFocus={(e) => e.target.style.borderColor = '#A8877A'}
               onBlur={(e) => {
                 if (!erro) e.target.style.borderColor = 'rgba(197, 188, 181, 0.3)';
               }}
-              autoFocus
             />
             {erro && (
               <p style={{
@@ -110,40 +141,34 @@ export default function AdminLogin({ onLoginSuccess }) {
                 marginTop: '8px',
                 marginBottom: 0
               }}>
-                ❌ Senha incorreta. Tente novamente.
+                ❌ {erro}
               </p>
             )}
           </div>
 
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: '100%',
               padding: '16px',
-              background: 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
+              background: loading
+                ? 'linear-gradient(135deg, #C5BCB5 0%, #9B9289 100%)'
+                : 'linear-gradient(135deg, #A8877A 0%, #8B7E74 100%)',
               color: 'white',
               border: 'none',
               borderRadius: '10px',
               fontSize: '16px',
               fontWeight: '600',
-              cursor: 'pointer',
+              cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.3s ease',
               boxShadow: '0 4px 16px rgba(168, 135, 122, 0.3)'
             }}
-            onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 8px 24px rgba(168, 135, 122, 0.4)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 4px 16px rgba(168, 135, 122, 0.3)';
-            }}
           >
-            Entrar 🔒
+            {loading ? 'Entrando...' : 'Entrar 🔒'}
           </button>
         </form>
 
-        {/* Aviso */}
         <p style={{
           fontSize: '12px',
           color: '#C5BCB5',
