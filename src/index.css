@@ -60,6 +60,20 @@ body::before {
     linear-gradient(90deg, rgba(37, 70, 35, 0.025) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), transparent 72%);
+  animation: ambient-grid 24s ease-in-out infinite;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(143,161,133,0.18), transparent 28%),
+    radial-gradient(circle at 76% 18%, rgba(194,178,128,0.15), transparent 30%),
+    radial-gradient(circle at 44% 82%, rgba(37,70,35,0.08), transparent 34%);
+  animation: ambient-water 28s ease-in-out infinite;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -147,6 +161,18 @@ img {
   -webkit-backdrop-filter: blur(24px) saturate(155%);
   overflow: hidden;
   isolation: isolate;
+  transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(.16,1,.3,1), box-shadow 650ms cubic-bezier(.16,1,.3,1), border-color 650ms ease;
+}
+
+.float-mirror:hover {
+  transform: translate3d(0, -8px, 0) rotateX(1.3deg) rotateY(-1.1deg);
+  border-color: rgba(194, 178, 128, 0.46);
+  box-shadow:
+    0 46px 110px rgba(24, 53, 31, 0.22),
+    0 18px 42px rgba(24, 53, 31, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 -28px 60px rgba(37,70,35,0.045);
 }
 
 .float-mirror::before {
@@ -155,10 +181,10 @@ img {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(115deg, rgba(255,255,255,0.48) 0%, transparent 28%, rgba(255,255,255,0.22) 54%, transparent 72%),
-    radial-gradient(circle at 72% 14%, rgba(143,161,133,0.18), transparent 26%);
-  transform: translateX(-18%);
-  animation: mirror-shimmer 8.5s ease-in-out infinite;
+    linear-gradient(115deg, rgba(255,255,255,0.52) 0%, transparent 26%, rgba(255,255,255,0.26) 52%, transparent 72%),
+    radial-gradient(circle at 72% 14%, rgba(143,161,133,0.20), transparent 26%);
+  transform: translateX(-24%) skewX(-8deg);
+  animation: mirror-shimmer 7.2s cubic-bezier(.4,0,.2,1) infinite;
 }
 
 .float-mirror::after {
@@ -172,16 +198,31 @@ img {
   background: radial-gradient(ellipse at center, rgba(24, 53, 31, 0.26), rgba(24, 53, 31, 0.08) 52%, transparent 72%);
   filter: blur(12px);
   z-index: -2;
-  animation: shadow-water 6.5s ease-in-out infinite;
+  animation: shadow-water 5.8s ease-in-out infinite;
 }
 
 .float-gentle {
-  animation: float-gentle 7s ease-in-out infinite;
+  animation: float-gentle 6.8s ease-in-out infinite;
 }
 
 .float-gentle-slow {
-  animation: float-gentle 9s ease-in-out infinite;
+  animation: float-gentle 8.8s ease-in-out infinite;
 }
+
+.float-tilt {
+  animation: float-tilt 9.5s ease-in-out infinite;
+}
+
+.motion-reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scale(0.985);
+  animation: reveal-up 900ms cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.motion-reveal.delay-1 { animation-delay: 120ms; }
+.motion-reveal.delay-2 { animation-delay: 240ms; }
+.motion-reveal.delay-3 { animation-delay: 360ms; }
+.motion-reveal.delay-4 { animation-delay: 480ms; }
 
 .water-orb {
   position: absolute;
@@ -193,27 +234,72 @@ img {
     linear-gradient(135deg, rgba(143,161,133,0.30), rgba(37,70,35,0.10));
   border: 1px solid rgba(255,255,255,0.44);
   box-shadow: inset 0 1px 12px rgba(255,255,255,0.35), 0 24px 70px rgba(37,70,35,0.14);
-  animation: water-drift 10s ease-in-out infinite;
+  animation: water-drift 9s ease-in-out infinite;
+}
+
+.magnetic-cta {
+  position: relative;
+  overflow: hidden;
+  transition: transform 360ms cubic-bezier(.16,1,.3,1), box-shadow 360ms ease, background 360ms ease;
+}
+
+.magnetic-cta:hover {
+  transform: translate3d(0, -3px, 0) scale(1.012);
+}
+
+.magnetic-cta::after {
+  content: '';
+  position: absolute;
+  inset: -80% -30%;
+  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%);
+  transform: translateX(-60%) rotate(12deg);
+  transition: transform 700ms cubic-bezier(.16,1,.3,1);
+}
+
+.magnetic-cta:hover::after {
+  transform: translateX(60%) rotate(12deg);
+}
+
+@keyframes ambient-grid {
+  0%, 100% { transform: translate3d(0,0,0); opacity: 1; }
+  50% { transform: translate3d(-12px, 10px, 0); opacity: 0.72; }
+}
+
+@keyframes ambient-water {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  33% { transform: translate3d(20px,-16px,0) scale(1.03); }
+  66% { transform: translate3d(-18px,14px,0) scale(0.985); }
 }
 
 @keyframes mirror-shimmer {
-  0%, 100% { transform: translateX(-20%) skewX(-8deg); opacity: 0.58; }
-  50% { transform: translateX(16%) skewX(-8deg); opacity: 0.86; }
+  0%, 100% { transform: translateX(-24%) skewX(-8deg); opacity: 0.50; }
+  45% { transform: translateX(18%) skewX(-8deg); opacity: 0.90; }
+  70% { transform: translateX(8%) skewX(-8deg); opacity: 0.62; }
 }
 
 @keyframes shadow-water {
-  0%, 100% { transform: scaleX(0.92); opacity: 0.54; }
-  50% { transform: scaleX(1.08); opacity: 0.34; }
+  0%, 100% { transform: scaleX(0.90) translateY(0); opacity: 0.52; }
+  50% { transform: scaleX(1.12) translateY(4px); opacity: 0.30; }
 }
 
 @keyframes float-gentle {
   0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -10px, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
+}
+
+@keyframes float-tilt {
+  0%, 100% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+  50% { transform: translate3d(0, -10px, 0) rotateX(1.2deg) rotateY(-1deg); }
 }
 
 @keyframes water-drift {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(14px, -18px, 0) scale(1.05); }
+  38% { transform: translate3d(16px, -20px, 0) scale(1.055); }
+  70% { transform: translate3d(-10px, -8px, 0) scale(0.985); }
+}
+
+@keyframes reveal-up {
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
 }
 
 *:focus-visible {
@@ -246,6 +332,10 @@ select:focus {
     right: 16%;
     bottom: -22px;
     height: 26px;
+  }
+
+  .float-mirror:hover {
+    transform: translate3d(0, -4px, 0);
   }
 }
 
