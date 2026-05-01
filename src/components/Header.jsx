@@ -5,284 +5,209 @@ export default function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const links = [
+    { to: '/', label: 'Início' },
+    { to: '/sobre', label: 'Sobre' },
+    { to: '/operadoras', label: 'Operadoras' },
+    { to: '/depoimentos', label: 'Depoimentos' },
+    { to: '/blog', label: 'Blog' },
+    { to: '/faq', label: 'FAQ' }
+  ];
+
   return (
     <>
       <header style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(197, 188, 181, 0.2)',
+        background: 'rgba(246, 241, 234, 0.84)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        borderBottom: '1px solid rgba(16, 24, 32, 0.08)',
         position: 'sticky',
         top: 0,
-        zIndex: 1000,
-        transition: 'all 0.3s ease',
-        boxShadow: '0 2px 20px rgba(0, 0, 0, 0.03)'
+        zIndex: 1000
       }}>
         <div style={{
-          maxWidth: '1400px',
+          maxWidth: '1280px',
           margin: '0 auto',
-          padding: 'clamp(16px, 2.5vw, 24px) clamp(20px, 5vw, 60px)',
+          padding: '16px clamp(20px, 5vw, 64px)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '20px'
+          gap: '24px'
         }}>
-          {/* ✅ LOGO + NOME */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             onClick={() => setMobileMenuOpen(false)}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'clamp(12px, 2vw, 16px)',
+              gap: '13px',
               textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              flex: '1'
+              minWidth: 'fit-content'
             }}
           >
-            <img 
-              src="/logo.png" 
-              alt="Maisa Valentim Logo" 
-              style={{ 
-                width: 'clamp(40px, 8vw, 56px)',
-                height: 'clamp(40px, 8vw, 56px)',
-                objectFit: 'contain',
-                transition: 'all 0.3s ease'
-              }} 
+            <img
+              src="/logo.png"
+              alt="Maisa Valentim"
+              style={{
+                width: '44px',
+                height: '44px',
+                objectFit: 'contain'
+              }}
             />
-            
             <div>
-              <h1 style={{
-                fontSize: 'clamp(18px, 4vw, 28px)',
-                fontWeight: '400',
-                background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                margin: 0,
-                lineHeight: 1.2,
+              <strong style={{
+                display: 'block',
+                fontSize: '18px',
+                lineHeight: 1,
+                color: '#101820',
                 letterSpacing: '-0.02em',
-                fontFamily: "'Playfair Display', serif"
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 700
               }}>
                 Maisa Valentim
-              </h1>
-              <p style={{
-                fontSize: 'clamp(9px, 1.8vw, 12px)',
-                color: '#9B9289',
-                margin: 0,
-                letterSpacing: '0.12em',
+              </strong>
+              <span style={{
+                display: 'block',
+                marginTop: '5px',
+                fontSize: '10px',
+                color: '#8A6F5A',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                fontWeight: '500',
-                marginTop: '2px'
+                fontWeight: 800
               }}>
-                Consultoria Personalizada
-              </p>
+                Consultoria
+              </span>
             </div>
           </Link>
 
-          {/* ✅ MENU DESKTOP COM BLOG */}
           <nav style={{
             display: window.innerWidth >= 768 ? 'flex' : 'none',
-            gap: 'clamp(20px, 3vw, 40px)',
-            alignItems: 'center'
+            gap: '6px',
+            alignItems: 'center',
+            padding: '6px',
+            background: 'rgba(255, 255, 255, 0.52)',
+            border: '1px solid rgba(16, 24, 32, 0.07)',
+            borderRadius: '999px'
           }}>
-            {[
-              { to: '/', label: 'Início' },
-              { to: '/sobre', label: 'Sobre' },
-              { to: '/operadoras', label: 'Operadoras' },
-              { to: '/depoimentos', label: 'Depoimentos' },
-              { to: '/blog', label: 'Blog' },
-              { to: '/faq', label: 'FAQ' }
-            ].map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                style={{
-                  fontSize: 'clamp(14px, 1.6vw, 16px)',
-                  color: location.pathname === link.to ? '#8B7E74' : '#6B6662',
-                  textDecoration: 'none',
-                  fontWeight: location.pathname === link.to ? '600' : '400',
-                  position: 'relative',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.color = '#8B7E74'}
-                onMouseOut={(e) => {
-                  if (location.pathname !== link.to) {
-                    e.currentTarget.style.color = '#6B6662';
-                  }
-                }}
-              >
-                {link.label}
-                {location.pathname === link.to && (
-                  <span style={{
-                    position: 'absolute',
-                    bottom: '-8px',
-                    left: 0,
-                    right: 0,
-                    height: '2px',
-                    background: 'linear-gradient(90deg, #8B7E74 0%, #A8877A 100%)',
-                    borderRadius: '2px'
-                  }} />
-                )}
-              </Link>
-            ))}
-
-            <Link
-              to="/contato"
-              style={{
-                fontSize: 'clamp(13px, 1.5vw, 15px)',
-                color: '#FFFFFF',
-                textDecoration: 'none',
-                fontWeight: '600',
-                padding: 'clamp(10px, 1.5vw, 14px) clamp(20px, 3vw, 32px)',
-                background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-                borderRadius: '10px',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 16px rgba(139, 126, 116, 0.25)',
-                whiteSpace: 'nowrap',
-                minHeight: '44px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              Solicitar Cotação
-            </Link>
+            {links.map((link) => {
+              const active = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  style={{
+                    fontSize: '13px',
+                    color: active ? '#FFFFFF' : '#536170',
+                    textDecoration: 'none',
+                    fontWeight: 700,
+                    padding: '10px 14px',
+                    borderRadius: '999px',
+                    background: active ? '#101820' : 'transparent',
+                    transition: 'all 0.22s ease'
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* ✅ BOTÃO HAMBURGER (MOBILE) */}
+          <Link
+            to="/contato"
+            style={{
+              display: window.innerWidth >= 768 ? 'inline-flex' : 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              color: '#FFFFFF',
+              textDecoration: 'none',
+              fontWeight: 800,
+              padding: '13px 20px',
+              background: '#101820',
+              borderRadius: '999px',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Pré-análise
+          </Link>
+
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
               display: window.innerWidth >= 768 ? 'none' : 'flex',
               flexDirection: 'column',
-              gap: '6px',
-              background: 'none',
+              gap: '5px',
+              background: '#101820',
               border: 'none',
               cursor: 'pointer',
               padding: '12px',
-              minWidth: '44px',
-              minHeight: '44px',
+              minWidth: '46px',
+              minHeight: '46px',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              borderRadius: '50%'
             }}
             aria-label="Menu"
           >
-            <span style={{
-              width: '28px',
-              height: '3px',
-              background: '#8B7E74',
-              borderRadius: '2px',
-              transition: 'all 0.3s ease',
-              transform: mobileMenuOpen ? 'rotate(45deg) translateY(9px)' : 'none'
-            }} />
-            <span style={{
-              width: '28px',
-              height: '3px',
-              background: '#8B7E74',
-              borderRadius: '2px',
-              transition: 'all 0.3s ease',
-              opacity: mobileMenuOpen ? 0 : 1
-            }} />
-            <span style={{
-              width: '28px',
-              height: '3px',
-              background: '#8B7E74',
-              borderRadius: '2px',
-              transition: 'all 0.3s ease',
-              transform: mobileMenuOpen ? 'rotate(-45deg) translateY(-9px)' : 'none'
-            }} />
+            {[0, 1, 2].map((item) => (
+              <span
+                key={item}
+                style={{
+                  width: '18px',
+                  height: '2px',
+                  background: '#FFFFFF',
+                  borderRadius: '2px',
+                  transition: 'all 0.25s ease',
+                  opacity: mobileMenuOpen && item === 1 ? 0 : 1,
+                  transform: mobileMenuOpen && item === 0
+                    ? 'rotate(45deg) translateY(5px)'
+                    : mobileMenuOpen && item === 2
+                      ? 'rotate(-45deg) translateY(-5px)'
+                      : 'none'
+                }}
+              />
+            ))}
           </button>
         </div>
       </header>
 
-      {/* ✅ MENU MOBILE COM BLOG */}
       {mobileMenuOpen && (
         <div style={{
           position: 'fixed',
-          top: 'clamp(72px, 15vw, 92px)',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(255, 255, 255, 0.98)',
-          backdropFilter: 'blur(20px)',
+          top: '76px',
+          left: '16px',
+          right: '16px',
+          background: '#101820',
           zIndex: 999,
-          padding: '40px 20px',
+          padding: '18px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '24px',
-          animation: 'slideDown 0.3s ease',
-          overflowY: 'auto'
+          gap: '6px',
+          borderRadius: '24px',
+          boxShadow: '0 30px 80px rgba(16, 24, 32, 0.28)'
         }}>
-          {[
-            { to: '/', label: 'Início' },
-            { to: '/sobre', label: 'Sobre' },
-            { to: '/operadoras', label: 'Operadoras' },
-            { to: '/depoimentos', label: 'Depoimentos' },
-            { to: '/blog', label: 'Blog' },
-            { to: '/faq', label: 'FAQ' },
-            { to: '/contato', label: 'Contato' }
-          ].map((link) => (
+          {[...links, { to: '/contato', label: 'Pré-análise' }].map((link) => (
             <Link
               key={link.to}
               to={link.to}
               onClick={() => setMobileMenuOpen(false)}
               style={{
-                fontSize: '24px',
-                color: location.pathname === link.to ? '#8B7E74' : '#6B6662',
+                fontSize: '17px',
+                color: '#FFFFFF',
                 textDecoration: 'none',
-                fontWeight: location.pathname === link.to ? '600' : '400',
-                padding: '16px',
-                borderBottom: '1px solid rgba(197, 188, 181, 0.2)',
-                transition: 'all 0.3s ease',
-                minHeight: '56px',
-                display: 'flex',
-                alignItems: 'center',
-                fontFamily: "'Playfair Display', serif"
+                fontWeight: 700,
+                padding: '15px 14px',
+                borderRadius: '14px',
+                background: location.pathname === link.to ? 'rgba(255,255,255,0.12)' : 'transparent'
               }}
             >
               {link.label}
             </Link>
           ))}
-
-          {/* Botão CTA Mobile */}
-          <Link
-            to="/contato"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              fontSize: '18px',
-              color: '#FFFFFF',
-              textDecoration: 'none',
-              fontWeight: '600',
-              padding: '18px 32px',
-              background: 'linear-gradient(135deg, #8B7E74 0%, #A8877A 100%)',
-              borderRadius: '12px',
-              textAlign: 'center',
-              boxShadow: '0 8px 24px rgba(139, 126, 116, 0.3)',
-              marginTop: '20px',
-              minHeight: '56px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            Solicitar Cotação →
-          </Link>
         </div>
       )}
-
-      <style>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </>
   );
 }
