@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Lato:wght@400;700;900&display=swap');
 
 * {
   margin: 0;
@@ -9,16 +9,22 @@
 }
 
 :root {
-  --ink: #101820;
-  --ink-soft: #344054;
-  --muted: #667085;
-  --linen: #F6F1EA;
-  --linen-deep: #E9DED2;
+  --forest: #254623;
+  --forest-900: #18351F;
+  --forest-800: #2C3E22;
+  --sage: #8FA185;
+  --olive: #6B7C53;
+  --sand: #C2B280;
+  --wood: #E8D4B8;
+  --cream: #F5F0E6;
+  --ivory: #FFFCF6;
   --paper: #FFFFFF;
-  --taupe: #8A6F5A;
-  --taupe-dark: #6F5745;
-  --line: rgba(16, 24, 32, 0.10);
-  --shadow-premium: 0 34px 90px rgba(16, 24, 32, 0.16);
+  --ink: #1E241B;
+  --muted: #67715F;
+  --line: rgba(37, 70, 35, 0.14);
+  --line-strong: rgba(37, 70, 35, 0.26);
+  --shadow-premium: 0 34px 90px rgba(24, 53, 31, 0.16);
+  --shadow-soft: 0 18px 54px rgba(24, 53, 31, 0.10);
   --radius-xl: 28px;
   --radius-lg: 20px;
   --radius-pill: 999px;
@@ -31,26 +37,40 @@ html {
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Lato', sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(138, 111, 90, 0.12), transparent 34rem),
-    linear-gradient(180deg, var(--linen) 0%, #FFFFFF 56%);
+    radial-gradient(circle at 9% 6%, rgba(143, 161, 133, 0.28), transparent 28rem),
+    radial-gradient(circle at 92% 12%, rgba(194, 178, 128, 0.22), transparent 30rem),
+    linear-gradient(180deg, var(--cream) 0%, var(--ivory) 48%, #FFFFFF 100%);
   color: var(--ink);
   overflow-x: hidden;
   min-height: 100vh;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(37, 70, 35, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 70, 35, 0.025) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), transparent 72%);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Playfair Display', serif;
-  color: var(--ink);
+  color: var(--forest-900);
   letter-spacing: -0.04em;
 }
 
 ::selection {
-  background: rgba(138, 111, 90, 0.24);
-  color: var(--ink);
+  background: rgba(194, 178, 128, 0.42);
+  color: var(--forest-900);
 }
 
 ::-webkit-scrollbar {
@@ -58,13 +78,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--linen);
+  background: var(--cream);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--ink);
+  background: var(--forest);
   border-radius: 999px;
-  border: 2px solid var(--linen);
+  border: 2px solid var(--cream);
 }
 
 a {
@@ -98,30 +118,30 @@ img {
 
 .card-clean,
 .glass-effect {
-  background: var(--paper);
+  background: color-mix(in srgb, var(--ivory) 92%, white);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-premium);
 }
 
 .eyebrow {
-  color: var(--taupe);
+  color: var(--forest);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 *:focus-visible {
-  outline: 2px solid var(--taupe);
+  outline: 2px solid var(--sand);
   outline-offset: 3px;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--taupe) !important;
-  box-shadow: 0 0 0 4px rgba(138, 111, 90, 0.10);
+  border-color: var(--forest) !important;
+  box-shadow: 0 0 0 4px rgba(37, 70, 35, 0.12);
 }
 
 @media (max-width: 768px) {
