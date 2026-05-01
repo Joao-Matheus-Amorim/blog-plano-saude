@@ -8,7 +8,7 @@ function Hero() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 'clamp(112px, 12vh, 156px) clamp(20px, 6vw, 96px) clamp(64px, 8vw, 110px)',
+      padding: 'clamp(112px, 12vh, 156px) clamp(20px, 6vw, 96px) clamp(76px, 9vw, 124px)',
       position: 'relative',
       overflow: 'hidden',
       background: '#F5F0E6'
@@ -19,6 +19,10 @@ function Hero() {
         background: 'linear-gradient(120deg, rgba(37,70,35,0.14) 0%, transparent 32%), radial-gradient(circle at 12% 16%, rgba(143,161,133,0.36), transparent 30rem), radial-gradient(circle at 86% 18%, rgba(194,178,128,0.26), transparent 28rem)',
         pointerEvents: 'none'
       }} />
+
+      <span className="water-orb" style={{ width: '118px', height: '118px', left: '8%', top: '22%', opacity: 0.45 }} />
+      <span className="water-orb" style={{ width: '72px', height: '72px', right: '10%', top: '18%', opacity: 0.34, animationDelay: '1.8s' }} />
+      <span className="water-orb" style={{ width: '96px', height: '96px', left: '46%', bottom: '10%', opacity: 0.25, animationDelay: '3s' }} />
 
       <div style={{
         position: 'absolute',
@@ -91,23 +95,20 @@ function Hero() {
             Uma pré-análise humana para entender o seu cenário antes de indicar caminhos de contratação. Sem preço automático, sem vitrine genérica, sem pressão.
           </p>
 
-          <div style={{
+          <div className="float-mirror float-gentle-slow" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
             gap: '10px',
             maxWidth: '660px',
             padding: '10px',
-            background: 'rgba(255,252,246,0.68)',
-            border: '1px solid rgba(37,70,35,0.12)',
-            borderRadius: '24px',
-            boxShadow: '0 18px 52px rgba(37,70,35,0.08)'
+            borderRadius: '26px'
           }}>
             {[
               ['50+', 'empresas atendidas'],
               ['100+', 'famílias orientadas'],
               ['24h', 'retorno médio']
             ].map(([value, label]) => (
-              <div key={label} style={{ padding: '16px 14px' }}>
+              <div key={label} style={{ padding: '16px 14px', position: 'relative', zIndex: 1 }}>
                 <strong style={{ display: 'block', color: '#254623', fontSize: '30px', lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>{value}</strong>
                 <span style={{ display: 'block', marginTop: '8px', color: '#67715F', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 900 }}>{label}</span>
               </div>
@@ -117,6 +118,7 @@ function Hero() {
 
         <motion.div
           id="lead-form"
+          className="float-gentle"
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, delay: 0.12 }}
