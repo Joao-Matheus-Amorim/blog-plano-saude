@@ -1,5 +1,6 @@
 import Hero from '../components/Hero.jsx';
 import Operadoras from '../components/Operadoras.jsx';
+import MembershipExperience from '../components/MembershipExperience.jsx';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO.jsx';
 
@@ -34,6 +35,7 @@ function PaginaBlog() {
       />
 
       <Hero />
+      <MembershipExperience />
 
       <section style={{
         padding: 'clamp(74px, 9vw, 120px) clamp(20px, 6vw, 96px)',
