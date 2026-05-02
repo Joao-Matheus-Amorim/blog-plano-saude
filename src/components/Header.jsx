@@ -88,13 +88,6 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
               className="liquid-brand"
             >
-              <span className="liquid-brand-mark">
-                <img
-                  src="/logo.png"
-                  alt="Maisa Valentim"
-                />
-              </span>
-
               <div>
                 <strong>Maisa Valentim</strong>
                 <span>Consultoria</span>
