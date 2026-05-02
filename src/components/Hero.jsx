@@ -1,9 +1,15 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Simulador from './Simulador.jsx';
+import LiquidBackground from './LiquidBackground.jsx';
 
 function Hero() {
+  const { scrollYProgress } = useScroll();
+  const layerOneY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const layerTwoY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const layerRotate = useTransform(scrollYProgress, [0, 1], [0, 10]);
+
   return (
-    <section style={{
+    <section className="hero-3d-fluid" style={{
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
@@ -11,36 +17,23 @@ function Hero() {
       padding: 'clamp(112px, 12vh, 156px) clamp(20px, 6vw, 96px) clamp(76px, 9vw, 124px)',
       position: 'relative',
       overflow: 'hidden',
-      background: '#F5F0E6'
+      background: '#F5F0E6',
+      perspective: '1400px',
+      transformStyle: 'preserve-3d'
     }}>
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(120deg, rgba(37,70,35,0.14) 0%, transparent 32%), radial-gradient(circle at 12% 16%, rgba(143,161,133,0.36), transparent 30rem), radial-gradient(circle at 86% 18%, rgba(194,178,128,0.26), transparent 28rem)',
-        pointerEvents: 'none'
-      }} />
+      <LiquidBackground />
 
-      <span className="water-orb" style={{ width: '118px', height: '118px', left: '8%', top: '22%', opacity: 0.45 }} />
-      <span className="water-orb" style={{ width: '72px', height: '72px', right: '10%', top: '18%', opacity: 0.34, animationDelay: '1.8s' }} />
-      <span className="water-orb" style={{ width: '96px', height: '96px', left: '46%', bottom: '10%', opacity: 0.25, animationDelay: '3s' }} />
+      <div className="liquid-gradient-veil" />
 
-      <div style={{
-        position: 'absolute',
-        left: 'clamp(18px, 3vw, 42px)',
-        top: 'clamp(92px, 14vh, 142px)',
-        bottom: 'clamp(28px, 4vw, 54px)',
-        width: '1px',
-        background: 'linear-gradient(180deg, transparent, rgba(37,70,35,0.30), transparent)'
-      }} />
+      <motion.div className="parallax-liquid-layer parallax-liquid-layer-a" style={{ y: layerOneY, rotate: layerRotate }} />
+      <motion.div className="parallax-liquid-layer parallax-liquid-layer-b" style={{ y: layerTwoY }} />
 
-      <div style={{
-        position: 'absolute',
-        right: 'clamp(18px, 3vw, 42px)',
-        top: 'clamp(92px, 14vh, 142px)',
-        bottom: 'clamp(28px, 4vw, 54px)',
-        width: '1px',
-        background: 'linear-gradient(180deg, transparent, rgba(194,178,128,0.55), transparent)'
-      }} />
+      <span className="water-orb liquid-orb-3d" style={{ width: '118px', height: '118px', left: '8%', top: '22%', opacity: 0.45 }} />
+      <span className="water-orb liquid-orb-3d" style={{ width: '72px', height: '72px', right: '10%', top: '18%', opacity: 0.34, animationDelay: '1.8s' }} />
+      <span className="water-orb liquid-orb-3d" style={{ width: '96px', height: '96px', left: '46%', bottom: '10%', opacity: 0.25, animationDelay: '3s' }} />
+
+      <div className="hero-depth-line hero-depth-line-left" />
+      <div className="hero-depth-line hero-depth-line-right" />
 
       <div style={{
         maxWidth: '1320px',
@@ -50,88 +43,76 @@ function Hero() {
         gap: 'clamp(44px, 7vw, 90px)',
         alignItems: 'center',
         position: 'relative',
-        zIndex: 1
+        zIndex: 2,
+        transformStyle: 'preserve-3d'
       }}>
         <motion.div
-          initial={{ opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75 }}
+          className="hero-copy-3d"
+          initial={{ opacity: 0, y: 32, rotateX: 8 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '12px',
-            color: '#254623',
-            fontSize: '12px',
-            fontWeight: '900',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            marginBottom: '28px'
-          }}>
-            <span style={{ width: '42px', height: '1px', background: '#254623', display: 'inline-block' }} />
+          <motion.div
+            className="liquid-eyebrow"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.62, delay: 0.08 }}
+          >
+            <span />
             Consultoria privada em planos de saúde
-          </div>
+          </motion.div>
 
-          <h1 style={{
-            fontSize: 'clamp(48px, 7.8vw, 96px)',
-            fontWeight: '600',
-            marginBottom: '30px',
-            lineHeight: 0.92,
-            letterSpacing: '-0.065em',
-            fontFamily: "'Playfair Display', serif",
-            color: '#254623',
-            maxWidth: '880px'
-          }}>
+          <motion.h1
+            className="hero-fluid-title"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.72, delay: 0.12 }}
+          >
             A decisão certa começa antes da proposta.
-          </h1>
+          </motion.h1>
 
-          <p style={{
-            fontSize: 'clamp(16px, 2vw, 20px)',
-            marginBottom: '34px',
-            lineHeight: 1.78,
-            color: '#4C5A45',
-            maxWidth: '650px'
-          }}>
+          <motion.p
+            className="hero-fluid-text"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.72, delay: 0.18 }}
+          >
             Uma pré-análise humana para entender o seu cenário antes de indicar caminhos de contratação. Sem preço automático, sem vitrine genérica, sem pressão.
-          </p>
+          </motion.p>
 
-          <div className="float-mirror float-gentle-slow" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-            gap: '10px',
-            maxWidth: '660px',
-            padding: '10px',
-            borderRadius: '26px'
-          }}>
+          <motion.div
+            className="float-mirror float-gentle-slow hero-stats-liquid"
+            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.68, delay: 0.26 }}
+          >
             {[
               ['50+', 'empresas atendidas'],
               ['100+', 'famílias orientadas'],
               ['24h', 'retorno médio']
             ].map(([value, label]) => (
-              <div key={label} style={{ padding: '16px 14px', position: 'relative', zIndex: 1 }}>
-                <strong style={{ display: 'block', color: '#254623', fontSize: '30px', lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>{value}</strong>
-                <span style={{ display: 'block', marginTop: '8px', color: '#67715F', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 900 }}>{label}</span>
-              </div>
+              <motion.div
+                key={label}
+                className="hero-stat-cell"
+                whileHover={{ y: -5, rotateX: 4, rotateY: -4 }}
+                transition={{ type: 'spring', stiffness: 280, damping: 20 }}
+              >
+                <strong>{value}</strong>
+                <span>{label}</span>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
           id="lead-form"
-          className="float-gentle"
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.12 }}
-          style={{ position: 'relative' }}
+          className="hero-form-3d float-gentle"
+          initial={{ opacity: 0, y: 34, rotateY: -5, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
+          transition={{ duration: 0.85, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+          whileHover={{ rotateY: -2.2, rotateX: 1.2, z: 22 }}
         >
-          <div style={{
-            position: 'absolute',
-            inset: '-18px',
-            background: 'linear-gradient(135deg, rgba(37,70,35,0.18), rgba(194,178,128,0.30))',
-            borderRadius: '36px',
-            filter: 'blur(18px)',
-            opacity: 0.82
-          }} />
+          <div className="liquid-card-glow" />
           <div style={{ position: 'relative' }}>
             <Simulador />
           </div>
