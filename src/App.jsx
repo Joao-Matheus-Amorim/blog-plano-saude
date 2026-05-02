@@ -8,7 +8,7 @@ import PopupSaida from './components/Popupsaida.jsx';
 import PremiumMotion from './components/PremiumMotion.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
-import PaginaSobre from './pages/PaginaSobre.jsx';
+import PaginaSobre from './pages/PaginaSobrePremium.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
 import PaginaDepoimentos from './pages/PaginaDepoimentos.jsx';
 import PaginaFAQ from './pages/PaginaFAQ.jsx';
