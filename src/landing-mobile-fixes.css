@@ -18,3 +18,78 @@
     padding-top: 42px !important;
   }
 }
+
+/* Footer institucional: remove a logo pequena e corrige proporção no mobile. */
+footer:has(img[src="/logo.png"]) img[src="/logo.png"] {
+  display: none !important;
+}
+
+footer:has(img[src="/logo.png"]) {
+  padding-top: clamp(64px, 8vw, 100px) !important;
+}
+
+footer:has(img[src="/logo.png"]) > div > div:first-child {
+  grid-template-columns: minmax(260px, 1.2fr) minmax(180px, .8fr) minmax(220px, .9fr) !important;
+  gap: clamp(34px, 5vw, 64px) !important;
+  margin-bottom: clamp(48px, 7vw, 82px) !important;
+}
+
+footer:has(img[src="/logo.png"]) h3 {
+  font-size: clamp(30px, 4vw, 42px) !important;
+  line-height: 1.05 !important;
+}
+
+@media (max-width: 760px) {
+  footer:has(img[src="/logo.png"]) {
+    padding: 46px 24px 118px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) > div > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+    margin-bottom: 40px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) > div > div:first-child > div:first-child > div:first-child {
+    gap: 0 !important;
+    margin-bottom: 18px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) h3 {
+    font-size: 32px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    max-width: 100% !important;
+  }
+
+  footer:has(img[src="/logo.png"]) h4 {
+    margin-bottom: 16px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) a {
+    font-size: 16px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) a[href*="instagram.com"],
+  footer:has(img[src="/logo.png"]) a[href*="wa.me"],
+  footer:has(img[src="/logo.png"]) a[href^="mailto:"] {
+    width: 100% !important;
+    max-width: 340px !important;
+    justify-content: center !important;
+    padding: 14px 22px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  footer:has(img[src="/logo.png"]) {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  footer:has(img[src="/logo.png"]) h3 {
+    font-size: 30px !important;
+  }
+}
