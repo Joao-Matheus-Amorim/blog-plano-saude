@@ -52,12 +52,13 @@
 }
 
 .liquid-header {
-  animation: nav-float-premium 6.4s ease-in-out infinite;
+  animation: nav-float-premium 3.8s ease-in-out infinite;
   border-bottom-color: rgba(64,245,221,0.18) !important;
   box-shadow:
     0 20px 58px rgba(24, 53, 31, 0.10),
     inset 0 1px 0 rgba(255,255,255,0.72),
     inset 0 -1px 0 rgba(64,245,221,0.16) !important;
+  will-change: transform;
 }
 
 .liquid-header::after,
@@ -133,12 +134,12 @@ article {
 
 .scroll-reveal-premium {
   opacity: 0;
-  transform: translate3d(0, 26px, 0) scale(0.985);
-  filter: blur(8px);
+  transform: translate3d(0, 42px, 0) scale(0.965);
+  filter: blur(10px);
   transition:
-    opacity 760ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
-    transform 760ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
-    filter 760ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms);
+    opacity 820ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
+    transform 820ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms),
+    filter 820ms cubic-bezier(.16,1,.3,1) var(--reveal-delay, 0ms);
 }
 
 .scroll-reveal-premium.is-revealed {
@@ -148,8 +149,8 @@ article {
 }
 
 .liquid-webgl-canvas {
-  opacity: 0.78 !important;
-  filter: saturate(1.08) contrast(1.02);
+  opacity: 0.86 !important;
+  filter: saturate(1.14) contrast(1.04);
 }
 
 .liquid-gradient-veil {
@@ -172,7 +173,7 @@ article {
 }
 
 .liquid-nav {
-  animation: pill-float-premium 5.8s ease-in-out infinite;
+  animation: pill-float-premium 3.4s ease-in-out infinite;
   border-color: rgba(64,245,221,0.18) !important;
   background:
     linear-gradient(135deg, rgba(255,255,255,0.56), rgba(255,252,246,0.36)),
@@ -181,6 +182,20 @@ article {
     inset 0 1px 0 rgba(255,255,255,0.86),
     inset 0 -1px 0 rgba(64,245,221,0.16),
     0 14px 34px rgba(24,53,31,0.08) !important;
+  will-change: transform;
+}
+
+.liquid-cta {
+  animation: cta-pulse-premium 2.8s ease-in-out infinite;
+}
+
+.liquid-menu-button {
+  animation: menu-button-breathe-premium 2.6s ease-in-out infinite;
+}
+
+.liquid-brand {
+  animation: brand-breathe-premium 4.2s ease-in-out infinite;
+  transform-origin: left center;
 }
 
 .liquid-nav-active,
@@ -203,23 +218,39 @@ article {
   border-radius: inherit;
   background: linear-gradient(115deg, transparent 28%, rgba(255,255,255,0.26), transparent 70%);
   transform: translateX(-80%) rotate(10deg);
-  animation: mirror-sweep-premium 4.8s ease-in-out infinite;
+  animation: mirror-sweep-premium 3.4s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes nav-float-premium {
-  0%, 100% { transform: translate3d(0,0,0); }
-  50% { transform: translate3d(0,2px,0); }
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  35% { transform: translate3d(0,-7px,0) scale(1.006); }
+  70% { transform: translate3d(0,5px,0) scale(0.998); }
 }
 
 @keyframes pill-float-premium {
-  0%, 100% { transform: translate3d(0,0,0); }
-  50% { transform: translate3d(0,-2px,0); }
+  0%, 100% { transform: translate3d(0,0,0) rotateX(0deg); }
+  50% { transform: translate3d(0,-7px,0) rotateX(5deg); }
+}
+
+@keyframes cta-pulse-premium {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(0,-4px,0) scale(1.035); }
+}
+
+@keyframes menu-button-breathe-premium {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes brand-breathe-premium {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(0,-3px,0) scale(1.018); }
 }
 
 @keyframes mirror-sweep-premium {
-  0%, 72%, 100% { transform: translateX(-85%) rotate(10deg); opacity: 0; }
-  38% { transform: translateX(85%) rotate(10deg); opacity: 1; }
+  0%, 62%, 100% { transform: translateX(-85%) rotate(10deg); opacity: 0; }
+  34% { transform: translateX(85%) rotate(10deg); opacity: 1; }
 }
 
 @media (max-width: 768px), (pointer: coarse) {
@@ -233,7 +264,7 @@ article {
   }
 
   .liquid-webgl-canvas {
-    opacity: 0.48 !important;
+    opacity: 0.58 !important;
   }
 }
 
@@ -242,6 +273,14 @@ article {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+
+  .liquid-header,
+  .liquid-nav,
+  .liquid-cta,
+  .liquid-menu-button,
+  .liquid-brand {
+    animation: none !important;
   }
 
   .custom-cursor-dot,
