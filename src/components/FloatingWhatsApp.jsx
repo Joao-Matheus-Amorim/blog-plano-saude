@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
 const whatsappHref = 'https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20falar%20direto%20pelo%20WhatsApp%20sobre%20plano%20de%20saúde.';
 
 export default function FloatingWhatsApp() {
   const [hovered, setHovered] = useState(null);
+  const [portalTarget, setPortalTarget] = useState(null);
 
-  return (
+  useEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
+
+  const floatingButtons = (
     <>
       <div className="premium-floating-actions" aria-label="Ações rápidas">
         <Link
@@ -45,14 +51,21 @@ export default function FloatingWhatsApp() {
 
       <style>{`
         .premium-floating-actions {
-          position: fixed;
-          right: 18px;
-          bottom: 18px;
-          z-index: 9999;
-          display: grid;
+          position: fixed !important;
+          right: 18px !important;
+          bottom: 18px !important;
+          z-index: 2147483647 !important;
+          display: grid !important;
           gap: 12px;
           justify-items: end;
           perspective: 900px;
+          opacity: 1 !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
+          transform: none !important;
+          filter: none !important;
+          isolation: isolate;
+          animation: premiumFloatingEnter 420ms cubic-bezier(.16, 1, .3, 1) both;
         }
 
         .premium-float-orb {
@@ -81,6 +94,9 @@ export default function FloatingWhatsApp() {
           animation: premiumFloatSimple 4.2s ease-in-out infinite;
           touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
+          opacity: 1 !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
         }
 
         .premium-float-orb::before {
@@ -196,10 +212,10 @@ export default function FloatingWhatsApp() {
         }
 
         .premium-floating-tooltip {
-          position: fixed;
-          right: 88px;
-          bottom: 28px;
-          z-index: 9998;
+          position: fixed !important;
+          right: 88px !important;
+          bottom: 28px !important;
+          z-index: 2147483646 !important;
           padding: 10px 14px;
           border-radius: 999px;
           color: rgba(237, 248, 230, 0.90);
@@ -211,6 +227,13 @@ export default function FloatingWhatsApp() {
           font-size: 12px;
           font-weight: 800;
           animation: premiumTooltipIn 180ms ease both;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+
+        @keyframes premiumFloatingEnter {
+          from { opacity: 0; transform: translate3d(12px, 18px, 0) scale(.92); }
+          to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
         }
 
         @keyframes premiumFloatSimple {
@@ -230,8 +253,8 @@ export default function FloatingWhatsApp() {
 
         @media (max-width: 768px) {
           .premium-floating-actions {
-            right: 14px;
-            bottom: calc(14px + env(safe-area-inset-bottom));
+            right: 14px !important;
+            bottom: calc(14px + env(safe-area-inset-bottom)) !important;
             gap: 10px;
           }
 
@@ -261,4 +284,8 @@ export default function FloatingWhatsApp() {
       `}</style>
     </>
   );
+
+  if (!portalTarget) return null;
+
+  return createPortal(floatingButtons, portalTarget);
 }
