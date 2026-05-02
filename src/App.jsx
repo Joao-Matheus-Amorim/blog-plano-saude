@@ -213,7 +213,7 @@ function App() {
                   textTransform: 'uppercase'
                 }}>
                   <span style={{ fontSize: '14px' }}>✦</span>
-                  Domingo a Domingo
+                  Segunda a Sexta
                 </div>
               </div>
 
