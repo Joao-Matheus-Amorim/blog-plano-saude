@@ -244,7 +244,8 @@ export default function FloatingWhatsApp() {
         @media (max-width: 768px) {
           .premium-floating-actions {
             right: 14px !important;
-            bottom: calc(128px + env(safe-area-inset-bottom)) !important;
+            top: calc(150px + env(safe-area-inset-top)) !important;
+            bottom: auto !important;
             gap: 10px;
           }
 
@@ -275,7 +276,8 @@ export default function FloatingWhatsApp() {
         @media (max-width: 420px) {
           .premium-floating-actions {
             right: 12px !important;
-            bottom: calc(118px + env(safe-area-inset-bottom)) !important;
+            top: calc(144px + env(safe-area-inset-top)) !important;
+            bottom: auto !important;
           }
         }
       `}</style>
