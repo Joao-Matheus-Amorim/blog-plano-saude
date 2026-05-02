@@ -244,7 +244,7 @@ export default function FloatingWhatsApp() {
         @media (max-width: 768px) {
           .premium-floating-actions {
             right: 14px !important;
-            bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+            bottom: calc(128px + env(safe-area-inset-bottom)) !important;
             gap: 10px;
           }
 
@@ -271,11 +271,18 @@ export default function FloatingWhatsApp() {
             display: none;
           }
         }
+
+        @media (max-width: 420px) {
+          .premium-floating-actions {
+            right: 12px !important;
+            bottom: calc(118px + env(safe-area-inset-bottom)) !important;
+          }
+        }
       `}</style>
     </>
   );
 
-  if (!portalTarget) return null;
+  if (!portalTarget) return floatingButtons;
 
   return createPortal(floatingButtons, portalTarget);
 }
