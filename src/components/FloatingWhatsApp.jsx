@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
@@ -6,11 +6,7 @@ const whatsappHref = 'https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20f
 
 export default function FloatingWhatsApp() {
   const [hovered, setHovered] = useState(null);
-  const [portalTarget, setPortalTarget] = useState(null);
-
-  useEffect(() => {
-    setPortalTarget(document.body);
-  }, []);
+  const portalTarget = typeof document !== 'undefined' ? document.body : null;
 
   const floatingButtons = (
     <>
@@ -62,10 +58,10 @@ export default function FloatingWhatsApp() {
           opacity: 1 !important;
           visibility: visible !important;
           pointer-events: auto !important;
-          transform: none !important;
+          transform: translate3d(0, 0, 0) !important;
           filter: none !important;
           isolation: isolate;
-          animation: premiumFloatingEnter 420ms cubic-bezier(.16, 1, .3, 1) both;
+          contain: layout style;
         }
 
         .premium-float-orb {
@@ -89,7 +85,6 @@ export default function FloatingWhatsApp() {
             inset 0 -12px 28px rgba(0, 0, 0, 0.22);
           backdrop-filter: blur(22px) saturate(170%);
           -webkit-backdrop-filter: blur(22px) saturate(170%);
-          transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg);
           transition: transform 260ms cubic-bezier(.16, 1, .3, 1), box-shadow 260ms ease, border-color 260ms ease;
           animation: premiumFloatSimple 4.2s ease-in-out infinite;
           touch-action: manipulation;
@@ -229,11 +224,6 @@ export default function FloatingWhatsApp() {
           animation: premiumTooltipIn 180ms ease both;
           opacity: 1 !important;
           visibility: visible !important;
-        }
-
-        @keyframes premiumFloatingEnter {
-          from { opacity: 0; transform: translate3d(12px, 18px, 0) scale(.92); }
-          to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
         }
 
         @keyframes premiumFloatSimple {
