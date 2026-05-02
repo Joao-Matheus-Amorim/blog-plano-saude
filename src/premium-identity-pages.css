@@ -1,0 +1,196 @@
+/* Identidade premium global para páginas internas.
+   Mantém a ideia da home e da página Sobre: verde escuro, glassmorphism,
+   parallax visual, cards 3D e navegação fluida sem reescrever cada página. */
+
+:root {
+  --mv-bg0: #080e06;
+  --mv-bg1: #0d160a;
+  --mv-green-0: #2d4a24;
+  --mv-green-1: #4a6b3a;
+  --mv-green-2: #6b8c52;
+  --mv-green-3: #8aab6e;
+  --mv-green-4: #a8c48a;
+  --mv-text: #d8e8cc;
+  --mv-muted: rgba(216, 232, 204, .66);
+  --mv-glass: rgba(13, 22, 10, .62);
+  --mv-glass-2: rgba(45, 74, 36, .28);
+  --mv-border: rgba(138, 171, 110, .30);
+  --mv-border-strong: rgba(168, 196, 138, .42);
+  --mv-glow: rgba(106, 140, 82, .30);
+}
+
+/* Páginas antigas com fundo claro recebem a mesma atmosfera da landing. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page),
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  color: var(--mv-text) !important;
+  background:
+    radial-gradient(circle at 78% 8%, rgba(74, 107, 58, .24), transparent 34rem),
+    radial-gradient(circle at 7% 16%, rgba(138, 171, 110, .14), transparent 30rem),
+    linear-gradient(180deg, var(--mv-bg0), var(--mv-bg1) 54%, #070b05) !important;
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page)::before,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page)::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(138, 171, 110, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(138, 171, 110, .04) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .76), transparent 84%);
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page)::after,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page)::after {
+  content: '';
+  position: fixed;
+  width: min(58vw, 620px);
+  height: min(58vw, 620px);
+  right: -170px;
+  top: 90px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(138, 171, 110, .22), rgba(74, 107, 58, .12) 38%, transparent 72%);
+  filter: blur(42px);
+  animation: mv-fluid-orb 10s ease-in-out infinite;
+}
+
+/* Tipografia das páginas internas no mesmo tom da home. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) h1,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) h2,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) h3,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) h1,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) h2,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) h3 {
+  color: var(--mv-text) !important;
+  background: linear-gradient(135deg, #edf8e6 0%, var(--mv-green-4) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) p,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) label,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) li,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) span,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) p,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) label,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) li,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) span {
+  color: var(--mv-muted) !important;
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) strong,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) strong {
+  color: var(--mv-green-4) !important;
+}
+
+/* Cards, formulários e blocos claros viram glassmorphism 3D. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) form,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) article,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="#FFFFFF"],
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="#FAF8F5"],
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) section[style*="#FAF8F5"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) form,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) article,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="#FFFFFF"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="#FAF8F5"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) section[style*="#FAF8F5"] {
+  border-color: var(--mv-border) !important;
+  background:
+    radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 0%), rgba(168, 196, 138, .15), transparent 34%),
+    linear-gradient(160deg, rgba(45, 74, 36, .30), rgba(13, 22, 10, .70)) !important;
+  color: var(--mv-text) !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .08) !important;
+  backdrop-filter: blur(30px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(160%) !important;
+}
+
+/* Badges/chips claros também entram na linguagem water glass. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="borderRadius: '20px'"],
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="border-radius: 20px"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="borderRadius: '20px'"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) div[style*="border-radius: 20px"] {
+  border-color: var(--mv-border-strong) !important;
+  background: rgba(168, 196, 138, .08) !important;
+  color: var(--mv-green-4) !important;
+}
+
+/* Campos do formulário no mesmo padrão escuro premium. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) input,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) select,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) input,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) select {
+  border: 1px solid var(--mv-border) !important;
+  background: rgba(13, 22, 10, .70) !important;
+  color: var(--mv-text) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 14px 34px rgba(0,0,0,.18) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) input::placeholder,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea::placeholder,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) input::placeholder,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea::placeholder {
+  color: rgba(216, 232, 204, .42) !important;
+}
+
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) input:focus,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea:focus,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) select:focus,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) input:focus,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) textarea:focus,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) select:focus {
+  border-color: var(--mv-green-4) !important;
+  box-shadow: 0 0 0 4px rgba(168, 196, 138, .10), 0 16px 38px rgba(0,0,0,.22) !important;
+}
+
+/* CTAs gerais: mesma linguagem da home. */
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) button,
+main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) a[style*="background"],
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) button,
+main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) a[style*="background"] {
+  border: 1px solid var(--mv-border-strong) !important;
+  color: #eff8e7 !important;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.24), transparent 32%),
+    linear-gradient(135deg, var(--mv-green-2), var(--mv-green-0)) !important;
+  box-shadow: 0 0 34px var(--mv-glow), inset 0 1px 0 rgba(255,255,255,.13) !important;
+}
+
+/* Water navigation: dá unidade ao menu superior das páginas que ainda não foram reescritas. */
+.liquid-header,
+.liquid-nav,
+.liquid-mobile-panel {
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+}
+
+@keyframes mv-fluid-orb {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-28px, 34px, 0) scale(1.08); }
+}
+
+@media (max-width: 760px) {
+  main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page),
+  main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  main > div > div[style*="min-height: 100vh"]:not(.elite-page):not(.about-fluid-page) section,
+  main > div > div[style*="minHeight: 100vh"]:not(.elite-page):not(.about-fluid-page) section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
