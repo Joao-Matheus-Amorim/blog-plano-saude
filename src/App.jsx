@@ -5,6 +5,7 @@ import Header from './components/Header.jsx';
 import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import PopupSaida from './components/Popupsaida.jsx';
+import PremiumMotion from './components/PremiumMotion.jsx';
 import PaginaBlog from './pages/PaginaBlog.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobre.jsx';
@@ -102,6 +103,7 @@ function App() {
   return (
     <Router>
       <GoogleAnalytics />
+      <PremiumMotion />
       
       <div style={{ 
         minHeight: '100vh', 
