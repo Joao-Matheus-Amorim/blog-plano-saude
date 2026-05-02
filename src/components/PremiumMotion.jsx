@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { animate, inView, stagger } from 'framer-motion';
 
-const INTERACTIVE_SELECTOR = 'a, button, input, textarea, select, [role="button"], .liquid-nav-link, .liquid-cta, .premium-floating-cta, .float-mirror, .glass-effect';
+const INTERACTIVE_SELECTOR = 'a, button, input, textarea, select, [role="button"], .liquid-nav-link, .liquid-cta, .premium-floating-cta, .premium-float-orb, .float-mirror, .glass-effect';
 const TILT_SELECTOR = '.float-mirror, .glass-effect, .hero-form-3d, .hero-stat-cell, article, section [style*="border-radius"], footer a';
 const REVEAL_SELECTOR = 'main section, main article, main section > div, .float-mirror, .glass-effect, .hero-stat-cell, footer > div, footer h3, footer h4, footer p, footer a';
 const GROUP_SELECTOR = 'main section, footer';
@@ -60,6 +60,7 @@ export default function PremiumMotion() {
     };
 
     const onOver = (event) => {
+      if (!(event.target instanceof Element)) return;
       const target = event.target.closest(INTERACTIVE_SELECTOR);
       if (!target) return;
 
@@ -72,6 +73,7 @@ export default function PremiumMotion() {
     };
 
     const onOut = (event) => {
+      if (!(event.target instanceof Element)) return;
       const target = event.target.closest(INTERACTIVE_SELECTOR);
       if (!target) return;
 
