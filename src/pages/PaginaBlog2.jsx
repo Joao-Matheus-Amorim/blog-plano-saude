@@ -13,7 +13,7 @@ function slugify(text = '') {
 }
 
 function normalizePost(post, index) {
-  const rawDate = post.data_publicacao || post.data || new Date().toISOString();
+  const rawDate = post.data_publicacao || post.publicado_em || post.data || new Date().toISOString();
   return {
     ...post,
     id: post.id || `${index}`,
@@ -38,18 +38,22 @@ export default function PaginaBlog2() {
 
   const carregarPosts = async () => {
     try {
-      const response = await fetch('/data/db.json');
-      if (!response.ok) {
-        throw new Error('Falha ao carregar posts');
+      let normalizedPosts = [];
+
+      try {
+        const response = await fetch('/api/blog/list');
+        if (!response.ok) throw new Error('Falha ao carregar posts do CMS');
+        const apiPosts = await response.json();
+        normalizedPosts = (apiPosts || []).map(normalizePost).filter(post => post.ativo);
+      } catch (apiError) {
+        console.warn('CMS indisponível, usando fallback estático:', apiError);
+        const fallback = await fetch('/data/db.json');
+        if (!fallback.ok) throw new Error('Falha ao carregar posts');
+        const db = await fallback.json();
+        normalizedPosts = (db.posts || []).map(normalizePost).filter(post => post.ativo);
       }
 
-      const db = await response.json();
-      const normalizedPosts = (db.posts || [])
-        .map(normalizePost)
-        .filter(post => post.ativo)
-        .sort((a, b) => new Date(b.data_publicacao) - new Date(a.data_publicacao));
-
-      setPosts(normalizedPosts);
+      setPosts(normalizedPosts.sort((a, b) => new Date(b.data_publicacao) - new Date(a.data_publicacao)));
     } catch (error) {
       console.error('Erro ao carregar posts:', error);
     } finally {
@@ -81,7 +85,6 @@ export default function PaginaBlog2() {
         background: 'linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%)',
         minHeight: '100vh'
       }}>
-        {/* HERO */}
         <section style={{
           padding: 'clamp(60px, 10vh, 100px) clamp(40px, 8vw, 100px) clamp(40px, 6vh, 60px)',
           maxWidth: '1200px',
@@ -108,7 +111,6 @@ export default function PaginaBlog2() {
           </p>
         </section>
 
-        {/* BUSCA */}
         <section style={{
           padding: '0 clamp(40px, 8vw, 100px) clamp(40px, 6vh, 60px)',
           maxWidth: '1200px',
@@ -150,7 +152,6 @@ export default function PaginaBlog2() {
           </div>
         </section>
 
-        {/* POSTS COM LINKS FUNCIONANDO */}
         <section style={{
           padding: '0 clamp(40px, 8vw, 100px) clamp(80px, 12vh, 120px)',
           maxWidth: '1300px',
@@ -159,6 +160,10 @@ export default function PaginaBlog2() {
           {loading ? (
             <div style={{ textAlign: 'center', padding: '60px 0' }}>
               <p>Carregando...</p>
+            </div>
+          ) : postsFiltrados.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px 0', color: '#8B7E74' }}>
+              Nenhum artigo encontrado.
             </div>
           ) : (
             <div style={{
@@ -190,15 +195,7 @@ export default function PaginaBlog2() {
                   }}
                 >
                   {post.imagem_url && (
-                    <img
-                      src={post.imagem_url}
-                      alt={post.titulo}
-                      style={{
-                        width: '100%',
-                        height: '200px',
-                        objectFit: 'cover'
-                      }}
-                    />
+                    <img src={post.imagem_url} alt={post.titulo} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
                   )}
 
                   <div style={{ padding: '24px' }}>
@@ -215,33 +212,9 @@ export default function PaginaBlog2() {
                       {post.categoria}
                     </div>
 
-                    <h3 style={{
-                      fontSize: '20px',
-                      fontWeight: '600',
-                      color: '#8B7E74',
-                      marginBottom: '12px'
-                    }}>
-                      {post.titulo}
-                    </h3>
-
-                    <p style={{
-                      fontSize: '15px',
-                      color: '#6B6662',
-                      lineHeight: 1.7,
-                      marginBottom: '16px'
-                    }}>
-                      {post.resumo}
-                    </p>
-
-                    <div style={{
-                      paddingTop: '16px',
-                      borderTop: '1px solid rgba(197, 188, 181, 0.15)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      fontSize: '13px',
-                      color: '#9B9289'
-                    }}>
+                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#8B7E74', marginBottom: '12px' }}>{post.titulo}</h3>
+                    <p style={{ fontSize: '15px', color: '#6B6662', lineHeight: 1.7, marginBottom: '16px' }}>{post.resumo}</p>
+                    <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(197, 188, 181, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', color: '#9B9289' }}>
                       <span>{new Date(post.data_publicacao).toLocaleDateString('pt-BR')}</span>
                       <span style={{ color: '#A8877A', fontWeight: '600' }}>Ler mais →</span>
                     </div>
