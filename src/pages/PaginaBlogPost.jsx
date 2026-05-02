@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
+import { seedBlogPosts } from '../data/seedBlogPosts.js';
 
 function slugify(text = '') {
   return text
@@ -76,11 +77,13 @@ export default function PaginaBlogPost() {
           allPosts = (list || []).map(normalizePost).filter(item => item.ativo);
         }
       } catch (apiError) {
-        console.warn('CMS indisponível, usando fallback estático:', apiError);
-        const response = await fetch('/data/db.json');
-        if (!response.ok) throw new Error('Falha ao carregar post');
-        const db = await response.json();
-        allPosts = (db.posts || []).map(normalizePost).filter(item => item.ativo);
+        console.warn('CMS indisponível, usando fallback local:', apiError);
+        allPosts = seedBlogPosts.map(normalizePost).filter(item => item.ativo);
+        postData = allPosts.find(item => item.slug === slug);
+      }
+
+      if (!postData) {
+        allPosts = seedBlogPosts.map(normalizePost).filter(item => item.ativo);
         postData = allPosts.find(item => item.slug === slug);
       }
 
