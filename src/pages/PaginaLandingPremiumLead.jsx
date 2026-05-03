@@ -98,6 +98,117 @@ function LeadForm({ compact = false }) {
   );
 }
 
+function PremiumCanvas() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return undefined;
+
+    const context = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let raf = 0;
+    let time = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const particles = Array.from({ length: 58 }, (_, index) => ({
+      x: Math.random(),
+      y: Math.random(),
+      z: 0.35 + Math.random() * 0.9,
+      r: 0.7 + Math.random() * 1.8,
+      speed: 0.15 + Math.random() * 0.55,
+      phase: Math.random() * Math.PI * 2,
+      warm: index % 3 === 0
+    }));
+
+    const resize = () => {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const handleMove = (event) => {
+      pointerX = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointerY = (event.clientY / window.innerHeight - 0.5) * 2;
+    };
+
+    const drawBlob = (x, y, radius, colorA, colorB, alpha) => {
+      const gradient = context.createRadialGradient(x, y, radius * 0.08, x, y, radius);
+      gradient.addColorStop(0, colorA);
+      gradient.addColorStop(0.48, colorB);
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      context.globalAlpha = alpha;
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2);
+      context.fill();
+      context.globalAlpha = 1;
+    };
+
+    const animate = () => {
+      time += 0.006;
+      context.clearRect(0, 0, width, height);
+
+      drawBlob(
+        width * 0.78 + pointerX * 36,
+        height * 0.2 + pointerY * 28,
+        Math.min(width, height) * 0.42,
+        'rgba(184,154,106,.32)',
+        'rgba(61,90,71,.20)',
+        0.95
+      );
+      drawBlob(
+        width * 0.18 - pointerX * 24,
+        height * 0.74 - pointerY * 24,
+        Math.min(width, height) * 0.33,
+        'rgba(61,90,71,.36)',
+        'rgba(184,154,106,.10)',
+        0.78
+      );
+
+      context.save();
+      context.globalCompositeOperation = 'lighter';
+      particles.forEach((particle) => {
+        const driftX = Math.sin(time * particle.speed + particle.phase) * 30 * particle.z;
+        const driftY = Math.cos(time * particle.speed * 0.8 + particle.phase) * 24 * particle.z;
+        const x = particle.x * width + driftX + pointerX * 12 * particle.z;
+        const y = particle.y * height + driftY + pointerY * 10 * particle.z;
+        context.globalAlpha = particle.warm ? 0.18 : 0.12;
+        context.fillStyle = particle.warm ? '#d4b88a' : '#9fb8a5';
+        context.beginPath();
+        context.arc(x, y, particle.r, 0, Math.PI * 2);
+        context.fill();
+      });
+      context.restore();
+
+      raf = requestAnimationFrame(animate);
+    };
+
+    resize();
+    animate();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', handleMove, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMove);
+    };
+  }, []);
+
+  return <canvas className="pl-canvas" ref={canvasRef} aria-hidden="true" />;
+}
+
 function ParallaxShell() {
   const shellRef = useRef(null);
 
@@ -142,6 +253,7 @@ export default function PaginaLandingPremiumLead() {
       />
 
       <main className="pl-page" id="topo">
+        <PremiumCanvas />
         <ParallaxShell />
 
         <header className="pl-nav">
@@ -199,7 +311,7 @@ export default function PaginaLandingPremiumLead() {
         <section className="pl-operators">
           <div className="pl-label">Parceiros</div>
           <h2>+20 operadoras <em>comparadas por você.</em></h2>
-          <div className="pl-marquee"><span>Unimed · Bradesco Saúde · SulAmérica · Amil · Porto Saúde · Hapvida · NotreDame · Care Plus · Sompo ·</span></div>
+          <div className="pl-marquee"><span>Unimed · Bradesco Saúde · SulAmérica · Amil · Porto Saúde · Hapvida · NotreDame · Care Plus · Sompo · Unimed · Bradesco Saúde · SulAmérica · Amil · Porto Saúde · Hapvida · NotreDame · Care Plus · Sompo ·</span></div>
         </section>
 
         <section className="pl-final">
