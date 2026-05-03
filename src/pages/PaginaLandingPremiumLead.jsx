@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SEO from '../components/SEO.jsx';
 import './PaginaLandingPremiumLead.css';
 
@@ -98,6 +98,40 @@ function LeadForm({ compact = false }) {
   );
 }
 
+function ParallaxShell() {
+  const shellRef = useRef(null);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return undefined;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    if (reduceMotion || !finePointer) return undefined;
+
+    const handleMove = (event) => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 2;
+      const y = (event.clientY / window.innerHeight - 0.5) * 2;
+      shell.style.setProperty('--mx', x.toFixed(3));
+      shell.style.setProperty('--my', y.toFixed(3));
+    };
+
+    window.addEventListener('mousemove', handleMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, []);
+
+  return (
+    <div className="pl-parallax" ref={shellRef} aria-hidden="true">
+      <div className="pl-orb pl-orb-a" />
+      <div className="pl-orb pl-orb-b" />
+      <div className="pl-orb pl-orb-c" />
+      <div className="pl-3d-card pl-3d-back"><span>rede</span><strong>Hospitais certos</strong></div>
+      <div className="pl-3d-card pl-3d-mid"><span>carência</span><strong>Sem surpresa</strong></div>
+      <div className="pl-3d-card pl-3d-front"><span>curadoria</span><strong>Plano ideal</strong><small>nome + WhatsApp</small></div>
+    </div>
+  );
+}
+
 export default function PaginaLandingPremiumLead() {
   return (
     <>
@@ -108,6 +142,8 @@ export default function PaginaLandingPremiumLead() {
       />
 
       <main className="pl-page" id="topo">
+        <ParallaxShell />
+
         <header className="pl-nav">
           <a href="#topo" className="pl-brand">Maisa <em>Valentim</em></a>
           <a href="#cotacao" className="pl-nav-cta">Cotação gratuita</a>
