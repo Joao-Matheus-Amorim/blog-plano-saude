@@ -53,7 +53,7 @@ function buildAdminMessage(lead) {
 async function saveLeadOnAdmin(lead) {
   const eventId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `lead-${Date.now()}`;
 
-  const response = await fetch('/api/leads', {
+  const response = await fetch('/api/leads/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -70,7 +70,10 @@ async function saveLeadOnAdmin(lead) {
   });
 
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Erro ao salvar lead');
+  if (!response.ok) {
+    const detail = data.detail || data.hint || data.code || '';
+    throw new Error([data.error || 'Erro ao salvar lead', detail].filter(Boolean).join(' — '));
+  }
   return data;
 }
 
@@ -93,7 +96,7 @@ function LeadForm({ compact = false }) {
       window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildMessage(lead))}`, '_blank', 'noopener,noreferrer');
     } catch (err) {
       console.error('Erro ao enviar lead:', err);
-      setError('Não consegui registrar no painel agora. O WhatsApp será aberto para não perder o contato.');
+      setError(`Não consegui registrar no painel: ${err.message}. O WhatsApp será aberto para não perder o contato.`);
       window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildMessage(lead))}`, '_blank', 'noopener,noreferrer');
     } finally {
       setSaving(false);
