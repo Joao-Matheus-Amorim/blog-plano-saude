@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import SEO from '../components/SEO.jsx';
 import PremiumLandingEffects from '../components/PremiumLandingEffects.jsx';
 import './PaginaLandingMasterpiece.css';
+import './PaginaLandingLead.css';
 
 const phoneNumber = '5521977472141';
 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent('Olá Maisa, quero uma consultoria gratuita para plano de saúde.')}`;
