@@ -6,7 +6,7 @@ import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import PopupSaida from './components/Popupsaida.jsx';
 import PremiumMotion from './components/PremiumMotion.jsx';
-import PaginaLandingPremium from './pages/PaginaLandingPremium.jsx';
+import PaginaLandingMasterpiece from './pages/PaginaLandingMasterpiece.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobrePremium.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
@@ -69,7 +69,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><PaginaLandingPremium /></PageTransition>} />
+        <Route path="/" element={<PageTransition><PaginaLandingMasterpiece /></PageTransition>} />
         <Route path="/contato" element={<PageTransition><PaginaContato /></PageTransition>} />
         <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
         <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
