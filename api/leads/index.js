@@ -1,5 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import crypto from 'crypto';
+import { ensureLeadTable } from '../_lib/leads.js';
+import { rateLimit } from '../_lib/security.js';
 
 // ─── DB ───────────────────────────────────────────────────────────────────────
 
@@ -39,6 +41,20 @@ function toDigitsOnly(value) {
 function normalizePhone(phone) {
   const digits = toDigitsOnly(phone);
   return digits.startsWith('55') ? digits : `55${digits}`;
+}
+
+function getPublicErrorPayload(error) {
+  const payload = {
+    error: 'Não foi possível registrar seu pedido. Tente novamente ou fale conosco pelo WhatsApp.',
+  };
+
+  if (process.env.NODE_ENV !== 'production' || process.env.EXPOSE_API_ERRORS === 'true') {
+    payload.detail = error?.message || 'Erro desconhecido';
+    payload.code = error?.code || null;
+    payload.hint = error?.hint || null;
+  }
+
+  return payload;
 }
 
 // ─── CALLMEBOT ────────────────────────────────────────────────────────────────
@@ -96,8 +112,6 @@ async function sendMetaCapi(lead, eventId) {
   if (lead.email)    userData.em = [sha256(lead.email)];
   if (lead.telefone) userData.ph = [sha256(normalizePhone(lead.telefone))];
 
-  // event_id deve ser IDÊNTICO ao passado no fbq({ eventID }) no browser.
-  // Se o frontend não enviou um eventId, geramos um aleatório — mas sem deduplicação.
   const resolvedEventId = eventId || `lead-fallback-${lead.id}-${eventTime}`;
 
   const payload = {
@@ -133,7 +147,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  // parse body
+  if (!rateLimit(req, res, { keyPrefix: 'lead-create', windowMs: 60_000, max: 12 })) {
+    return;
+  }
+
   let body = req.body;
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch { body = {}; }
@@ -150,7 +167,7 @@ export default async function handler(req, res) {
     vidas,
     mensagem,
     origem,
-    event_id,   // ← UUID gerado no frontend para deduplicação CAPI
+    event_id,
   } = body || {};
 
   const nomeFinal      = String(nome || name || '').trim();
@@ -166,10 +183,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Informe seu nome para continuar.' });
   }
 
-  // ── 1. Salva no banco ──────────────────────────────────────────────────────
+  if (!telefoneFinal) {
+    return res.status(400).json({ error: 'Informe seu WhatsApp para continuar.' });
+  }
+
   let lead;
   try {
     const sql = getSqlClient();
+    await ensureLeadTable(sql);
+
     const result = await sql`
       INSERT INTO lead (nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status)
       VALUES (
@@ -187,19 +209,14 @@ export default async function handler(req, res) {
       detail:  error?.detail,
       hint:    error?.hint,
     });
-    return res.status(500).json({
-      error: 'Não foi possível registrar seu pedido. Tente novamente ou fale conosco pelo WhatsApp.',
-    });
+    return res.status(500).json(getPublicErrorPayload(error));
   }
 
-  // ── 2. Notificações (não bloqueiam a resposta se falharem) ─────────────────
-  // Passa o eventId do frontend para a CAPI — chave da deduplicação
   const [whatsappResult, metaResult] = await Promise.allSettled([
     sendWhatsapp(lead),
     sendMetaCapi(lead, eventIdFinal),
   ]);
 
-  // ── 3. Resposta ────────────────────────────────────────────────────────────
   return res.status(200).json({
     success: true,
     lead,
