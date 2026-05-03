@@ -4,13 +4,14 @@ import SEO from '../components/SEO.jsx';
 import PremiumLandingEffects from '../components/PremiumLandingEffects.jsx';
 import './PaginaLandingMasterpiece.css';
 
-const whatsappUrl = 'https://wa.me/5521977472141?text=Olá%20Maisa,%20quero%20uma%20consultoria%20gratuita%20para%20plano%20de%20saúde.';
+const phoneNumber = '5521977472141';
+const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent('Olá Maisa, quero uma consultoria gratuita para plano de saúde.')}`;
 
 const navItems = [
+  ['Cotação', '#lead'],
   ['Curadoria', '#curadoria'],
   ['Método', '#metodo'],
   ['Operadoras', '#operadoras'],
-  ['Prova social', '#depoimentos'],
   ['FAQ', '#faq']
 ];
 
@@ -20,13 +21,13 @@ const methodSteps = [
   ['01', 'Diagnóstico real', 'Entendo cidade, idade, dependentes, hospitais desejados, uso médico e limite de investimento.'],
   ['02', 'Filtro técnico', 'Corto opções ruins antes de você ver: rede fraca, carência incoerente, coparticipação confusa e contrato desalinhado.'],
   ['03', 'Comparativo claro', 'Você recebe poucas opções, mas bem escolhidas, com prós, limites e indicação honesta do melhor caminho.'],
-  ['04', 'Suporte depois', 'A contratação não encerra a relação. A Maisa segue disponível para dúvidas, carteirinha e primeiros usos.']
+  ['04', 'Suporte depois', 'A Maisa segue disponível para dúvidas, carteirinha, rede credenciada e primeiros usos do plano.']
 ];
 
 const proofCards = [
   ['+20', 'operadoras comparadas', 'mercado amplo, escolha mais precisa'],
   ['0', 'custo de consultoria', 'orientação gratuita e sem pressão'],
-  ['5★', 'experiência percebida', 'clareza, cuidado e acompanhamento']
+  ['24h', 'pré-análise rápida', 'lead quente respondido com prioridade']
 ];
 
 const testimonials = [
@@ -37,11 +38,22 @@ const testimonials = [
 
 const faqs = [
   ['A consultoria é mesmo gratuita?', 'Sim. Você não paga pela consultoria. A remuneração vem da operadora quando há contratação, sem alterar o valor final do plano.'],
+  ['Por que preencher o formulário?', 'Porque a Maisa já recebe nome, telefone, cidade, tipo de plano e urgência. Isso reduz perguntas repetidas e acelera a cotação.'],
   ['Você atende fora do Rio de Janeiro?', 'Sim. O atendimento é online pelo WhatsApp e a análise considera a rede credenciada da sua cidade antes da indicação.'],
   ['Consigo avaliar meu plano atual?', 'Sim. A Maisa pode comparar seu plano atual com alternativas do mercado para ver se ainda faz sentido manter, trocar ou renegociar.'],
-  ['Atende MEI, família e empresa?', 'Sim. A consultoria atende planos familiares, MEI, PME e empresas que precisam organizar benefícios para colaboradores.'],
-  ['Quanto tempo demora?', 'Com as informações principais em mãos, normalmente a pré-análise sai no mesmo dia ou em até 24 horas úteis.']
+  ['Atende MEI, família e empresa?', 'Sim. A consultoria atende planos familiares, MEI, PME e empresas que precisam organizar benefícios para colaboradores.']
 ];
+
+const initialLead = {
+  nome: '',
+  telefone: '',
+  cidade: '',
+  tipo: 'Família',
+  vidas: '1 vida',
+  prioridade: 'Melhor custo-benefício',
+  horario: 'Hoje ainda',
+  observacao: ''
+};
 
 const reveal = {
   hidden: { opacity: 0, y: 34 },
@@ -75,7 +87,7 @@ function useLuxuryCursor() {
     };
 
     const hot = (event) => {
-      const isHot = Boolean(event.target.closest('a, button, .mv-touch'));
+      const isHot = Boolean(event.target.closest('a, button, input, select, textarea, .mv-touch'));
       dot.classList.toggle('is-hot', isHot);
       ring.classList.toggle('is-hot', isHot);
     };
@@ -92,6 +104,108 @@ function useLuxuryCursor() {
   }, []);
 }
 
+function buildLeadMessage(lead) {
+  return [
+    'Olá Maisa! Quero uma consultoria gratuita de plano de saúde.',
+    '',
+    `Nome: ${lead.nome || 'Não informado'}`,
+    `Telefone: ${lead.telefone || 'Não informado'}`,
+    `Cidade/UF: ${lead.cidade || 'Não informado'}`,
+    `Tipo de plano: ${lead.tipo}`,
+    `Quantidade de vidas: ${lead.vidas}`,
+    `Prioridade: ${lead.prioridade}`,
+    `Melhor momento para contato: ${lead.horario}`,
+    lead.observacao ? `Observação: ${lead.observacao}` : '',
+    '',
+    'Pode me chamar para montar minha cotação?'
+  ].filter(Boolean).join('\n');
+}
+
+function LeadForm({ compact = false }) {
+  const [lead, setLead] = useState(initialLead);
+  const [sent, setSent] = useState(false);
+
+  const updateLead = (field, value) => setLead((current) => ({ ...current, [field]: value }));
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSent(true);
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildLeadMessage(lead))}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <form className={`mv-lead-form ${compact ? 'compact' : ''}`} onSubmit={handleSubmit}>
+      <div className="mv-form-badge">pré-análise gratuita</div>
+      <h3>Receba uma cotação personalizada</h3>
+      <p>Preencha em menos de 1 minuto. A Maisa recebe tudo no WhatsApp e já consegue te chamar com contexto.</p>
+
+      <div className="mv-form-grid">
+        <label>
+          Nome completo
+          <input value={lead.nome} onChange={(event) => updateLead('nome', event.target.value)} required placeholder="Seu nome" />
+        </label>
+        <label>
+          WhatsApp
+          <input value={lead.telefone} onChange={(event) => updateLead('telefone', event.target.value)} required inputMode="tel" placeholder="(21) 99999-9999" />
+        </label>
+        <label>
+          Cidade / UF
+          <input value={lead.cidade} onChange={(event) => updateLead('cidade', event.target.value)} required placeholder="Rio de Janeiro, RJ" />
+        </label>
+        <label>
+          Tipo de plano
+          <select value={lead.tipo} onChange={(event) => updateLead('tipo', event.target.value)}>
+            <option>Família</option>
+            <option>Individual</option>
+            <option>MEI</option>
+            <option>Empresa / PME</option>
+            <option>Quero trocar meu plano atual</option>
+          </select>
+        </label>
+        <label>
+          Quantas vidas?
+          <select value={lead.vidas} onChange={(event) => updateLead('vidas', event.target.value)}>
+            <option>1 vida</option>
+            <option>2 vidas</option>
+            <option>3 a 5 vidas</option>
+            <option>6 a 29 vidas</option>
+            <option>30+ vidas</option>
+          </select>
+        </label>
+        <label>
+          Prioridade
+          <select value={lead.prioridade} onChange={(event) => updateLead('prioridade', event.target.value)}>
+            <option>Melhor custo-benefício</option>
+            <option>Menor preço possível</option>
+            <option>Hospital específico</option>
+            <option>Rede premium</option>
+            <option>Reduzir custo do plano atual</option>
+          </select>
+        </label>
+        <label>
+          Quando quer retorno?
+          <select value={lead.horario} onChange={(event) => updateLead('horario', event.target.value)}>
+            <option>Hoje ainda</option>
+            <option>Manhã</option>
+            <option>Tarde</option>
+            <option>Noite</option>
+            <option>Sem pressa</option>
+          </select>
+        </label>
+        <label className="mv-field-wide">
+          Algum hospital, bairro ou detalhe importante?
+          <textarea value={lead.observacao} onChange={(event) => updateLead('observacao', event.target.value)} rows="3" placeholder="Ex: quero rede com Copa D'Or, Barra, Niterói, parto, reembolso..." />
+        </label>
+      </div>
+
+      <button className="mv-btn mv-btn-gold mv-form-submit" type="submit"><WhatsIcon /> enviar dados pelo WhatsApp</button>
+      {sent && <small className="mv-form-success">Perfeito. O WhatsApp foi aberto com os dados do lead formatados.</small>}
+      <small className="mv-form-note">Ao enviar, você será direcionado ao WhatsApp. Sem spam, sem compromisso.</small>
+    </form>
+  );
+}
+
 export default function PaginaLandingMasterpiece() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
@@ -102,9 +216,9 @@ export default function PaginaLandingMasterpiece() {
   return (
     <>
       <SEO
-        title="Maisa Valentim | Curadoria Premium em Planos de Saúde"
-        description="Consultoria gratuita em planos de saúde com curadoria humana, comparação de operadoras, rede credenciada, carências e suporte pós-contratação."
-        keywords="Maisa Valentim, consultoria plano de saúde, plano de saúde RJ, plano de saúde familiar, plano MEI, plano empresarial, Unimed, Bradesco Saúde, SulAmérica, Amil"
+        title="Maisa Valentim | Cotação Gratuita de Planos de Saúde"
+        description="Faça uma pré-análise gratuita de plano de saúde. Envie seus dados pelo formulário e receba atendimento pelo WhatsApp com Maisa Valentim."
+        keywords="cotação plano de saúde, consultoria plano de saúde, Maisa Valentim, plano de saúde familiar, plano MEI, plano empresarial, Unimed, Bradesco Saúde, SulAmérica, Amil"
       />
 
       <main className="mv-page" id="topo">
@@ -119,7 +233,7 @@ export default function PaginaLandingMasterpiece() {
           <div className="mv-nav-links">
             {navItems.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
           </div>
-          <a className="mv-nav-cta" href={whatsappUrl} target="_blank" rel="noopener noreferrer">consultoria gratuita</a>
+          <a className="mv-nav-cta" href="#lead">fazer cotação grátis</a>
           <button className="mv-menu" type="button" aria-label="Abrir menu" onClick={() => setMenuOpen((state) => !state)}>{menuOpen ? '×' : '☰'}</button>
         </nav>
 
@@ -135,11 +249,14 @@ export default function PaginaLandingMasterpiece() {
             <div className="mv-overline"><span /> Consultoria em planos de saúde · sem custo</div>
             <h1>Plano de saúde escolhido com <em>critério, beleza e calma.</em></h1>
             <p>
-              Uma curadoria personalizada para você parar de comparar no escuro. A Maisa entende sua rotina, lê o mercado por trás das propostas e te guia até a cobertura certa.
+              Uma curadoria personalizada para você parar de comparar no escuro. Preencha seus dados, fale pelo WhatsApp e receba uma pré-análise com rede, carência e custo-benefício.
             </p>
             <div className="mv-actions">
-              <a className="mv-btn mv-btn-gold" href={whatsappUrl} target="_blank" rel="noopener noreferrer"><WhatsIcon /> falar com a Maisa</a>
-              <a className="mv-scroll" href="#curadoria">ver a experiência <span>↓</span></a>
+              <a className="mv-btn mv-btn-gold" href="#lead"><WhatsIcon /> quero minha cotação</a>
+              <a className="mv-scroll" href={whatsappUrl} target="_blank" rel="noopener noreferrer">chamar direto no WhatsApp <span>↗</span></a>
+            </div>
+            <div className="mv-lead-promise">
+              <span>Resposta rápida</span><span>Sem compromisso</span><span>Atendimento humano</span>
             </div>
           </motion.div>
 
@@ -152,17 +269,17 @@ export default function PaginaLandingMasterpiece() {
                 <span>não apenas nomes famosos</span>
               </div>
               <div className="mv-card mv-card-mid">
-                <small>carência & regras</small>
-                <strong>Sem surpresa</strong>
-                <span>antes de assinar</span>
+                <small>lead qualificado</small>
+                <strong>Dados certos</strong>
+                <span>para acionar rápido</span>
               </div>
               <div className="mv-card mv-card-front">
                 <div className="mv-card-top">
                   <div><small>curadoria Maisa</small><strong>Plano ideal</strong></div>
                   <span className="mv-chip">gratuita</span>
                 </div>
-                <div className="mv-card-price">clareza antes do contrato</div>
-                <div className="mv-tags"><span>rede</span><span>carência</span><span>custo</span><span>suporte</span></div>
+                <div className="mv-card-price">cotação com contexto</div>
+                <div className="mv-tags"><span>nome</span><span>cidade</span><span>vidas</span><span>prioridade</span></div>
               </div>
             </div>
           </motion.div>
@@ -176,6 +293,22 @@ export default function PaginaLandingMasterpiece() {
               <p>{caption}</p>
             </div>
           ))}
+        </section>
+
+        <section className="mv-lead-section" id="lead">
+          <motion.div className="mv-lead-copy" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }} variants={reveal}>
+            <div className="mv-kicker">Lead qualificado</div>
+            <h2>Deixe seus dados e receba uma <em>pré-análise real.</em></h2>
+            <p>Este formulário foi criado para gerar lead pronto para atendimento: telefone, cidade, tipo de plano, quantidade de vidas e prioridade. Ao enviar, o WhatsApp abre com tudo organizado para a Maisa acionar o cliente.</p>
+            <ul>
+              <li>Menos fricção para o cliente</li>
+              <li>Mais contexto para a consultora</li>
+              <li>Mais chance de conversão no primeiro contato</li>
+            </ul>
+          </motion.div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={reveal}>
+            <LeadForm />
+          </motion.div>
         </section>
 
         <section className="mv-section mv-curadoria" id="curadoria">
@@ -208,8 +341,8 @@ export default function PaginaLandingMasterpiece() {
           <div className="mv-method-left">
             <div className="mv-kicker">O método</div>
             <h2>Simples por fora, <em>cirúrgico por dentro.</em></h2>
-            <p>Esta área mistura o refinamento editorial do seu HTML com a pegada premium do projeto antigo: passos limpos, hierarquia forte e microinterações sem poluição.</p>
-            <a className="mv-inline" href={whatsappUrl} target="_blank" rel="noopener noreferrer">iniciar diagnóstico →</a>
+            <p>A jornada foi desenhada para gerar contato e confiança ao mesmo tempo: a pessoa entende a proposta, preenche o formulário e já chega no WhatsApp mais qualificada.</p>
+            <a className="mv-inline" href="#lead">iniciar diagnóstico →</a>
           </div>
           <div className="mv-method-steps">
             {methodSteps.map(([number, title, text]) => (
@@ -219,6 +352,11 @@ export default function PaginaLandingMasterpiece() {
               </motion.div>
             ))}
           </div>
+        </section>
+
+        <section className="mv-mini-cta">
+          <div><strong>Quer acelerar?</strong><span>Envie seus dados agora e receba atendimento com contexto.</span></div>
+          <a className="mv-btn mv-btn-gold" href="#lead"><WhatsIcon /> preencher formulário</a>
         </section>
 
         <section className="mv-operators" id="operadoras">
@@ -283,14 +421,14 @@ export default function PaginaLandingMasterpiece() {
           <div>
             <span>Comece agora — sem compromisso</span>
             <h2>Sua saúde merece uma decisão <em>bem guiada.</em></h2>
-            <p>Uma conversa rápida já mostra se existe um plano mais inteligente para sua fase de vida, família ou empresa.</p>
-            <a className="mv-btn mv-btn-gold" href={whatsappUrl} target="_blank" rel="noopener noreferrer"><WhatsIcon /> falar no WhatsApp agora</a>
+            <p>Prefere ir direto? Preencha o formulário e o WhatsApp abrirá com todos os dados que a Maisa precisa para te acionar.</p>
+            <a className="mv-btn mv-btn-gold" href="#lead"><WhatsIcon /> preencher e enviar</a>
             <small>Sem custo · Sem pressão · Atendimento humano</small>
           </div>
         </section>
 
-        <a className="mv-float" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp"><WhatsIcon /></a>
-        <div className="mv-mobile-dock"><a href="#metodo">Método</a><a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a></div>
+        <a className="mv-float" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp"><WhatsIcon /><span>WhatsApp</span></a>
+        <div className="mv-mobile-dock"><a href="#lead">Cotação</a><a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a></div>
       </main>
     </>
   );
