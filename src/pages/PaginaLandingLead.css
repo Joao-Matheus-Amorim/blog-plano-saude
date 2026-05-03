@@ -274,44 +274,68 @@
 @media (max-width: 640px) {
   .mv-page { padding-bottom: 92px !important; }
 
+  .mv-page::after {
+    opacity: .35 !important;
+  }
+
   .mv-nav {
-    top: 14px !important;
+    top: 12px !important;
     width: calc(100% - 20px) !important;
     padding: 9px 10px 9px 14px !important;
-    background: rgba(14,15,13,.86) !important;
+    background: rgba(14,15,13,.9) !important;
+    z-index: 5000 !important;
   }
 
   .mv-brand { font-size: 14px !important; letter-spacing: .11em !important; }
   .mv-menu { min-height: 38px !important; width: 40px !important; }
-  .mv-mobile-panel { top: 72px !important; }
+  .mv-mobile-panel { top: 72px !important; z-index: 4999 !important; }
 
   .mv-hero {
-    min-height: auto !important;
-    padding: 88px 16px 24px !important;
-    gap: 20px !important;
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 84px 16px 18px !important;
+    margin: 0 !important;
+  }
+
+  .mv-hero-copy {
+    display: block !important;
+    position: relative !important;
+    z-index: 20 !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .mv-overline {
-    margin-bottom: 14px !important;
+    display: inline-flex !important;
+    margin-bottom: 12px !important;
     font-size: 9px !important;
     line-height: 1.45 !important;
-    letter-spacing: .13em !important;
+    letter-spacing: .12em !important;
+  }
+
+  .mv-overline span {
+    width: 24px !important;
   }
 
   .mv-hero h1 {
-    font-size: clamp(2.45rem, 12.5vw, 3.75rem) !important;
-    line-height: .94 !important;
+    display: block !important;
+    font-size: clamp(2.3rem, 11.5vw, 3.35rem) !important;
+    line-height: .96 !important;
     letter-spacing: -.035em !important;
+    max-width: 100% !important;
   }
 
   .mv-hero-copy p {
-    margin-top: 16px !important;
+    display: block !important;
+    margin-top: 14px !important;
     font-size: 14px !important;
-    line-height: 1.55 !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
   }
 
   .mv-actions {
-    margin-top: 20px !important;
+    margin-top: 18px !important;
     gap: 10px !important;
   }
 
@@ -329,7 +353,7 @@
   }
 
   .mv-lead-promise {
-    margin-top: 14px;
+    margin-top: 12px;
     gap: 6px;
   }
 
@@ -342,54 +366,51 @@
   }
 
   .mv-hero-art {
-    min-height: 210px !important;
-    transform: scale(.7) !important;
-    transform-origin: center top !important;
-    margin-bottom: -72px !important;
-    opacity: .9;
+    display: none !important;
   }
 
   .mv-proof-strip {
-    padding: 12px 16px 18px !important;
+    padding: 8px 16px 14px !important;
     gap: 8px !important;
+    display: grid !important;
   }
 
   .mv-proof {
     min-height: auto !important;
-    padding: 16px !important;
+    padding: 14px !important;
     border-radius: 14px;
   }
 
-  .mv-proof strong { font-size: 34px !important; }
-  .mv-proof span { margin-top: 8px !important; font-size: 9px !important; }
+  .mv-proof strong { font-size: 32px !important; }
+  .mv-proof span { margin-top: 7px !important; font-size: 9px !important; }
   .mv-proof p { font-size: 12px !important; }
 
   .mv-lead-section {
-    padding: 26px 16px 44px !important;
-    gap: 20px !important;
-    scroll-margin-top: 86px;
+    padding: 20px 16px 42px !important;
+    gap: 18px !important;
+    scroll-margin-top: 80px;
   }
 
-  .mv-lead-copy .mv-kicker { display: none; }
+  .mv-lead-copy .mv-kicker { display: none !important; }
 
   .mv-lead-copy h2 {
-    font-size: clamp(2rem, 10vw, 2.75rem) !important;
+    font-size: clamp(1.95rem, 9.5vw, 2.65rem) !important;
     line-height: 1 !important;
   }
 
   .mv-lead-copy p {
-    margin-top: 12px !important;
-    font-size: 14px !important;
-    line-height: 1.55 !important;
+    margin-top: 10px !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
   }
 
   .mv-lead-copy ul {
-    margin-top: 16px !important;
-    gap: 8px !important;
+    margin-top: 14px !important;
+    gap: 7px !important;
   }
 
   .mv-lead-copy li {
-    font-size: 13px !important;
+    font-size: 12.5px !important;
   }
 
   .mv-form-grid {
@@ -399,23 +420,23 @@
 
   .mv-lead-form {
     border-radius: 16px;
-    padding: 20px !important;
+    padding: 19px !important;
     box-shadow: 0 22px 60px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.08);
   }
 
   .mv-form-badge {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     font-size: 9px;
   }
 
   .mv-lead-form h3 {
-    font-size: 2rem !important;
+    font-size: 1.9rem !important;
   }
 
   .mv-lead-form p {
-    margin: 10px 0 16px;
-    font-size: 13.5px;
-    line-height: 1.5;
+    margin: 9px 0 15px;
+    font-size: 13px;
+    line-height: 1.45;
   }
 
   .mv-lead-form input,
@@ -427,7 +448,7 @@
   }
 
   .mv-field-wide textarea {
-    min-height: 74px;
+    min-height: 72px;
   }
 
   .mv-form-submit {
@@ -440,18 +461,18 @@
   .mv-operators,
   .mv-faq,
   .mv-final {
-    padding-top: 54px !important;
-    padding-bottom: 54px !important;
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
   }
 
   .mv-section-head {
-    margin-bottom: 32px !important;
+    margin-bottom: 30px !important;
   }
 
   .mv-section-head h2,
   .mv-method-left h2,
   .mv-final h2 {
-    font-size: clamp(2.2rem, 11vw, 3.25rem) !important;
+    font-size: clamp(2.05rem, 10.5vw, 3.05rem) !important;
     line-height: 1 !important;
   }
 
@@ -466,7 +487,7 @@
   }
 
   .mv-mini-cta {
-    margin: 0 16px 46px !important;
+    margin: 0 16px 44px !important;
     padding: 20px !important;
   }
 
@@ -482,10 +503,10 @@
     left: 10px !important;
     right: 10px !important;
     bottom: 10px !important;
-    z-index: 4000 !important;
+    z-index: 6000 !important;
     padding: 8px !important;
     border-radius: 22px !important;
-    background: rgba(14,15,13,.9) !important;
+    background: rgba(14,15,13,.92) !important;
     border: 1px solid rgba(184,154,106,.34) !important;
     backdrop-filter: blur(26px) !important;
     box-shadow: 0 18px 60px rgba(0,0,0,.48) !important;
