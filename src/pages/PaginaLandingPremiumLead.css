@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 .pl-page {
-  --ink: #0e0f0d;
-  --card: #111311;
+  --ink: #0a120d;
+  --card: #0f1a13;
   --sage: #3d5a47;
+  --leaf: #7ed957;
+  --leaf2: #b8ff88;
+  --mint: #dfffd3;
   --mist: #c8d5cc;
   --ivory: #f5f2ec;
   --gold: #b89a6a;
@@ -15,10 +18,23 @@
   color: var(--ivory);
   font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background:
-    radial-gradient(ellipse 75% 55% at 76% 22%, rgba(61,90,71,.34), transparent 62%),
-    radial-gradient(ellipse 60% 72% at 8% 82%, rgba(184,154,106,.14), transparent 58%),
-    linear-gradient(160deg, #0e0f0d 0%, #141a15 52%, #0e0f0d 100%);
+    radial-gradient(ellipse 85% 60% at 84% 10%, rgba(126,217,87,.2), transparent 56%),
+    radial-gradient(ellipse 70% 62% at 12% 82%, rgba(184,154,106,.13), transparent 58%),
+    radial-gradient(ellipse 52% 48% at 74% 58%, rgba(61,90,71,.35), transparent 62%),
+    linear-gradient(160deg, #07100a 0%, #0d1b11 46%, #0e0f0d 100%);
   position: relative;
+}
+
+.pl-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(126,217,87,.09), transparent 18%),
+    radial-gradient(circle at 90% 72%, rgba(184,154,106,.1), transparent 22%);
+  filter: blur(2px);
+  opacity: .9;
 }
 
 .pl-page::after {
@@ -26,10 +42,10 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: .52;
+  opacity: .42;
   background-image:
-    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+    linear-gradient(rgba(223,255,211,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(223,255,211,.025) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(ellipse 75% 70% at 60% 35%, black 18%, transparent 78%);
 }
@@ -51,11 +67,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  border: 1px solid rgba(184,154,106,.34);
+  border: 1px solid rgba(126,217,87,.28);
   border-radius: 999px;
-  background: rgba(14,15,13,.86);
-  backdrop-filter: blur(24px) saturate(160%);
-  box-shadow: 0 20px 60px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.05);
+  background: rgba(8,18,11,.78);
+  backdrop-filter: blur(24px) saturate(170%);
+  box-shadow: 0 20px 60px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 .pl-brand {
@@ -66,7 +82,7 @@
   white-space: nowrap;
   color: var(--ivory);
 }
-.pl-brand em { color: var(--gold); font-style: italic; }
+.pl-brand em { color: var(--leaf2); font-style: italic; }
 
 .pl-nav-cta {
   min-height: 42px;
@@ -75,12 +91,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--gold);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--leaf2), var(--leaf));
+  color: #07100a;
   font-size: 10px;
   font-weight: 900;
   letter-spacing: .09em;
   text-transform: uppercase;
+  box-shadow: 0 12px 34px rgba(126,217,87,.24);
 }
 
 .pl-hero {
@@ -90,12 +107,24 @@
   position: relative;
 }
 
+.pl-hero::before {
+  content: '';
+  position: absolute;
+  right: -64px;
+  top: 8px;
+  width: 190px;
+  height: 190px;
+  border-radius: 44% 56% 63% 37% / 42% 40% 60% 58%;
+  background: radial-gradient(circle, rgba(126,217,87,.18), transparent 66%);
+  pointer-events: none;
+}
+
 .pl-eyebrow,
 .pl-label {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--gold2);
+  color: var(--leaf2);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .16em;
@@ -107,8 +136,8 @@
   content: '';
   width: 28px;
   height: 1px;
-  background: var(--gold);
-  opacity: .72;
+  background: linear-gradient(90deg, var(--leaf), var(--gold));
+  opacity: .85;
 }
 
 .pl-copy h1,
@@ -134,8 +163,9 @@
 .pl-section h2 em,
 .pl-operators h2 em,
 .pl-final h2 em {
-  color: var(--gold);
+  color: var(--leaf2);
   font-style: italic;
+  text-shadow: 0 0 34px rgba(126,217,87,.14);
 }
 
 .pl-copy p,
@@ -160,7 +190,7 @@
 .pl-submit {
   min-height: 52px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -173,15 +203,15 @@
 
 .pl-main-cta,
 .pl-submit {
-  background: var(--gold);
-  color: var(--ink);
-  box-shadow: 0 16px 46px rgba(184,154,106,.27);
+  background: linear-gradient(135deg, var(--leaf2), var(--leaf));
+  color: #07100a;
+  box-shadow: 0 16px 46px rgba(126,217,87,.25);
 }
 
 .pl-ghost-cta {
-  border: 1px solid rgba(184,154,106,.28);
-  background: rgba(184,154,106,.07);
-  color: var(--gold2);
+  border: 1px solid rgba(126,217,87,.26);
+  background: rgba(126,217,87,.08);
+  color: var(--mint);
 }
 
 .pl-trust {
@@ -194,12 +224,12 @@
 .pl-trust span {
   min-height: 34px;
   padding: 0 6px;
-  border: 1px solid rgba(184,154,106,.18);
+  border: 1px solid rgba(126,217,87,.2);
   border-radius: 999px;
-  background: rgba(184,154,106,.06);
+  background: rgba(126,217,87,.07);
   display: grid;
   place-items: center;
-  color: var(--gold2);
+  color: var(--mint);
   font-size: 8.4px;
   font-weight: 900;
   letter-spacing: .08em;
@@ -215,24 +245,24 @@
 #cotacao { scroll-margin-top: 86px; }
 
 .pl-form {
-  border: 1px solid rgba(184,154,106,.3);
-  border-radius: 18px;
+  border: 1px solid rgba(126,217,87,.26);
+  border-radius: 24px;
   padding: 18px;
   background:
-    linear-gradient(150deg, rgba(61,90,71,.44), rgba(17,19,17,.92)),
-    rgba(17,19,17,.88);
-  box-shadow: 0 26px 76px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
-  backdrop-filter: blur(18px);
+    linear-gradient(150deg, rgba(28,66,37,.58), rgba(10,18,13,.92)),
+    rgba(15,26,19,.9);
+  box-shadow: 0 26px 76px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.09), 0 0 0 1px rgba(184,154,106,.05);
+  backdrop-filter: blur(20px) saturate(160%);
 }
 
 .pl-form-badge {
   width: fit-content;
   margin-bottom: 10px;
-  border: 1px solid rgba(184,154,106,.28);
+  border: 1px solid rgba(126,217,87,.28);
   border-radius: 999px;
   padding: 7px 11px;
-  color: var(--gold2);
-  background: rgba(184,154,106,.08);
+  color: var(--mint);
+  background: rgba(126,217,87,.09);
   font-size: 9px;
   font-weight: 900;
   letter-spacing: .13em;
@@ -259,7 +289,7 @@
 .pl-fields label {
   display: grid;
   gap: 7px;
-  color: var(--gold2);
+  color: var(--mint);
   font-size: 10px;
   font-weight: 900;
   letter-spacing: .1em;
@@ -277,7 +307,7 @@
   font-size: 8.5px;
   letter-spacing: .1em;
 }
-.pl-fields b { color: #9be7b1; }
+.pl-fields b { color: var(--leaf2); }
 .pl-fields em { color: rgba(200,213,204,.48); }
 
 .pl-fields input,
@@ -285,13 +315,20 @@
 .pl-fields textarea {
   width: 100%;
   min-height: 46px;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 11px;
+  border: 1px solid rgba(223,255,211,.12);
+  border-radius: 15px;
   outline: none;
   padding: 0 13px;
-  background: rgba(14,15,13,.62);
+  background: rgba(5,13,8,.58);
   color: var(--ivory);
   font-size: 14px;
+}
+
+.pl-fields input:focus,
+.pl-fields select:focus,
+.pl-fields textarea:focus {
+  border-color: rgba(126,217,87,.6);
+  box-shadow: 0 0 0 3px rgba(126,217,87,.12);
 }
 
 .pl-fields textarea {
@@ -311,7 +348,7 @@
 .pl-success {
   display: block;
   margin-top: 10px;
-  color: #9be7b1;
+  color: var(--leaf2);
   font-weight: 800;
 }
 
@@ -323,15 +360,16 @@
 
 .pl-proof div,
 .pl-steps article {
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 14px;
+  border: 1px solid rgba(223,255,211,.08);
+  border-radius: 20px;
   padding: 15px;
-  background: rgba(17,19,17,.72);
+  background: rgba(15,26,19,.62);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 .pl-proof strong {
   display: block;
-  color: var(--gold);
+  color: var(--leaf2);
   font-family: 'Cormorant Garamond', serif;
   font-size: 34px;
   font-weight: 300;
@@ -370,7 +408,7 @@
 }
 
 .pl-steps b {
-  color: var(--gold);
+  color: var(--leaf2);
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
   letter-spacing: .12em;
@@ -389,19 +427,19 @@
 .pl-full-lead {
   display: grid;
   gap: 20px;
-  background: rgba(17,19,17,.36);
+  background: rgba(15,26,19,.36);
 }
 
 .pl-operators {
   overflow: hidden;
-  background: #111311;
+  background: rgba(9,18,12,.86);
 }
 
 .pl-marquee {
   margin-top: 26px;
   padding: 20px 0;
-  border-top: 1px solid rgba(255,255,255,.07);
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  border-top: 1px solid rgba(223,255,211,.08);
+  border-bottom: 1px solid rgba(223,255,211,.08);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -409,7 +447,7 @@
 .pl-marquee span {
   display: inline-block;
   font-family: 'Cormorant Garamond', serif;
-  color: rgba(255,255,255,.32);
+  color: rgba(223,255,211,.38);
   font-size: 23px;
   letter-spacing: .06em;
   animation: pl-marquee 22s linear infinite;
@@ -417,7 +455,7 @@
 
 .pl-final {
   text-align: center;
-  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(61,90,71,.38), transparent 72%);
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(126,217,87,.18), transparent 72%);
 }
 
 .pl-final .pl-main-cta {
@@ -436,16 +474,16 @@
   grid-template-columns: 1.18fr .82fr;
   gap: 8px;
   padding: 8px;
-  border: 1px solid rgba(184,154,106,.34);
-  border-radius: 22px;
-  background: rgba(14,15,13,.92);
+  border: 1px solid rgba(126,217,87,.32);
+  border-radius: 24px;
+  background: rgba(8,18,11,.92);
   backdrop-filter: blur(24px);
   box-shadow: 0 18px 60px rgba(0,0,0,.48);
 }
 
 .pl-dock a {
   min-height: 52px;
-  border-radius: 16px;
+  border-radius: 18px;
   display: grid;
   place-items: center;
   font-size: 11px;
@@ -455,8 +493,8 @@
 }
 
 .pl-dock a:first-child {
-  background: var(--gold);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--leaf2), var(--leaf));
+  color: #07100a;
 }
 
 .pl-dock a:last-child {
@@ -491,7 +529,7 @@
     right: 38%;
     top: 18%;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(184,154,106,.14);
+    -webkit-text-stroke: 1px rgba(126,217,87,.16);
     font-family: 'Cormorant Garamond', serif;
     font-size: 220px;
     pointer-events: none;
@@ -526,7 +564,7 @@
   .pl-full-lead {
     grid-template-columns: .82fr 1.18fr;
     align-items: start;
-    background: rgba(17,19,17,.28);
+    background: rgba(15,26,19,.28);
   }
   .pl-fields { grid-template-columns: repeat(2, 1fr); }
   .pl-fields .wide { grid-column: 1 / -1; }
