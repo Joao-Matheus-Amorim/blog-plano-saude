@@ -29,15 +29,75 @@ function buildMessage(lead) {
   ].filter(Boolean).join('\n');
 }
 
+function getNumericLives(value) {
+  const text = String(value || '');
+  if (!text) return null;
+  if (text.includes('30')) return 30;
+  if (text.includes('6')) return 6;
+  if (text.includes('3')) return 3;
+  if (text.includes('2')) return 2;
+  if (text.includes('1')) return 1;
+  return null;
+}
+
+function buildAdminMessage(lead) {
+  return [
+    lead.cidade ? `Cidade/UF: ${lead.cidade}` : '',
+    lead.tipo ? `Tipo de plano: ${lead.tipo}` : '',
+    lead.vidas ? `Quantidade de vidas: ${lead.vidas}` : '',
+    lead.observacao ? `Detalhe: ${lead.observacao}` : '',
+    'Origem: Landing premium de planos de saúde'
+  ].filter(Boolean).join('\n');
+}
+
+async function saveLeadOnAdmin(lead) {
+  const eventId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `lead-${Date.now()}`;
+
+  const response = await fetch('/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nome: lead.nome,
+      telefone: lead.telefone,
+      whatsapp: lead.telefone,
+      email: null,
+      operadora: lead.tipo || 'Não informado',
+      vidas: getNumericLives(lead.vidas),
+      mensagem: buildAdminMessage(lead),
+      origem: 'Landing Premium Maisa',
+      event_id: eventId
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Erro ao salvar lead');
+  return data;
+}
+
 function LeadForm({ compact = false }) {
   const [lead, setLead] = useState(initialLead);
   const [sent, setSent] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const update = (field, value) => setLead((current) => ({ ...current, [field]: value }));
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    setSent(true);
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildMessage(lead))}`, '_blank', 'noopener,noreferrer');
+    setError('');
+    setSent(false);
+    setSaving(true);
+
+    try {
+      await saveLeadOnAdmin(lead);
+      setSent(true);
+      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildMessage(lead))}`, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      console.error('Erro ao enviar lead:', err);
+      setError('Não consegui registrar no painel agora. O WhatsApp será aberto para não perder o contato.');
+      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildMessage(lead))}`, '_blank', 'noopener,noreferrer');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -92,8 +152,9 @@ function LeadForm({ compact = false }) {
         )}
       </div>
 
-      <button className="pl-submit" type="submit">Receber cotação grátis</button>
-      {sent && <small className="pl-success">WhatsApp aberto com os dados do lead.</small>}
+      <button className="pl-submit" type="submit" disabled={saving}>{saving ? 'Registrando...' : 'Receber cotação grátis'}</button>
+      {sent && <small className="pl-success">Lead salvo no painel e WhatsApp aberto.</small>}
+      {error && <small className="pl-error">{error}</small>}
     </form>
   );
 }
