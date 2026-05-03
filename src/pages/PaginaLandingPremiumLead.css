@@ -54,6 +54,15 @@
 .pl-page button, .pl-page input, .pl-page select, .pl-page textarea { font: inherit; }
 .pl-page > * { position: relative; z-index: 2; }
 
+.pl-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .94;
+  mix-blend-mode: screen;
+}
+
 .pl-parallax {
   --mx: 0;
   --my: 0;
@@ -105,12 +114,25 @@
   width: 210px;
   min-height: 118px;
   padding: 20px;
-  border: 1px solid rgba(184,154,106,.24);
+  border: 1px solid rgba(184,154,106,.28);
   border-radius: 24px;
-  background: linear-gradient(145deg, rgba(61,90,71,.34), rgba(14,15,13,.5));
-  backdrop-filter: blur(24px) saturate(150%);
-  box-shadow: 0 28px 90px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.08), transparent 34%),
+    linear-gradient(145deg, rgba(61,90,71,.36), rgba(14,15,13,.5));
+  backdrop-filter: blur(30px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  box-shadow: 0 32px 100px rgba(0,0,0,.46), 0 0 58px rgba(184,154,106,.08), inset 0 1px 0 rgba(255,255,255,.11);
   transform-style: preserve-3d;
+}
+
+.pl-3d-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.16) 45%, transparent 62%);
+  transform: translateX(-120%);
+  animation: pl-shine 8s ease-in-out infinite;
 }
 
 .pl-3d-card span {
@@ -283,6 +305,7 @@
   font-weight: 900;
   letter-spacing: .1em;
   text-transform: uppercase;
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
 }
 
 .pl-main-cta,
@@ -292,10 +315,22 @@
   box-shadow: 0 16px 46px rgba(184,154,106,.25);
 }
 
+.pl-main-cta:hover,
+.pl-submit:hover,
+.pl-nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 58px rgba(184,154,106,.34), 0 0 34px rgba(184,154,106,.16);
+}
+
 .pl-ghost-cta {
   border: 1px solid rgba(184,154,106,.26);
   background: rgba(184,154,106,.08);
   color: var(--gold2);
+}
+
+.pl-ghost-cta:hover {
+  border-color: rgba(184,154,106,.62);
+  transform: translateY(-2px);
 }
 
 .pl-trust {
@@ -328,18 +363,36 @@
 .pl-hero-form,
 #cotacao { scroll-margin-top: 86px; }
 
+.pl-hero-form {
+  perspective: 1000px;
+}
+
 .pl-form {
-  border: 1px solid rgba(184,154,106,.28);
+  border: 1px solid rgba(184,154,106,.32);
   border-radius: 24px;
   padding: 18px;
   background:
+    linear-gradient(145deg, rgba(255,255,255,.08), transparent 28%),
     linear-gradient(150deg, rgba(61,90,71,.36), rgba(14,15,13,.78)),
     rgba(17,22,17,.74);
-  box-shadow: 0 26px 76px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.09), 0 0 0 1px rgba(255,255,255,.035);
-  backdrop-filter: blur(24px) saturate(165%);
-  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  box-shadow: 0 32px 96px rgba(0,0,0,.48), 0 0 72px rgba(184,154,106,.08), inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(28px) saturate(175%);
+  -webkit-backdrop-filter: blur(28px) saturate(175%);
   transform: translateZ(0);
+  position: relative;
+  overflow: hidden;
 }
+
+.pl-form::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 16% 0%, rgba(212,184,138,.18), transparent 38%);
+  pointer-events: none;
+}
+
+.pl-form > * { position: relative; z-index: 1; }
 
 .pl-form-badge {
   width: fit-content;
@@ -408,13 +461,14 @@
   background: rgba(8,11,8,.52);
   color: var(--ivory);
   font-size: 14px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 .pl-fields input:focus,
 .pl-fields select:focus,
 .pl-fields textarea:focus {
   border-color: rgba(184,154,106,.62);
-  box-shadow: 0 0 0 3px rgba(184,154,106,.12);
+  box-shadow: 0 0 0 3px rgba(184,154,106,.12), inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 .pl-fields textarea {
@@ -446,12 +500,15 @@
 
 .pl-proof div,
 .pl-steps article {
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.09);
   border-radius: 20px;
   padding: 15px;
-  background: rgba(17,22,17,.52);
-  backdrop-filter: blur(16px) saturate(150%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 20px 60px rgba(0,0,0,.18);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.055), transparent 36%),
+    rgba(17,22,17,.52);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 22px 70px rgba(0,0,0,.2);
 }
 
 .pl-proof strong {
@@ -600,6 +657,12 @@
   50% { translate: 0 -14px; }
 }
 
+@keyframes pl-shine {
+  0%, 18% { transform: translateX(-125%); }
+  38% { transform: translateX(125%); }
+  100% { transform: translateX(125%); }
+}
+
 @media (min-width: 760px) {
   .pl-page { padding-bottom: 0; }
   .pl-nav { max-width: 1180px; top: 18px; }
@@ -617,6 +680,14 @@
   .pl-actions { grid-template-columns: max-content max-content; }
   .pl-main-cta, .pl-ghost-cta, .pl-submit { padding: 0 28px; }
   .pl-trust { max-width: 500px; }
+  .pl-hero-form .pl-form {
+    transform: perspective(1050px) rotateY(-4deg) rotateX(2deg);
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .pl-hero-form .pl-form:hover {
+    transform: perspective(1050px) rotateY(-1deg) rotateX(0deg) translateY(-4px);
+    box-shadow: 0 42px 120px rgba(0,0,0,.56), 0 0 88px rgba(184,154,106,.13), inset 0 1px 0 rgba(255,255,255,.13);
+  }
   .pl-symbol {
     display: block;
     position: absolute;
@@ -674,6 +745,14 @@
     align-items: start;
   }
   .pl-steps { margin-top: 0; }
+  .pl-steps article {
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .pl-steps article:hover {
+    transform: translateY(-6px) perspective(800px) rotateX(2deg);
+    border-color: rgba(184,154,106,.34);
+    box-shadow: 0 32px 80px rgba(0,0,0,.28), 0 0 42px rgba(184,154,106,.08);
+  }
   .pl-full-lead {
     grid-template-columns: .82fr 1.18fr;
     align-items: start;
@@ -685,5 +764,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pl-3d-front, .pl-marquee span { animation: none !important; }
+  .pl-3d-front, .pl-marquee span, .pl-3d-card::before { animation: none !important; }
 }
