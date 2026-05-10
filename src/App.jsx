@@ -24,19 +24,18 @@ function GoogleAnalytics() {
   useEffect(() => {
     if (document.querySelector(`script[src*="${GA_TRACKING_ID}"]`)) return;
 
-    const script1 = document.createElement('script');
-    script1.async = true;
-    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-    document.head.appendChild(script1);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function gtag() {
+      window.dataLayer.push(arguments);
+    };
 
-    const script2 = document.createElement('script');
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });
-    `;
-    document.head.appendChild(script2);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
+    document.head.appendChild(script);
+
+    window.gtag('js', new Date());
+    window.gtag('config', GA_TRACKING_ID, { page_path: window.location.pathname });
   }, []);
 
   useEffect(() => {
@@ -54,21 +53,30 @@ function useSmoothScrollToTop() {
   useEffect(() => {
     const timer = setTimeout(() => {
       requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        if (location.hash) {
+          const target = document.getElementById(location.hash.slice(1));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+        }
+
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       });
-    }, 100);
+    }, 80);
 
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, location.search, location.hash]);
 }
 
 function AnimatedRoutes() {
   const location = useLocation();
+  const routeKey = `${location.pathname}${location.search}${location.hash}`;
   useSmoothScrollToTop();
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location} key={routeKey}>
         <Route path="/" element={<PageTransition><PaginaLandingPremiumLead /></PageTransition>} />
         <Route path="/contato" element={<PageTransition><PaginaContato /></PageTransition>} />
         <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
@@ -91,9 +99,9 @@ function AppShell() {
     <>
       <GoogleAnalytics />
       {!isLanding && <PremiumMotion />}
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden', position: 'relative' }}>
         {!isLanding && <Header />}
-        <main style={{ flex: 1, position: 'relative', isolation: 'isolate', WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' }}>
+        <main style={{ flex: 1, width: '100%', position: 'relative', isolation: 'isolate', WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' }}>
           <AnimatedRoutes />
         </main>
       </div>
