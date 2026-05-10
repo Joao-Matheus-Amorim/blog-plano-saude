@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
-const whatsappHref = 'https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20falar%20direto%20pelo%20WhatsApp%20sobre%20plano%20de%20saúde.';
+const whatsappHref = 'https://wa.me/5521977472141?text=Olá!%20Gostaria%20de%20falar%20direto%20pelo%20WhatsApp%20sobre%20uma%20análise%20personalizada%20de%20plano%20de%20saúde.';
 
 export default function FloatingWhatsApp() {
   const [hovered, setHovered] = useState(null);
@@ -13,14 +13,14 @@ export default function FloatingWhatsApp() {
       <div className="premium-floating-actions" aria-label="Ações rápidas">
         <Link
           to="/contato"
-          onMouseEnter={() => setHovered('quote')}
+          onMouseEnter={() => setHovered('analysis')}
           onMouseLeave={() => setHovered(null)}
           className="premium-float-orb premium-float-orb--quote"
-          aria-label="Abrir formulário de cotação"
+          aria-label="Abrir formulário de análise personalizada"
         >
           <span className="premium-float-orb__shine" />
           <span className="premium-float-orb__mark">MV</span>
-          <span className="premium-float-orb__label">Cotação</span>
+          <span className="premium-float-orb__label">Análise</span>
         </Link>
 
         <a
@@ -41,245 +41,29 @@ export default function FloatingWhatsApp() {
 
       {hovered && (
         <div className="premium-floating-tooltip">
-          {hovered === 'quote' ? 'Pegar dados para cotação' : 'Ir direto para o WhatsApp'}
+          {hovered === 'analysis' ? 'Solicitar análise personalizada' : 'Ir direto para o WhatsApp'}
         </div>
       )}
 
       <style>{`
-        .premium-floating-actions {
-          position: fixed !important;
-          right: 18px !important;
-          bottom: 18px !important;
-          z-index: 2147483647 !important;
-          display: grid !important;
-          gap: 12px;
-          justify-items: end;
-          perspective: 900px;
-          opacity: 1 !important;
-          visibility: visible !important;
-          pointer-events: auto !important;
-          transform: translate3d(0, 0, 0) !important;
-          filter: none !important;
-          isolation: isolate;
-          contain: layout style;
-        }
-
-        .premium-float-orb {
-          position: relative;
-          width: 62px;
-          height: 62px;
-          border-radius: 22px;
-          display: grid;
-          place-items: center;
-          color: #eff8e7;
-          text-decoration: none;
-          overflow: hidden;
-          border: 1px solid rgba(168, 196, 138, 0.34);
-          background:
-            radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.30), transparent 34%),
-            linear-gradient(145deg, rgba(45, 74, 36, 0.84), rgba(8, 14, 6, 0.78));
-          box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.34),
-            0 0 28px rgba(106, 140, 82, 0.28),
-            inset 0 1px 0 rgba(255, 255, 255, 0.22),
-            inset 0 -12px 28px rgba(0, 0, 0, 0.22);
-          backdrop-filter: blur(22px) saturate(170%);
-          -webkit-backdrop-filter: blur(22px) saturate(170%);
-          transition: transform 260ms cubic-bezier(.16, 1, .3, 1), box-shadow 260ms ease, border-color 260ms ease;
-          animation: premiumFloatSimple 4.2s ease-in-out infinite;
-          touch-action: manipulation;
-          -webkit-tap-highlight-color: transparent;
-          opacity: 1 !important;
-          visibility: visible !important;
-          pointer-events: auto !important;
-        }
-
-        .premium-float-orb::before {
-          content: '';
-          position: absolute;
-          inset: 5px;
-          border-radius: 18px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          pointer-events: none;
-        }
-
-        .premium-float-orb::after {
-          content: '';
-          position: absolute;
-          left: 13%;
-          right: 13%;
-          bottom: 8px;
-          height: 10px;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.08);
-          filter: blur(6px);
-          pointer-events: none;
-        }
-
-        .premium-float-orb:hover {
-          transform: translate3d(0, -5px, 0) rotateX(8deg) rotateY(-8deg) scale(1.04);
-          border-color: rgba(168, 196, 138, 0.66);
-          box-shadow:
-            0 24px 54px rgba(0, 0, 0, 0.42),
-            0 0 44px rgba(106, 140, 82, 0.42),
-            inset 0 1px 0 rgba(255, 255, 255, 0.30),
-            inset 0 -14px 30px rgba(0, 0, 0, 0.26);
-        }
-
-        .premium-float-orb:active {
-          transform: translate3d(0, -1px, 0) scale(0.96);
-        }
-
-        .premium-float-orb__shine {
-          position: absolute;
-          inset: -60% -45%;
-          background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.28), transparent 62%);
-          transform: translateX(-62%) rotate(14deg);
-          animation: premiumOrbSweep 4.8s ease-in-out infinite;
-          pointer-events: none;
-        }
-
-        .premium-float-orb__mark {
-          position: relative;
-          z-index: 1;
-          width: 41px;
-          height: 41px;
-          border-radius: 16px;
-          display: grid;
-          place-items: center;
-          color: #254623;
-          background:
-            radial-gradient(circle at 30% 18%, #ffffff, rgba(255, 252, 246, 0.88) 48%, rgba(168, 196, 138, 0.74));
-          box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.9),
-            inset 0 -8px 18px rgba(37, 70, 35, 0.14),
-            0 8px 22px rgba(0, 0, 0, 0.26);
-          font-family: 'Playfair Display', serif;
-          font-size: 17px;
-          font-weight: 800;
-          letter-spacing: -0.07em;
-          text-shadow: 0 1px 0 rgba(255, 255, 255, 0.56);
-        }
-
-        .premium-float-orb__label {
-          position: absolute;
-          right: 72px;
-          top: 50%;
-          transform: translateY(-50%) translateX(6px);
-          opacity: 0;
-          pointer-events: none;
-          white-space: nowrap;
-          padding: 8px 12px;
-          border-radius: 999px;
-          color: rgba(237, 248, 230, 0.90);
-          background: rgba(13, 22, 10, 0.78);
-          border: 1px solid rgba(168, 196, 138, 0.24);
-          box-shadow: 0 16px 36px rgba(0,0,0,.28);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: .08em;
-          text-transform: uppercase;
-          transition: opacity 220ms ease, transform 220ms ease;
-        }
-
-        .premium-float-orb:hover .premium-float-orb__label {
-          opacity: 1;
-          transform: translateY(-50%) translateX(0);
-        }
-
-        .premium-float-orb__icon {
-          position: relative;
-          z-index: 1;
-          filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28));
-        }
-
-        .premium-float-orb--whats {
-          width: 56px;
-          height: 56px;
-          border-radius: 20px;
-          background:
-            radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.28), transparent 34%),
-            linear-gradient(145deg, rgba(37, 211, 102, 0.92), rgba(18, 140, 126, 0.82) 58%, rgba(37, 70, 35, 0.88));
-          color: white;
-          animation-delay: .42s;
-        }
-
-        .premium-floating-tooltip {
-          position: fixed !important;
-          right: 88px !important;
-          bottom: 28px !important;
-          z-index: 2147483646 !important;
-          padding: 10px 14px;
-          border-radius: 999px;
-          color: rgba(237, 248, 230, 0.90);
-          background: rgba(13, 22, 10, 0.82);
-          border: 1px solid rgba(168, 196, 138, 0.28);
-          box-shadow: 0 18px 44px rgba(0, 0, 0, 0.30);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          font-size: 12px;
-          font-weight: 800;
-          animation: premiumTooltipIn 180ms ease both;
-          opacity: 1 !important;
-          visibility: visible !important;
-        }
-
-        @keyframes premiumFloatSimple {
-          0%, 100% { transform: translate3d(0, 0, 0); }
-          50% { transform: translate3d(0, -4px, 0); }
-        }
-
-        @keyframes premiumOrbSweep {
-          0%, 68%, 100% { transform: translateX(-65%) rotate(14deg); opacity: 0; }
-          36% { transform: translateX(65%) rotate(14deg); opacity: 1; }
-        }
-
-        @keyframes premiumTooltipIn {
-          from { opacity: 0; transform: translateY(6px) scale(.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @media (max-width: 768px) {
-          .premium-floating-actions {
-            right: 14px !important;
-            top: calc(150px + env(safe-area-inset-top)) !important;
-            bottom: auto !important;
-            gap: 10px;
-          }
-
-          .premium-float-orb {
-            width: 56px;
-            height: 56px;
-            border-radius: 20px;
-          }
-
-          .premium-float-orb--whats {
-            width: 52px;
-            height: 52px;
-          }
-
-          .premium-float-orb__mark {
-            width: 38px;
-            height: 38px;
-            border-radius: 15px;
-            font-size: 16px;
-          }
-
-          .premium-float-orb__label,
-          .premium-floating-tooltip {
-            display: none;
-          }
-        }
-
-        @media (max-width: 420px) {
-          .premium-floating-actions {
-            right: 12px !important;
-            top: calc(144px + env(safe-area-inset-top)) !important;
-            bottom: auto !important;
-          }
-        }
+        .premium-floating-actions { position: fixed !important; right: 18px !important; bottom: 18px !important; z-index: 2147483647 !important; display: grid !important; gap: 12px; justify-items: end; perspective: 900px; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; transform: translate3d(0, 0, 0) !important; filter: none !important; isolation: isolate; contain: layout style; }
+        .premium-float-orb { position: relative; width: 62px; height: 62px; border-radius: 22px; display: grid; place-items: center; color: #eff8e7; text-decoration: none; overflow: hidden; border: 1px solid rgba(168, 196, 138, 0.34); background: radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.30), transparent 34%), linear-gradient(145deg, rgba(45, 74, 36, 0.84), rgba(8, 14, 6, 0.78)); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 28px rgba(106, 140, 82, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -12px 28px rgba(0, 0, 0, 0.22); backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%); transition: transform 260ms cubic-bezier(.16, 1, .3, 1), box-shadow 260ms ease, border-color 260ms ease; animation: premiumFloatSimple 4.2s ease-in-out infinite; touch-action: manipulation; -webkit-tap-highlight-color: transparent; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .premium-float-orb::before { content: ''; position: absolute; inset: 5px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.08); pointer-events: none; }
+        .premium-float-orb::after { content: ''; position: absolute; left: 13%; right: 13%; bottom: 8px; height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); filter: blur(6px); pointer-events: none; }
+        .premium-float-orb:hover { transform: translate3d(0, -5px, 0) rotateX(8deg) rotateY(-8deg) scale(1.04); border-color: rgba(168, 196, 138, 0.66); box-shadow: 0 24px 54px rgba(0, 0, 0, 0.42), 0 0 44px rgba(106, 140, 82, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.30), inset 0 -14px 30px rgba(0, 0, 0, 0.26); }
+        .premium-float-orb:active { transform: translate3d(0, -1px, 0) scale(0.96); }
+        .premium-float-orb__shine { position: absolute; inset: -60% -45%; background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.28), transparent 62%); transform: translateX(-62%) rotate(14deg); animation: premiumOrbSweep 4.8s ease-in-out infinite; pointer-events: none; }
+        .premium-float-orb__mark { position: relative; z-index: 1; width: 41px; height: 41px; border-radius: 16px; display: grid; place-items: center; color: #254623; background: radial-gradient(circle at 30% 18%, #ffffff, rgba(255, 252, 246, 0.88) 48%, rgba(168, 196, 138, 0.74)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -8px 18px rgba(37, 70, 35, 0.14), 0 8px 22px rgba(0, 0, 0, 0.26); font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 800; letter-spacing: -0.07em; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.56); }
+        .premium-float-orb__label { position: absolute; right: 72px; top: 50%; transform: translateY(-50%) translateX(6px); opacity: 0; pointer-events: none; white-space: nowrap; padding: 8px 12px; border-radius: 999px; color: rgba(237, 248, 230, 0.90); background: rgba(13, 22, 10, 0.78); border: 1px solid rgba(168, 196, 138, 0.24); box-shadow: 0 16px 36px rgba(0,0,0,.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; transition: opacity 220ms ease, transform 220ms ease; }
+        .premium-float-orb:hover .premium-float-orb__label { opacity: 1; transform: translateY(-50%) translateX(0); }
+        .premium-float-orb__icon { position: relative; z-index: 1; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28)); }
+        .premium-float-orb--whats { width: 56px; height: 56px; border-radius: 20px; background: radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.28), transparent 34%), linear-gradient(145deg, rgba(37, 211, 102, 0.92), rgba(18, 140, 126, 0.82) 58%, rgba(37, 70, 35, 0.88)); color: white; animation-delay: .42s; }
+        .premium-floating-tooltip { position: fixed !important; right: 88px !important; bottom: 28px !important; z-index: 2147483646 !important; padding: 10px 14px; border-radius: 999px; color: rgba(237, 248, 230, 0.90); background: rgba(13, 22, 10, 0.82); border: 1px solid rgba(168, 196, 138, 0.28); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.30); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); font-size: 12px; font-weight: 800; animation: premiumTooltipIn 180ms ease both; opacity: 1 !important; visibility: visible !important; }
+        @keyframes premiumFloatSimple { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -4px, 0); } }
+        @keyframes premiumOrbSweep { 0%, 68%, 100% { transform: translateX(-65%) rotate(14deg); opacity: 0; } 36% { transform: translateX(65%) rotate(14deg); opacity: 1; } }
+        @keyframes premiumTooltipIn { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @media (max-width: 768px) { .premium-floating-actions { right: 14px !important; top: calc(150px + env(safe-area-inset-top)) !important; bottom: auto !important; gap: 10px; } .premium-float-orb { width: 56px; height: 56px; border-radius: 20px; } .premium-float-orb--whats { width: 52px; height: 52px; } .premium-float-orb__mark { width: 38px; height: 38px; border-radius: 15px; font-size: 16px; } .premium-float-orb__label, .premium-floating-tooltip { display: none; } }
+        @media (max-width: 420px) { .premium-floating-actions { right: 12px !important; top: calc(144px + env(safe-area-inset-top)) !important; bottom: auto !important; } }
       `}</style>
     </>
   );
