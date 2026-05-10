@@ -3,7 +3,7 @@ import SEO from '../components/SEO.jsx';
 import './PaginaLandingPremiumLead.css';
 
 const phoneNumber = '5521977472141';
-const directWhatsapp = `https://wa.me/${phoneNumber}?text=${encodeURIComponent('Olá Maisa, quero uma consultoria gratuita de plano de saúde.')}`;
+const directWhatsapp = `https://wa.me/${phoneNumber}?text=${encodeURIComponent('Olá Maisa, quero uma análise personalizada de plano de saúde.')}`;
 
 const initialLead = {
   nome: '',
@@ -16,7 +16,7 @@ const initialLead = {
 
 function buildMessage(lead) {
   return [
-    'Olá Maisa! Quero uma consultoria gratuita de plano de saúde.',
+    'Olá Maisa! Quero uma análise personalizada de plano de saúde.',
     '',
     `Nome: ${lead.nome}`,
     `WhatsApp: ${lead.telefone}`,
@@ -105,8 +105,8 @@ function LeadForm({ compact = false }) {
 
   return (
     <form className={`pl-form ${compact ? 'compact' : ''}`} onSubmit={submit}>
-      <div className="pl-form-badge">pré-análise gratuita</div>
-      <h2>{compact ? 'Receba sua cotação' : 'Receba uma cotação personalizada'}</h2>
+      <div className="pl-form-badge">pré-análise personalizada</div>
+      <h2>{compact ? 'Receba sua análise' : 'Receba uma análise personalizada'}</h2>
       <p>Obrigatório somente nome e WhatsApp. O restante é opcional.</p>
 
       <div className="pl-fields">
@@ -155,7 +155,7 @@ function LeadForm({ compact = false }) {
         )}
       </div>
 
-      <button className="pl-submit" type="submit" disabled={saving}>{saving ? 'Registrando...' : 'Receber cotação grátis'}</button>
+      <button className="pl-submit" type="submit" disabled={saving}>{saving ? 'Registrando...' : 'Receber análise personalizada'}</button>
       {sent && <small className="pl-success">Lead salvo no painel e WhatsApp aberto.</small>}
       {error && <small className="pl-error">{error}</small>}
     </form>
@@ -222,23 +222,8 @@ function PremiumCanvas() {
     const animate = () => {
       time += 0.006;
       context.clearRect(0, 0, width, height);
-
-      drawBlob(
-        width * 0.78 + pointerX * 36,
-        height * 0.2 + pointerY * 28,
-        Math.min(width, height) * 0.42,
-        'rgba(184,154,106,.32)',
-        'rgba(61,90,71,.20)',
-        0.95
-      );
-      drawBlob(
-        width * 0.18 - pointerX * 24,
-        height * 0.74 - pointerY * 24,
-        Math.min(width, height) * 0.33,
-        'rgba(61,90,71,.36)',
-        'rgba(184,154,106,.10)',
-        0.78
-      );
+      drawBlob(width * 0.78 + pointerX * 36, height * 0.2 + pointerY * 28, Math.min(width, height) * 0.42, 'rgba(184,154,106,.32)', 'rgba(61,90,71,.20)', 0.95);
+      drawBlob(width * 0.18 - pointerX * 24, height * 0.74 - pointerY * 24, Math.min(width, height) * 0.33, 'rgba(61,90,71,.36)', 'rgba(184,154,106,.10)', 0.78);
 
       context.save();
       context.globalCompositeOperation = 'lighter';
@@ -254,7 +239,6 @@ function PremiumCanvas() {
         context.fill();
       });
       context.restore();
-
       raf = requestAnimationFrame(animate);
     };
 
@@ -311,9 +295,9 @@ export default function PaginaLandingPremiumLead() {
   return (
     <>
       <SEO
-        title="Maisa Valentim | Consultoria Gratuita em Planos de Saúde"
-        description="Consultoria gratuita e personalizada em planos de saúde. Envie nome e WhatsApp para receber uma pré-análise com Maisa Valentim."
-        keywords="consultoria plano de saúde, cotação plano de saúde, Maisa Valentim, plano de saúde familiar, plano MEI, plano empresarial"
+        title="Maisa Valentim | Análise Personalizada em Planos de Saúde"
+        description="Análise personalizada em planos de saúde. Envie nome e WhatsApp para receber uma pré-análise com Maisa Valentim."
+        keywords="análise personalizada plano de saúde, consultoria plano de saúde, Maisa Valentim, plano de saúde familiar, plano MEI, plano empresarial"
       />
 
       <main className="pl-page" id="topo">
@@ -322,19 +306,19 @@ export default function PaginaLandingPremiumLead() {
 
         <header className="pl-nav">
           <a href="#topo" className="pl-brand">Maisa <em>Valentim</em></a>
-          <a href="#cotacao" className="pl-nav-cta">Cotação gratuita</a>
+          <a href="#cotacao" className="pl-nav-cta">Análise personalizada</a>
         </header>
 
         <section className="pl-hero">
           <div className="pl-copy">
-            <div className="pl-eyebrow"><span /> Consultoria em Planos de Saúde · 100% Gratuita</div>
+            <div className="pl-eyebrow"><span /> Consultoria em Planos de Saúde · Análise Personalizada</div>
             <h1>A cobertura que você merece, <em>sem complicar.</em></h1>
-            <p>Analiso sua situação, comparo operadoras e te apresento a melhor opção — com honestidade, sem custo e sem pressão.</p>
+            <p>Analiso sua situação, comparo operadoras e te apresento a melhor opção — com honestidade, clareza e sem pressão.</p>
             <div className="pl-actions">
-              <a className="pl-main-cta" href="#cotacao">Quero minha cotação</a>
+              <a className="pl-main-cta" href="#cotacao">Quero minha análise</a>
               <a className="pl-ghost-cta" href={directWhatsapp} target="_blank" rel="noopener noreferrer">WhatsApp direto</a>
             </div>
-            <div className="pl-trust"><span>Sem custo</span><span>Sem compromisso</span><span>Atendimento humano</span></div>
+            <div className="pl-trust"><span>Sem compromisso</span><span>Orientação clara</span><span>Atendimento humano</span></div>
           </div>
 
           <div className="pl-hero-form" id="cotacao">
@@ -346,7 +330,7 @@ export default function PaginaLandingPremiumLead() {
 
         <section className="pl-proof">
           <div><strong>+20</strong><span>operadoras comparadas</span></div>
-          <div><strong>0</strong><span>custo da consultoria</span></div>
+          <div><strong>1:1</strong><span>análise personalizada</span></div>
           <div><strong>24h</strong><span>pré-análise rápida</span></div>
         </section>
 
@@ -367,7 +351,7 @@ export default function PaginaLandingPremiumLead() {
           <div className="pl-full-copy">
             <div className="pl-label">Lead qualificado</div>
             <h2>Quer enviar mais detalhes?</h2>
-            <p>Nome e WhatsApp bastam. Os campos opcionais ajudam a Maisa a preparar uma cotação mais certeira.</p>
+            <p>Nome e WhatsApp bastam. Os campos opcionais ajudam a Maisa a preparar uma análise mais certeira.</p>
           </div>
           <LeadForm />
         </section>
@@ -382,11 +366,11 @@ export default function PaginaLandingPremiumLead() {
           <div className="pl-label">Comece agora</div>
           <h2>Saúde é decisão <em>que não pode esperar.</em></h2>
           <p>Uma conversa rápida já mostra o melhor caminho para contratar, trocar ou revisar seu plano.</p>
-          <a className="pl-main-cta" href="#cotacao">Preencher cotação</a>
+          <a className="pl-main-cta" href="#cotacao">Preencher análise</a>
         </section>
 
         <div className="pl-dock">
-          <a href="#cotacao">Cotação</a>
+          <a href="#cotacao">Análise</a>
           <a href={directWhatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
         </div>
       </main>
