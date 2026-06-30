@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { requireAdmin } from '../_lib/security.js';
+import { ensureLeadTable } from '../_lib/leads.js';
 
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -33,8 +34,10 @@ export default async function handler(req, res) {
 
   try {
     const sql = getSqlClient();
+    await ensureLeadTable(sql);
+
     const leads = await sql`
-      SELECT id, nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status
+      SELECT id, nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status, observacao_interna, ultima_acao_em
       FROM lead
       ORDER BY id DESC
     `;
