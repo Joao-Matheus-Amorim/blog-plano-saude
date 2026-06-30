@@ -10,7 +10,9 @@ export async function ensureLeadTable(sql) {
       vidas INTEGER,
       origem TEXT DEFAULT 'Direto',
       data_envio TIMESTAMPTZ DEFAULT NOW(),
-      status TEXT DEFAULT 'Novo'
+      status TEXT DEFAULT 'Novo',
+      observacao_interna TEXT,
+      ultima_acao_em TIMESTAMPTZ
     )
   `;
 
@@ -23,4 +25,6 @@ export async function ensureLeadTable(sql) {
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS origem TEXT DEFAULT 'Direto'`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS data_envio TIMESTAMPTZ DEFAULT NOW()`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Novo'`;
+  await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS observacao_interna TEXT`;
+  await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS ultima_acao_em TIMESTAMPTZ`;
 }
