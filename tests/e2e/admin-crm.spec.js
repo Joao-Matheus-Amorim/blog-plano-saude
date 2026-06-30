@@ -31,8 +31,12 @@ const leads = [
   },
 ];
 
+function cloneLeads() {
+  return JSON.parse(JSON.stringify(leads));
+}
+
 async function prepareAdmin(page, patches = []) {
-  let currentLeads = structuredClone(leads);
+  let currentLeads = cloneLeads();
 
   await page.addInitScript(() => {
     localStorage.setItem('adminToken', 'fake-admin-token');
@@ -110,7 +114,7 @@ test.describe('Admin CRM', () => {
     const openedUrls = await page.evaluate(() => window.__openedUrls);
     expect(openedUrls.some((url) => url.startsWith('https://wa.me/5521977776666'))).toBe(true);
 
-    await mariaCard.getByRole('button', { name: 'Chamado' }).click();
+    await mariaCard.locator('button').filter({ hasText: /^Chamado$/ }).click();
     expect(patches.at(-1)).toMatchObject({ id: 1, status: 'Chamado' });
     await expect(mariaCard.locator('.status-chip')).toContainText('Chamado');
 
