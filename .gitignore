@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Playwright
+playwright-report/
+test-results/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -25,7 +29,6 @@ dist-ssr
 .env.local
 .env
 
-# Binários e executáveis (nunca versionar)
 *.exe
 *.dll
 *.bin
