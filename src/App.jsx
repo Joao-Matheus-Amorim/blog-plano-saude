@@ -6,7 +6,7 @@ import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import PopupSaida from './components/Popupsaida.jsx';
 import PremiumMotion from './components/PremiumMotion.jsx';
-import PaginaLandingPremiumLead from './pages/PaginaLandingPremiumLead.jsx';
+import PaginaHomeConversao from './pages/PaginaHomeConversao.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobrePremium.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
@@ -77,7 +77,8 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={routeKey}>
-        <Route path="/" element={<PageTransition><PaginaLandingPremiumLead /></PageTransition>} />
+        <Route path="/" element={<PageTransition><PaginaHomeConversao /></PageTransition>} />
+        <Route path="/cotacao" element={<PageTransition><PaginaHomeConversao /></PageTransition>} />
         <Route path="/contato" element={<PageTransition><PaginaContato /></PageTransition>} />
         <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
         <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
@@ -93,7 +94,7 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const location = useLocation();
-  const isLanding = location.pathname === '/';
+  const isLanding = location.pathname === '/' || location.pathname === '/cotacao';
 
   return (
     <>
