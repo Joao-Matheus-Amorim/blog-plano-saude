@@ -19,6 +19,67 @@ import PaginaBlog2 from './pages/PaginaBlog2.jsx';
 import PaginaBlogPost from './pages/PaginaBlogPost.jsx';
 
 const GA_TRACKING_ID = 'G-FY4Z9HBPD2';
+const ORGANIC_SESSION_KEY = 'maisa_organic_session_key';
+const ORGANIC_SESSION_DEPTH_KEY = 'maisa_organic_page_depth';
+
+function inferSourceTag(search = '') {
+  const params = new URLSearchParams(search);
+  return params.get('origem') || params.get('tag_origem') || params.get('ref') || params.get('canal') || 'site_organico';
+}
+
+function inferSourceChannel(sourceTag = '') {
+  const value = sourceTag.toLowerCase();
+  if (value.includes('whatsapp')) return 'WhatsApp orgânico';
+  if (value.includes('instagram')) return 'Instagram orgânico';
+  if (value.includes('facebook') || value.includes('grupo')) return 'Facebook/grupos';
+  if (value.includes('google')) return 'Google orgânico';
+  if (value.includes('radar')) return 'Radar B2B';
+  if (value.includes('indicacao') || value.includes('referencia')) return 'Indicação';
+  return 'Direto/orgânico';
+}
+
+function inferPlanType(pathname = '') {
+  if (pathname.includes('/planos/mei')) return 'MEI';
+  if (pathname.includes('/planos/familiar')) return 'Família';
+  if (pathname.includes('/planos/empresarial')) return 'Empresarial';
+  if (pathname.includes('/planos/portabilidade')) return 'Portabilidade';
+  if (pathname.includes('/planos/individual')) return 'Individual';
+  if (pathname.includes('/planos/idoso')) return 'Sênior';
+  if (pathname.includes('/planos/gestante')) return 'Gestante';
+  return 'Plano de saúde';
+}
+
+function getOrganicSessionKey() {
+  try {
+    const existing = sessionStorage.getItem(ORGANIC_SESSION_KEY);
+    if (existing) return existing;
+
+    const key = `sess_${crypto?.randomUUID?.() || `${Date.now()}_${Math.random().toString(36).slice(2)}`}`;
+    sessionStorage.setItem(ORGANIC_SESSION_KEY, key);
+    return key;
+  } catch {
+    return `sess_${Date.now()}`;
+  }
+}
+
+function nextPageDepth() {
+  try {
+    const current = Number(sessionStorage.getItem(ORGANIC_SESSION_DEPTH_KEY) || 0) + 1;
+    sessionStorage.setItem(ORGANIC_SESSION_DEPTH_KEY, String(current));
+    return current;
+  } catch {
+    return 1;
+  }
+}
+
+function postOrganicSession(payload) {
+  fetch('/api/organic/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    keepalive: true,
+  }).catch(() => {});
+}
 
 function GoogleAnalytics() {
   const location = useLocation();
@@ -47,21 +108,30 @@ function GoogleAnalytics() {
     });
 
     if (!location.pathname.startsWith('/admin')) {
-      const params = new URLSearchParams(location.search);
-      const sourceTag = params.get('origem') || params.get('tag_origem') || 'site_organico';
+      const sourceTag = inferSourceTag(location.search);
+      const sourceChannel = inferSourceChannel(sourceTag);
+      const planType = inferPlanType(location.pathname);
+      const payload = {
+        action_type: 'page_view',
+        page_path: pagePath,
+        source_tag: sourceTag,
+        source_channel: sourceChannel,
+        plan_type: planType,
+        target_key: 'pagina',
+      };
+
       fetch('/api/organic/summary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action_type: 'page_view',
-          page_path: pagePath,
-          source_tag: sourceTag,
-          source_channel: sourceTag.includes('whatsapp') ? 'WhatsApp orgânico' : 'Direto/orgânico',
-          plan_type: location.pathname.includes('/planos/mei') ? 'MEI' : 'Plano de saúde',
-          target_key: 'pagina',
-        }),
+        body: JSON.stringify(payload),
         keepalive: true,
       }).catch(() => {});
+
+      postOrganicSession({
+        ...payload,
+        session_key: getOrganicSessionKey(),
+        page_depth: nextPageDepth(),
+      });
     }
   }, [location]);
 
