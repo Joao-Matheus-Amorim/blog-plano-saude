@@ -17,6 +17,7 @@ import PaginaFAQ from './pages/PaginaFAQ.jsx';
 import PaginaAdmin from './pages/PaginaAdmin.jsx';
 import PaginaAdminOrganico from './pages/PaginaAdminOrganico.jsx';
 import PaginaAdminLinks from './pages/PaginaAdminLinks.jsx';
+import PaginaAdminRadar from './pages/PaginaAdminRadar.jsx';
 import PaginaBlog2 from './pages/PaginaBlog2.jsx';
 import PaginaBlogPost from './pages/PaginaBlogPost.jsx';
 
@@ -191,6 +192,7 @@ function AnimatedRoutes() {
         <Route path="/admin" element={<PageTransition><PaginaAdmin /></PageTransition>} />
         <Route path="/admin/organico" element={<PageTransition><PaginaAdminOrganico /></PageTransition>} />
         <Route path="/admin/links" element={<PageTransition><PaginaAdminLinks /></PageTransition>} />
+        <Route path="/admin/radar" element={<PageTransition><PaginaAdminRadar /></PageTransition>} />
         <Route path="/blog" element={<PageTransition><PaginaBlog2 /></PageTransition>} />
         <Route path="/blog/:slug" element={<PageTransition><PaginaBlogPost /></PageTransition>} />
         <Route path="/faq" element={<PageTransition><PaginaFAQ /></PageTransition>} />
