@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-const baseUrl = 'https://www.planosdesaudemaisavalentim.com.br';
+const baseUrl = 'https://consultoriadesaude.vercel.app';
 const whatsapp = 'https://wa.me/5521977472141?text=Ol%C3%A1%20Maisa%2C%20vim%20pelo%20link%20org%C3%A2nico%20e%20quero%20uma%20cota%C3%A7%C3%A3o.';
 
 const organicLinks = [
