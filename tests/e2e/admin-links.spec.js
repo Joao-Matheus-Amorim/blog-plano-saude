@@ -44,11 +44,12 @@ test.describe('Ranking de links orgânicos', () => {
 
     await page.goto('/admin/links');
 
+    const placar = page.locator('section').filter({ hasText: 'Placar por link' });
     await expect(page.getByRole('heading', { name: /ranking de links/i })).toBeVisible();
-    await expect(page.getByText('/planos/familiar?origem=whatsapp_status')).toBeVisible();
-    await expect(page.getByText('/planos/mei?origem=instagram_bio')).toBeVisible();
-    await expect(page.getByText('WhatsApp Status')).toBeVisible();
-    await expect(page.getByText('Instagram Bio')).toBeVisible();
+    await expect(placar.getByText('/planos/familiar?origem=whatsapp_status')).toBeVisible();
+    await expect(placar.getByText('/planos/mei?origem=instagram_bio')).toBeVisible();
+    await expect(placar.getByText('WhatsApp Status')).toBeVisible();
+    await expect(placar.getByText('Instagram Bio')).toBeVisible();
     await expect(page.getByRole('link', { name: /abrir central/i })).toHaveAttribute('href', '/links');
     await expect(page.getByRole('link', { name: /radar orgânico/i })).toHaveAttribute('href', '/admin/organico');
   });
