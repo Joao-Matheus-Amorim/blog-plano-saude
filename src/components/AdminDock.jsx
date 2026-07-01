@@ -16,10 +16,12 @@ export default function AdminDock() {
       <style>{`
         .admin-dock {
           position: fixed;
-          top: 86px;
+          top: 92px;
           right: clamp(18px, 4vw, 52px);
-          z-index: 1000;
-          display: flex;
+          z-index: 80;
+          display: inline-flex;
+          width: max-content;
+          max-width: calc(100vw - 36px);
           gap: 8px;
           padding: 8px;
           border: 1px solid rgba(168,196,138,.28);
@@ -28,10 +30,11 @@ export default function AdminDock() {
           backdrop-filter: blur(24px) saturate(170%);
           -webkit-backdrop-filter: blur(24px) saturate(170%);
           box-shadow: 0 22px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+          pointer-events: none;
         }
         .admin-dock a {
           min-height: 42px;
-          min-width: 116px;
+          min-width: 112px;
           padding: 0 14px;
           border-radius: 999px;
           display: inline-flex;
@@ -45,6 +48,12 @@ export default function AdminDock() {
           font-weight: 900;
           letter-spacing: .04em;
           text-transform: uppercase;
+          pointer-events: auto;
+          touch-action: manipulation;
+        }
+        .admin-dock a:focus-visible {
+          outline: 3px solid rgba(168,196,138,.72);
+          outline-offset: 3px;
         }
         .admin-dock a span {
           margin-top: 2px;
@@ -60,7 +69,7 @@ export default function AdminDock() {
           box-shadow: 0 0 28px rgba(106,140,82,.22), inset 0 1px 0 rgba(255,255,255,.13);
         }
         .admin-dock a.is-active span { color: rgba(237,248,230,.74); }
-        @media (min-width: 1180px) {
+        @media (min-width: 1480px) {
           .admin-dock {
             top: 50%;
             right: 24px;
@@ -73,18 +82,34 @@ export default function AdminDock() {
             min-height: 56px;
           }
         }
-        @media (max-width: 920px) {
+        @media (max-width: 1120px) {
+          .admin-dock {
+            top: 74px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            justify-content: center;
+          }
+          .admin-dock a {
+            min-width: 100px;
+          }
+        }
+        @media (max-width: 760px) {
           .admin-dock {
             top: auto;
             left: 10px;
             right: 10px;
             bottom: 10px;
             transform: none;
+            width: auto;
+            max-width: none;
             border-radius: 24px;
             overflow-x: auto;
             justify-content: flex-start;
+            -webkit-overflow-scrolling: touch;
           }
           .admin-dock a {
+            flex: 0 0 auto;
             min-width: 104px;
             min-height: 44px;
           }
