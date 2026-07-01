@@ -35,6 +35,28 @@ test.describe('Admin orgânico', () => {
           recent: [
             { summary_day: '2026-06-30', action_type: 'form_submit', page_path: '/planos/mei?origem=whatsapp_status', source_tag: 'whatsapp_status', target_key: 'formulario_cotacao', total: 6 },
           ],
+          sessionOverview: {
+            total_sessions: 18,
+            high_intent_sessions: 7,
+            whatsapp_sessions: 5,
+            form_sessions: 4,
+            avg_score: 62,
+            avg_pages: 3.2,
+          },
+          topJourneys: [
+            {
+              source_tag: 'whatsapp_status',
+              source_channel: 'WhatsApp orgânico',
+              first_page: '/planos/mei?origem=whatsapp_status',
+              last_page: '/planos/familiar?origem=whatsapp_status',
+              plan_type: 'MEI',
+              last_action: 'whatsapp_click',
+              last_target: 'whatsapp_direto',
+              total_sessions: 5,
+              avg_score: 84,
+              avg_pages: 3.4,
+            },
+          ],
         }),
       });
     });
@@ -42,6 +64,8 @@ test.describe('Admin orgânico', () => {
     await page.goto('/admin/organico');
 
     await expect(page.getByRole('heading', { name: /radar orgânico/i })).toBeVisible();
+    await expect(page.locator('section').filter({ hasText: 'Jornada anônima' }).getByText('/planos/familiar?origem=whatsapp_status')).toBeVisible();
+    await expect(page.locator('section').filter({ hasText: 'Jornada anônima' }).getByText('84')).toBeVisible();
     await expect(page.locator('section').filter({ hasText: 'Origem orgânica' }).getByRole('cell', { name: 'whatsapp_status' })).toBeVisible();
     await expect(page.locator('section').filter({ hasText: 'Origem orgânica' }).getByText('Instagram orgânico')).toBeVisible();
     await expect(page.locator('section').filter({ hasText: 'Páginas e intenção' }).getByText('/planos/mei?origem=whatsapp_status')).toBeVisible();
