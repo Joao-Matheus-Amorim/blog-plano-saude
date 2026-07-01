@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.planosdesaudemaisavalentim.com.br/sitemap.xml
+Sitemap: https://consultoriadesaude.vercel.app/sitemap.xml
 
 Disallow: /admin/
 Disallow: /api/
