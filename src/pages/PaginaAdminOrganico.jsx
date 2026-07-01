@@ -38,7 +38,7 @@ export default function PaginaAdminOrganico() {
   const [adminToken, setAdminToken] = useState('');
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(7);
-  const [metrics, setMetrics] = useState({ bySource: [], byPage: [], byAction: [], recent: [] });
+  const [metrics, setMetrics] = useState({ bySource: [], byPage: [], byAction: [], recent: [], sessionOverview: {}, topJourneys: [] });
 
   const authHeaders = (token = adminToken) => ({ Authorization: `Bearer ${token}` });
 
@@ -58,7 +58,7 @@ export default function PaginaAdminOrganico() {
       if (res.status === 401) return handleAuthError();
       if (!res.ok) throw new Error('Erro ao buscar métricas orgânicas');
       const data = await res.json();
-      setMetrics(data || { bySource: [], byPage: [], byAction: [], recent: [] });
+      setMetrics(data || { bySource: [], byPage: [], byAction: [], recent: [], sessionOverview: {}, topJourneys: [] });
     } catch (error) {
       console.error('Erro ao carregar métricas orgânicas:', error);
     } finally {
@@ -101,6 +101,8 @@ export default function PaginaAdminOrganico() {
   const forms = metrics.byAction.find((item) => item.action_type === 'form_submit')?.total || 0;
   const whatsapp = metrics.byAction.find((item) => item.action_type === 'whatsapp_click')?.total || 0;
   const conversion = visits ? `${Math.round((forms / visits) * 100)}%` : '0%';
+  const sessionOverview = metrics.sessionOverview || {};
+  const topJourneys = metrics.topJourneys || [];
 
   if (!autenticado) return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
 
@@ -141,7 +143,7 @@ export default function PaginaAdminOrganico() {
         <header className="organic-topbar">
           <div>
             <h1 className="organic-title">Radar <em>orgânico</em></h1>
-            <p className="organic-sub">Métricas agregadas de visitas, formulários e cliques no WhatsApp por origem gratuita. Não identifica visitante anônimo.</p>
+            <p className="organic-sub">Métricas agregadas de visitas, formulários, cliques no WhatsApp e jornadas anônimas por origem gratuita. Não identifica visitante anônimo.</p>
           </div>
           <div className="organic-actions">
             <select className="organic-select" value={days} onChange={(event) => handlePeriodChange(event.target.value)}>
@@ -160,6 +162,17 @@ export default function PaginaAdminOrganico() {
           <div className="organic-card"><span>Formulários</span><strong>{forms}</strong><small>form_submit</small></div>
           <div className="organic-card"><span>WhatsApp direto</span><strong>{whatsapp}</strong><small>whatsapp_click</small></div>
           <div className="organic-card"><span>Conversão bruta</span><strong>{conversion}</strong><small>formulário / visita</small></div>
+          <div className="organic-card"><span>Sessões</span><strong>{sessionOverview.total_sessions || 0}</strong><small>jornadas anônimas</small></div>
+          <div className="organic-card"><span>Alta intenção</span><strong>{sessionOverview.high_intent_sessions || 0}</strong><small>score acima de 55</small></div>
+          <div className="organic-card"><span>Sessões com WhatsApp</span><strong>{sessionOverview.whatsapp_sessions || 0}</strong><small>contato provável</small></div>
+          <div className="organic-card"><span>Score médio</span><strong>{sessionOverview.avg_score || 0}</strong><small>intenção média</small></div>
+        </section>
+
+        <section className="organic-panel">
+          <div className="organic-head"><h2>Jornada anônima</h2><p>Agrupa caminhos sem nome, telefone, e-mail, CPF, IP ou identificação escondida.</p></div>
+          {loading ? <div className="organic-empty">Carregando jornadas...</div> : topJourneys.length === 0 ? <div className="organic-empty">Ainda sem jornadas anônimas.</div> : (
+            <div className="organic-table-wrap"><table className="organic-table"><thead><tr><th>Origem</th><th>Entrada</th><th>Última página</th><th>Última ação</th><th>Sessões</th><th>Score</th><th>Páginas</th></tr></thead><tbody>{topJourneys.map((row, index) => <tr key={`${row.source_tag}-${row.first_page}-${row.last_page}-${index}`}><td><span className="organic-name">{row.source_tag || 'site_organico'}</span><span className="organic-chip">{row.source_channel || 'Direto/orgânico'}</span></td><td>{row.first_page || '-'}</td><td>{row.last_page || '-'}</td><td>{labelAction(row.last_action)}<br /><small className="organic-muted">{row.last_target || '-'}</small></td><td>{row.total_sessions}</td><td>{row.avg_score}</td><td>{row.avg_pages}</td></tr>)}</tbody></table></div>
+          )}
         </section>
 
         <section className="organic-panel">
