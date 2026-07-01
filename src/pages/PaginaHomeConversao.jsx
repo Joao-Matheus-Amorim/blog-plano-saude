@@ -24,7 +24,7 @@ export default function PaginaHomeConversao() {
         title="Cotação de Plano de Saúde no RJ"
         description="Compare plano de saúde individual, familiar, MEI ou empresarial com pré-análise gratuita por WhatsApp."
         keywords="cotação plano de saúde RJ, plano de saúde MEI, plano familiar, plano empresarial, plano de saúde Magé, plano de saúde Piabetá"
-        url="https://www.planosdesaudemaisavalentim.com.br/"
+        url="https://consultoriadesaude.vercel.app/"
       />
 
       <main className="home-conversion">
