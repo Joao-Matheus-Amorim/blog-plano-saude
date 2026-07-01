@@ -20,6 +20,7 @@ test.describe('Central de links orgânicos', () => {
 
     await page.goto('/links?origem=instagram_bio');
 
+    const bioCard = page.locator('aside.links-phone');
     await expect(page.getByRole('heading', { name: /central de links/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'WhatsApp Status' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Google Perfil da Empresa' })).toBeVisible();
@@ -27,7 +28,7 @@ test.describe('Central de links orgânicos', () => {
     await expect(page.getByRole('link', { name: /^Abrir$/ }).nth(1)).toHaveAttribute('href', '/planos/mei?origem=links_organicos');
     await expect(page.locator('article.links-item').filter({ hasText: 'Plano para pessoa 59+' }).getByRole('link', { name: 'Abrir' })).toHaveAttribute('href', '/planos/idoso?origem=links_organicos');
     await expect(page.locator('article.links-item').filter({ hasText: 'Plano de saúde em Piabetá' }).getByRole('link', { name: 'Abrir' })).toHaveAttribute('href', '/plano-saude-piabeta?origem=links_organicos');
-    await expect(page.getByText('https://www.planosdesaudemaisavalentim.com.br/links?origem=instagram_bio')).toBeVisible();
+    await expect(bioCard.locator('code')).toHaveText('https://www.planosdesaudemaisavalentim.com.br/links?origem=instagram_bio');
     await expect.poll(() => summaries.length).toBeGreaterThan(0);
     await expect.poll(() => sessions.length).toBeGreaterThan(0);
     expect(summaries[0]).toMatchObject({
