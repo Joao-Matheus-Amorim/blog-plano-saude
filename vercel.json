@@ -25,6 +25,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/leads/create",
+      "destination": "/api/leads"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
