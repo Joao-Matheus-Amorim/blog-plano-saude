@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
 const pages = [
-  { path: '/planos/individual', heading: /plano de saúde individual/i, form: /quero cotação individual/i, type: 'Individual' },
-  { path: '/planos/idoso', heading: /pessoa 59\+/i, form: /quero cotação para pessoa 59\+/i, type: 'Individual' },
-  { path: '/planos/gestante', heading: /obstetrícia/i, form: /quero orientação para gestante/i, type: 'Família' },
-  { path: '/plano-saude-mage', heading: /magé e região/i, form: /quero cotação em magé/i, city: 'Magé, RJ' },
-  { path: '/plano-saude-piabeta', heading: /piabetá/i, form: /quero cotação em piabetá/i, city: 'Piabetá, RJ' },
+  { path: '/planos/individual', heading: 'Plano de saúde individual com orientação antes da cotação.', form: 'Quero cotação individual', type: 'Individual' },
+  { path: '/planos/idoso', heading: 'Plano de saúde para pessoa 59+ com pré-análise cuidadosa.', form: 'Quero cotação para pessoa 59+', type: 'Individual' },
+  { path: '/planos/gestante', heading: 'Orientação para plano de saúde com foco em obstetrícia.', form: 'Quero orientação para gestante', type: 'Família' },
+  { path: '/plano-saude-mage', heading: 'Cote plano de saúde em Magé e região.', form: 'Quero cotação em Magé', city: 'Magé, RJ' },
+  { path: '/plano-saude-piabeta', heading: 'Cote plano de saúde em Piabetá.', form: 'Quero cotação em Piabetá', city: 'Piabetá, RJ' },
 ];
 
 test.describe('Páginas SEO locais e de intenção', () => {
@@ -25,8 +25,8 @@ test.describe('Páginas SEO locais e de intenção', () => {
 
       await page.goto(`${item.path}?origem=google_perfil_empresa`);
 
-      await expect(page.getByRole('heading', { name: item.heading })).toBeVisible();
-      await expect(page.getByRole('heading', { name: item.form })).toBeVisible();
+      await expect(page.getByRole('heading', { level: 1, name: item.heading })).toBeVisible();
+      await expect(page.getByRole('heading', { level: 2, name: item.form })).toBeVisible();
       await expect(page.locator('form.lead-capture').first()).toBeVisible();
 
       if (item.type) {
