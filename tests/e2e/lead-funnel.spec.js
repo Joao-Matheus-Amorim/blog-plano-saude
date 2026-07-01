@@ -85,11 +85,11 @@ test.describe('Funil de lead', () => {
     expect(submissions).toHaveLength(0);
   });
 
-  test('home salva lead, registra origem e abre WhatsApp', async ({ page }) => {
+  test('home salva lead, registra origem orgânica, score e abre WhatsApp', async ({ page }) => {
     const submissions = [];
     await prepareLeadPage(page, submissions);
 
-    await page.goto('/');
+    await page.goto('/?origem=whatsapp_status');
 
     const form = page.locator('form.lead-capture').first();
     await fillLeadForm(form, {
@@ -108,10 +108,20 @@ test.describe('Funil de lead', () => {
       nome: 'Maria Funil',
       telefone: '21977776666',
       origem: 'home-cotacao',
+      cidade: 'Piabetá, RJ',
+      uf: 'RJ',
+      tipo_plano: 'Família',
+      tag_origem: 'whatsapp_status',
+      canal: 'WhatsApp orgânico',
+      consentimento_lgpd: true,
     });
+    expect(submissions[0].pagina_origem).toContain('/?origem=whatsapp_status');
+    expect(submissions[0].score).toBeGreaterThanOrEqual(70);
     expect(submissions[0].mensagem).toContain('Intenção: cotacao-principal');
     expect(submissions[0].mensagem).toContain('Cidade/UF: Piabetá, RJ');
     expect(submissions[0].mensagem).toContain('Tipo de plano: Família');
+    expect(submissions[0].mensagem).toContain('Tag origem: whatsapp_status');
+    expect(submissions[0].mensagem).toContain('Canal: WhatsApp orgânico');
 
     const openedUrls = await page.evaluate(() => window.__openedUrls);
     expect(openedUrls.some((url) => url.startsWith('https://wa.me/5521977472141'))).toBe(true);
