@@ -34,6 +34,36 @@ const organicLinks = [
     href: '/planos/portabilidade?origem=links_organicos',
     tag: 'portabilidade',
   },
+  {
+    title: 'Plano individual',
+    description: 'Para quem vai contratar sozinho e quer orientação inicial.',
+    href: '/planos/individual?origem=links_organicos',
+    tag: 'individual',
+  },
+  {
+    title: 'Plano para pessoa 59+',
+    description: 'Para família pesquisando opções com mais cuidado.',
+    href: '/planos/idoso?origem=links_organicos',
+    tag: 'idoso',
+  },
+  {
+    title: 'Plano para gestante',
+    description: 'Para dúvidas sobre obstetrícia, rede e próximos passos.',
+    href: '/planos/gestante?origem=links_organicos',
+    tag: 'gestante',
+  },
+  {
+    title: 'Plano de saúde em Magé',
+    description: 'Entrada local para Magé, Piabetá e região.',
+    href: '/plano-saude-mage?origem=links_organicos',
+    tag: 'mage',
+  },
+  {
+    title: 'Plano de saúde em Piabetá',
+    description: 'Entrada local para moradores, MEIs e empresas de Piabetá.',
+    href: '/plano-saude-piabeta?origem=links_organicos',
+    tag: 'piabeta',
+  },
 ];
 
 const channelKits = [
@@ -42,9 +72,9 @@ const channelKits = [
     origin: 'whatsapp_status',
     intro: 'Poste como status com um link direto para uma intenção específica.',
     messages: [
-      'Você é MEI e quer comparar plano de saúde sem compromisso? Fiz uma página rápida para cotação gratuita.',
-      'Plano familiar mudou muito de preço. Quem quiser comparar opções pode me chamar por aqui.',
-      'Hoje vou separar um horário para simular planos empresariais para pequenos negócios.',
+      { text: 'Você é MEI e quer comparar plano de saúde sem compromisso? Fiz uma página rápida para cotação gratuita.', path: '/planos/mei' },
+      { text: 'Plano familiar mudou muito de preço. Quem quiser comparar opções pode me chamar por aqui.', path: '/planos/familiar' },
+      { text: 'Hoje vou separar um horário para simular planos empresariais para pequenos negócios.', path: '/planos/empresarial' },
     ],
   },
   {
@@ -52,9 +82,9 @@ const channelKits = [
     origin: 'instagram_bio',
     intro: 'Use como central de links da bio e dos stories.',
     messages: [
-      'Cotação gratuita de plano de saúde para MEI, família e empresas.',
-      'Compare opções antes de contratar. Atendimento pelo WhatsApp.',
-      'Planos de saúde com orientação humana, sem enrolação e sem custo para cotar.',
+      { text: 'Cotação gratuita de plano de saúde para MEI, família e empresas.', path: '/links' },
+      { text: 'Compare opções antes de contratar. Atendimento pelo WhatsApp.', path: '/links' },
+      { text: 'Planos de saúde com orientação humana, sem enrolação e sem custo para cotar.', path: '/links' },
     ],
   },
   {
@@ -62,9 +92,9 @@ const channelKits = [
     origin: 'google_perfil_empresa',
     intro: 'Use em publicações semanais no perfil local.',
     messages: [
-      'Está pesquisando plano de saúde em Magé, Piabetá ou região? Faça uma cotação gratuita com orientação individual.',
-      'MEI também pode comparar plano de saúde com análise gratuita. Veja as opções e fale pelo WhatsApp.',
-      'Antes de contratar um plano de saúde, compare rede, carência, preço e perfil de uso.',
+      { text: 'Está pesquisando plano de saúde em Magé, Piabetá ou região? Faça uma cotação gratuita com orientação individual.', path: '/plano-saude-mage' },
+      { text: 'MEI também pode comparar plano de saúde com análise gratuita. Veja as opções e fale pelo WhatsApp.', path: '/planos/mei' },
+      { text: 'Antes de contratar um plano de saúde, compare rede, carência, preço e perfil de uso.', path: '/links' },
     ],
   },
   {
@@ -72,9 +102,9 @@ const channelKits = [
     origin: 'grupo_facebook_mage',
     intro: 'Use com postagem útil, sem cara de disparo em massa.',
     messages: [
-      'Pessoal, deixei uma página simples para quem quer entender opções de plano de saúde para MEI, família ou empresa em Magé e região.',
-      'Quem estiver pesquisando plano de saúde pode comparar antes de contratar. A cotação é gratuita e o atendimento é pelo WhatsApp.',
-      'Muita gente olha só preço e esquece rede, carência e tipo de contrato. Fiz uma página para começar a cotação com mais clareza.',
+      { text: 'Pessoal, deixei uma página simples para quem quer entender opções de plano de saúde para MEI, família ou empresa em Magé e região.', path: '/plano-saude-mage' },
+      { text: 'Quem estiver pesquisando plano de saúde pode comparar antes de contratar. A cotação é gratuita e o atendimento é pelo WhatsApp.', path: '/links' },
+      { text: 'Muita gente olha só preço e esquece rede, carência e tipo de contrato. Fiz uma página para começar a cotação com mais clareza.', path: '/links' },
     ],
   },
   {
@@ -82,9 +112,9 @@ const channelKits = [
     origin: 'radar_b2b',
     intro: 'Use em abordagem manual para empresas públicas e legítimas.',
     messages: [
-      'Vi que vocês têm uma operação local e talvez faça sentido comparar plano empresarial. Posso fazer uma simulação sem custo?',
-      'Empresas pequenas às vezes pagam caro por falta de comparação. Posso avaliar opções de plano de saúde para a equipe.',
-      'Faço cotação gratuita de plano empresarial com análise de vidas, região e perfil da equipe.',
+      { text: 'Vi que vocês têm uma operação local e talvez faça sentido comparar plano empresarial. Posso fazer uma simulação sem custo?', path: '/planos/empresarial' },
+      { text: 'Empresas pequenas às vezes pagam caro por falta de comparação. Posso avaliar opções de plano de saúde para a equipe.', path: '/planos/empresarial' },
+      { text: 'Faço cotação gratuita de plano empresarial com análise de vidas, região e perfil da equipe.', path: '/planos/empresarial' },
     ],
   },
 ];
@@ -201,11 +231,11 @@ export default function PaginaLinksOrganicos() {
                 <span className="kit-origin">{kit.origin}</span>
               </div>
               {kit.messages.map((message, index) => {
-                const url = withOrigin('/planos/mei', kit.origin);
-                const text = `${message}\n\n${url}`;
+                const url = withOrigin(message.path, kit.origin);
+                const text = `${message.text}\n\n${url}`;
                 return (
                   <div className="message-box" key={`${kit.origin}-${index}`}>
-                    <p>{message}</p>
+                    <p>{message.text}</p>
                     <code>{url}</code>
                     <div className="links-actions">
                       <button className="copy-button" type="button" onClick={() => copyText(text, setCopied, `${kit.channel} ${index + 1}`)}>Copiar texto</button>
