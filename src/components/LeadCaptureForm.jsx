@@ -146,6 +146,28 @@ function buildTrackingContext(lead, context) {
   };
 }
 
+function sendOrganicSummary(actionType, tracking, targetKey) {
+  if (typeof window === 'undefined') return;
+
+  try {
+    fetch('/api/organic/summary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action_type: actionType,
+        page_path: tracking.pagina_origem || getPagePath(),
+        source_tag: tracking.tag_origem || 'site_organico',
+        source_channel: tracking.canal || 'Direto/orgânico',
+        plan_type: tracking.tipo_plano || 'Plano de saúde',
+        target_key: targetKey || 'formulario',
+      }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // Métrica auxiliar: não bloqueia o funil.
+  }
+}
+
 function buildWhatsappMessage(lead, context) {
   return [
     context.whatsappIntro || 'Olá Maisa! Quero uma cotação de plano de saúde.',
@@ -219,6 +241,13 @@ export default function LeadCaptureForm({
     setLead((current) => ({ ...current, [field]: value }));
   };
 
+  const getCurrentContext = () => ({ origin, intent, pageTitle, defaultType, whatsappIntro });
+
+  const handleDirectWhatsapp = () => {
+    const tracking = buildTrackingContext(lead, getCurrentContext());
+    sendOrganicSummary('whatsapp_click', tracking, 'whatsapp_direto');
+  };
+
   const submit = async (event) => {
     event.preventDefault();
     setError('');
@@ -230,9 +259,10 @@ export default function LeadCaptureForm({
     }
 
     const eventId = generateEventId();
-    const context = { origin, intent, pageTitle, defaultType, whatsappIntro };
+    const context = getCurrentContext();
     const tracking = buildTrackingContext(lead, context);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(buildWhatsappMessage(lead, context))}`;
+    sendOrganicSummary('form_submit', tracking, 'formulario_cotacao');
 
     try {
       setSaving(true);
@@ -336,7 +366,7 @@ export default function LeadCaptureForm({
 
       <div className="lead-capture__actions">
         <button className="lead-capture__submit" type="submit" disabled={saving}>{saving ? 'Registrando...' : cta}</button>
-        <a className="lead-capture__direct" href={directWhatsapp} target="_blank" rel="noopener noreferrer">Prefiro chamar direto no WhatsApp</a>
+        <a className="lead-capture__direct" href={directWhatsapp} target="_blank" rel="noopener noreferrer" onClick={handleDirectWhatsapp}>Prefiro chamar direto no WhatsApp</a>
       </div>
 
       {sent && <small className="lead-capture__success">Lead salvo no painel e WhatsApp aberto.</small>}
