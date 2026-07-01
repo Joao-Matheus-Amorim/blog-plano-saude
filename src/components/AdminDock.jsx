@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const adminLinks = [
   { href: '/admin', label: 'CRM', description: 'Leads' },
@@ -16,9 +16,8 @@ export default function AdminDock() {
       <style>{`
         .admin-dock {
           position: fixed;
-          left: 50%;
-          bottom: 18px;
-          transform: translateX(-50%);
+          top: 86px;
+          right: clamp(18px, 4vw, 52px);
           z-index: 1000;
           display: flex;
           gap: 8px;
@@ -31,8 +30,8 @@ export default function AdminDock() {
           box-shadow: 0 22px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
         }
         .admin-dock a {
-          min-height: 44px;
-          min-width: 106px;
+          min-height: 42px;
+          min-width: 116px;
           padding: 0 14px;
           border-radius: 999px;
           display: inline-flex;
@@ -61,8 +60,22 @@ export default function AdminDock() {
           box-shadow: 0 0 28px rgba(106,140,82,.22), inset 0 1px 0 rgba(255,255,255,.13);
         }
         .admin-dock a.is-active span { color: rgba(237,248,230,.74); }
-        @media (max-width: 680px) {
+        @media (min-width: 1180px) {
           .admin-dock {
+            top: 50%;
+            right: 24px;
+            transform: translateY(-50%);
+            flex-direction: column;
+            border-radius: 28px;
+          }
+          .admin-dock a {
+            min-width: 118px;
+            min-height: 56px;
+          }
+        }
+        @media (max-width: 920px) {
+          .admin-dock {
+            top: auto;
             left: 10px;
             right: 10px;
             bottom: 10px;
@@ -71,16 +84,19 @@ export default function AdminDock() {
             overflow-x: auto;
             justify-content: flex-start;
           }
-          .admin-dock a { min-width: 96px; }
+          .admin-dock a {
+            min-width: 104px;
+            min-height: 44px;
+          }
         }
       `}</style>
       {adminLinks.map((link) => {
         const active = location.pathname === link.href;
         return (
-          <a className={active ? 'is-active' : ''} href={link.href} key={link.href}>
+          <Link className={active ? 'is-active' : ''} to={link.href} key={link.href}>
             {link.label}
             <span>{link.description}</span>
-          </a>
+          </Link>
         );
       })}
     </nav>
