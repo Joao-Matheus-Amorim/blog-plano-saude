@@ -160,7 +160,7 @@ export default function PaginaPlanoIntencao({ tipo = 'mei' }) {
         title={config.title}
         description={`${config.lead} Receba uma pré-análise gratuita por WhatsApp.`}
         keywords={`${config.title}, cotação plano de saúde, plano de saúde RJ, Maisa Valentim`}
-        url={`https://www.planosdesaudemaisavalentim.com.br${config.path}`}
+        url={`https://consultoriadesaude.vercel.app${config.path}`}
       />
 
       <main className="home-conversion">
