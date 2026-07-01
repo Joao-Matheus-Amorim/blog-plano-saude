@@ -2,8 +2,16 @@
    Prioriza experiência no celular em todas as páginas: área segura, sem cortes,
    botões tocáveis, tipografia responsiva e elementos fixos acima da barra do navegador. */
 
+html,
+body,
+#root {
+  min-height: 100%;
+  height: auto;
+}
+
 html {
   overflow-x: hidden;
+  overflow-y: auto;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -11,9 +19,10 @@ html {
 
 body {
   overflow-x: hidden;
+  overflow-y: auto;
   min-width: 320px;
-  overscroll-behavior-y: none;
-  touch-action: manipulation;
+  overscroll-behavior-y: auto;
+  touch-action: auto;
 }
 
 button,
@@ -116,77 +125,5 @@ video {
   .operators-page {
     padding-left: var(--mobile-page-x) !important;
     padding-right: var(--mobile-page-x) !important;
-  }
-
-  .elite-title,
-  .about-title,
-  .operators-title {
-    max-width: 100% !important;
-    word-break: normal;
-    overflow-wrap: anywhere;
-  }
-
-  .elite-actions,
-  .about-actions,
-  .operators-actions {
-    width: 100% !important;
-  }
-
-  .elite-actions a,
-  .about-actions a,
-  .operators-actions a,
-  .operators-btn {
-    width: 100%;
-    min-height: 56px;
-  }
-
-  .premium-floating-actions {
-    right: 12px !important;
-    bottom: var(--mobile-safe-bottom) !important;
-    gap: 10px !important;
-    z-index: 2147483647 !important;
-  }
-
-  .premium-float-orb {
-    width: 56px !important;
-    height: 56px !important;
-    border-radius: 20px !important;
-  }
-
-  .premium-float-orb--whats {
-    width: 52px !important;
-    height: 52px !important;
-  }
-
-  .premium-floating-tooltip,
-  .premium-float-orb__label {
-    display: none !important;
-  }
-
-  footer {
-    padding-bottom: calc(150px + env(safe-area-inset-bottom)) !important;
-  }
-}
-
-@media (max-width: 390px) {
-  :root {
-    --mobile-safe-bottom: max(108px, calc(88px + env(safe-area-inset-bottom)));
-    --mobile-page-x: 18px;
-  }
-
-  .liquid-brand strong {
-    font-size: 23px !important;
-  }
-
-  .liquid-menu-button {
-    width: 56px !important;
-    height: 56px !important;
-    flex-basis: 56px !important;
-  }
-}
-
-@media (display-mode: standalone) and (max-width: 768px) {
-  :root {
-    --mobile-safe-bottom: calc(18px + env(safe-area-inset-bottom));
   }
 }
