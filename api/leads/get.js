@@ -37,7 +37,10 @@ export default async function handler(req, res) {
     await ensureLeadTable(sql);
 
     const leads = await sql`
-      SELECT id, nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status, observacao_interna, ultima_acao_em
+      SELECT
+        id, nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status,
+        observacao_interna, ultima_acao_em, cidade, uf, tipo_plano, pagina_origem,
+        tag_origem, canal, referrer, score, consentimento_lgpd
       FROM lead
       ORDER BY id DESC
     `;
