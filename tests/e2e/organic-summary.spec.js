@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-async function prepareOrganicPage(page, summaries = []) {
+async function prepareOrganicPage(page, summaries = [], sessions = []) {
   await page.addInitScript(() => {
     window.__openedUrls = [];
     window.open = (url) => {
@@ -21,6 +21,14 @@ async function prepareOrganicPage(page, summaries = []) {
       body: JSON.stringify({ success: true }),
     });
   });
+  await page.route('**/api/organic/session', async (route) => {
+    sessions.push(route.request().postDataJSON());
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: true }),
+    });
+  });
 }
 
 async function fillMinimalLeadForm(form) {
@@ -35,12 +43,14 @@ async function fillMinimalLeadForm(form) {
 test.describe('Resumo orgânico', () => {
   test('registra visualização agregada com origem gratuita', async ({ page }) => {
     const summaries = [];
-    await prepareOrganicPage(page, summaries);
+    const sessions = [];
+    await prepareOrganicPage(page, summaries, sessions);
 
     await page.goto('/planos/mei?origem=whatsapp_status');
 
     await expect(page.locator('form.lead-capture').first()).toBeVisible();
     await expect.poll(() => summaries.length).toBeGreaterThan(0);
+    await expect.poll(() => sessions.length).toBeGreaterThan(0);
     expect(summaries[0]).toMatchObject({
       action_type: 'page_view',
       page_path: '/planos/mei?origem=whatsapp_status',
@@ -49,12 +59,23 @@ test.describe('Resumo orgânico', () => {
       plan_type: 'MEI',
       target_key: 'pagina',
     });
+    expect(sessions[0]).toMatchObject({
+      action_type: 'page_view',
+      page_path: '/planos/mei?origem=whatsapp_status',
+      source_tag: 'whatsapp_status',
+      source_channel: 'WhatsApp orgânico',
+      plan_type: 'MEI',
+      target_key: 'pagina',
+      page_depth: 1,
+    });
+    expect(sessions[0].session_key).toMatch(/^sess_/);
   });
 
   test('registra envio do formulário sem identificar visitante anônimo', async ({ page }) => {
     const summaries = [];
+    const sessions = [];
     const leads = [];
-    await prepareOrganicPage(page, summaries);
+    await prepareOrganicPage(page, summaries, sessions);
 
     await page.route('**/api/leads/create', async (route) => {
       leads.push(route.request().postDataJSON());
@@ -84,7 +105,8 @@ test.describe('Resumo orgânico', () => {
 
   test('registra clique no WhatsApp direto como métrica agregada', async ({ page }) => {
     const summaries = [];
-    await prepareOrganicPage(page, summaries);
+    const sessions = [];
+    await prepareOrganicPage(page, summaries, sessions);
 
     await page.goto('/planos/mei?origem=whatsapp_status');
 
