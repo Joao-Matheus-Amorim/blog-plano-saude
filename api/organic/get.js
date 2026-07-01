@@ -112,11 +112,12 @@ export default async function handler(req, res) {
         last_target,
         COUNT(*)::int AS total_sessions,
         COALESCE(ROUND(AVG(intention_score)), 0)::int AS avg_score,
-        COALESCE(ROUND(AVG(page_count), 1), 0)::float AS avg_pages
+        COALESCE(ROUND(AVG(page_count), 1), 0)::float AS avg_pages,
+        MAX(updated_at) AS last_seen
       FROM organic_sessions_daily
       WHERE summary_day >= CURRENT_DATE - (${days}::int - 1)
       GROUP BY source_tag, source_channel, first_page, last_page, plan_type, last_action, last_target
-      ORDER BY avg_score DESC, total_sessions DESC, updated_at DESC
+      ORDER BY avg_score DESC, total_sessions DESC, last_seen DESC
       LIMIT 40
     `;
 
