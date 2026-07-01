@@ -10,6 +10,9 @@ const configs = {
     type: 'MEI',
     origin: 'pagina-mei',
     intent: 'plano-mei',
+    path: '/planos/mei',
+    formTitle: 'Quero cotação para MEI',
+    formSubtitle: 'Informe WhatsApp, cidade e quantidade de vidas. Se já tiver CNPJ ativo, escreva no campo de detalhes.',
     bullets: ['MEI com dependentes', '2 ou mais vidas', 'CNPJ pequeno', 'Comparação com plano individual'],
   },
   familiar: {
@@ -19,6 +22,9 @@ const configs = {
     type: 'Família',
     origin: 'pagina-familiar',
     intent: 'plano-familiar',
+    path: '/planos/familiar',
+    formTitle: 'Quero cotação familiar',
+    formSubtitle: 'Informe cidade, WhatsApp e quantas pessoas vão entrar no plano. Use os detalhes para citar bairro, hospital ou idade.',
     bullets: ['1 a 5 vidas', 'Dependentes', 'Rede por região', 'Troca de plano atual'],
   },
   empresarial: {
@@ -28,33 +34,45 @@ const configs = {
     type: 'Empresa / PME',
     origin: 'pagina-empresarial',
     intent: 'plano-empresarial',
+    path: '/planos/empresarial',
+    formTitle: 'Quero cotação empresarial',
+    formSubtitle: 'Informe a cidade e uma estimativa de vidas. Se for para sócios, equipe ou dependentes, coloque nos detalhes.',
     bullets: ['PME', 'Equipe pequena', 'Benefício para funcionários', 'Rede e custo-benefício'],
   },
   individual: {
     title: 'Plano de saúde individual no RJ',
-    h1: 'Encontre uma opção individual com orientação.',
-    lead: 'Para quem quer contratar sozinho e precisa entender alternativas, rede, coparticipação e próximos passos.',
+    h1: 'Plano de saúde individual com orientação antes da cotação.',
+    lead: 'Para quem quer contratar sozinho e precisa entender alternativas, rede, coparticipação e próximos passos sem preencher dez formulários diferentes.',
     type: 'Individual',
     origin: 'pagina-individual',
     intent: 'plano-individual',
+    path: '/planos/individual',
+    formTitle: 'Quero cotação individual',
+    formSubtitle: 'Informe WhatsApp, cidade e idade aproximada nos detalhes. Isso ajuda a orientar a conversa inicial.',
     bullets: ['Uma vida', 'Rede desejada', 'Coparticipação', 'Orçamento mensal'],
   },
   idoso: {
     title: 'Plano de saúde para idoso no RJ',
-    h1: 'Pré-análise para plano de saúde sênior.',
-    lead: 'Para famílias que precisam avaliar alternativas com cuidado, considerando idade, cidade, rede e necessidade de atendimento.',
-    type: 'Família',
+    h1: 'Plano de saúde para pessoa 59+ com pré-análise cuidadosa.',
+    lead: 'Para famílias que precisam avaliar alternativas considerando idade, cidade, rede desejada, plano atual e orçamento possível.',
+    type: 'Individual',
     origin: 'pagina-idoso',
     intent: 'plano-idoso',
-    bullets: ['Rede hospitalar', 'Cidade de atendimento', 'Orçamento', 'Plano atual'],
+    path: '/planos/idoso',
+    formTitle: 'Quero cotação para pessoa 59+',
+    formSubtitle: 'Informe cidade, WhatsApp e idade da pessoa que vai entrar no plano. Se já existe plano atual, cite nos detalhes.',
+    bullets: ['Idade e perfil', 'Rede hospitalar', 'Cidade de atendimento', 'Plano atual'],
   },
   gestante: {
     title: 'Plano de saúde para gestante no RJ',
-    h1: 'Entenda opções de plano com foco em obstetrícia.',
-    lead: 'Para quem quer avaliar cobertura, rede, parto, prazos e alternativas de contratação com orientação.',
+    h1: 'Orientação para plano de saúde com foco em obstetrícia.',
+    lead: 'Para quem quer entender opções de contratação, rede, obstetrícia, prazos e próximos passos com atendimento pelo WhatsApp.',
     type: 'Família',
     origin: 'pagina-gestante',
     intent: 'plano-gestante',
+    path: '/planos/gestante',
+    formTitle: 'Quero orientação para gestante',
+    formSubtitle: 'Informe cidade e WhatsApp. Nos detalhes, diga se já está gestante, se está planejando ou se quer rede específica.',
     bullets: ['Obstetrícia', 'Rede hospitalar', 'Cidade', 'Prazos e contratação'],
   },
   portabilidade: {
@@ -64,6 +82,9 @@ const configs = {
     type: 'Quero trocar meu plano atual',
     origin: 'pagina-portabilidade',
     intent: 'portabilidade',
+    path: '/planos/portabilidade',
+    formTitle: 'Quero avaliar troca de plano',
+    formSubtitle: 'Informe seu plano atual, cidade e motivo da troca. A cotação continua pelo WhatsApp.',
     bullets: ['Plano atual', 'Motivo da troca', 'Rede desejada', 'Quantidade de vidas'],
   },
   mage: {
@@ -74,6 +95,9 @@ const configs = {
     city: 'Magé, RJ',
     origin: 'pagina-mage',
     intent: 'plano-mage',
+    path: '/plano-saude-mage',
+    formTitle: 'Quero cotação em Magé',
+    formSubtitle: 'A cidade já vem preenchida. Escolha o tipo de plano e informe WhatsApp para continuar a conversa.',
     bullets: ['Magé', 'Piabetá', 'MEI e família', 'Plano empresarial'],
   },
   piabeta: {
@@ -84,6 +108,9 @@ const configs = {
     city: 'Piabetá, RJ',
     origin: 'pagina-piabeta',
     intent: 'plano-piabeta',
+    path: '/plano-saude-piabeta',
+    formTitle: 'Quero cotação em Piabetá',
+    formSubtitle: 'A cidade já vem preenchida. Informe tipo de plano, vidas e algum detalhe de rede ou bairro se tiver.',
     bullets: ['Piabetá', 'Magé', 'Pessoa física', 'Empresa local'],
   },
 };
@@ -97,7 +124,7 @@ export default function PaginaPlanoIntencao({ tipo = 'mei' }) {
         title={config.title}
         description={`${config.lead} Receba uma pré-análise gratuita por WhatsApp.`}
         keywords={`${config.title}, cotação plano de saúde, plano de saúde RJ, Maisa Valentim`}
-        url={`https://maisavalentim.com.br/${tipo}`}
+        url={`https://www.planosdesaudemaisavalentim.com.br${config.path}`}
       />
 
       <main className="home-conversion">
@@ -114,8 +141,8 @@ export default function PaginaPlanoIntencao({ tipo = 'mei' }) {
 
           <div className="home-conversion__form">
             <LeadCaptureForm
-              title="Receba uma pré-análise"
-              subtitle="Informe nome, WhatsApp e o contexto. A conversa continua pelo WhatsApp."
+              title={config.formTitle || 'Receba uma pré-análise'}
+              subtitle={config.formSubtitle || 'Informe nome, WhatsApp e o contexto. A conversa continua pelo WhatsApp.'}
               cta="Quero cotar meu caso"
               origin={config.origin}
               intent={config.intent}
