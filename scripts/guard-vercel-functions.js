@@ -1,7 +1,8 @@
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const apiDir = join(process.cwd(), 'api');
+const cwd = globalThis.process.cwd();
+const apiDir = join(cwd, 'api');
 const maxFunctions = 12;
 
 function listServerlessFunctions(dir) {
@@ -16,7 +17,7 @@ function listServerlessFunctions(dir) {
     if (!entry.isFile()) return [];
     if (!entry.name.endsWith('.js')) return [];
 
-    const relative = fullPath.replace(`${process.cwd()}/`, '').replace(/\\/g, '/');
+    const relative = fullPath.replace(`${cwd}/`, '').replace(/\\/g, '/');
     const size = statSync(fullPath).size;
     return [{ path: relative, size }];
   });
@@ -30,5 +31,5 @@ functions.forEach((fn) => console.log(`- ${fn.path}`));
 if (functions.length > maxFunctions) {
   console.error(`\nFunction budget exceeded. Hobby plan allows ${maxFunctions} serverless functions.`);
   console.error('Remove or merge API files before deploying.');
-  process.exit(1);
+  globalThis.process.exit(1);
 }
