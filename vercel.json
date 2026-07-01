@@ -29,6 +29,10 @@
       "destination": "/api/leads"
     },
     {
+      "source": "/api/blog/get",
+      "destination": "/api/blog/list"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
