@@ -64,10 +64,14 @@ test.describe('Funil de lead', () => {
 
     await page.goto('/');
 
+    const specificSearches = page.locator('section').filter({ hasText: 'Buscas específicas também têm caminho.' });
     await expect(page.getByRole('heading', { name: /compare seu plano de saúde/i })).toBeVisible();
     await expect(page.getByText(/individual, família, mei ou empresa/i)).toBeVisible();
     await expect(page.getByRole('link', { name: /tenho mei/i })).toHaveAttribute('href', '/planos/mei');
     await expect(page.locator('form.lead-capture').first()).toBeVisible();
+    await expect(specificSearches.getByRole('link', { name: /plano individual/i })).toHaveAttribute('href', '/planos/individual');
+    await expect(specificSearches.getByRole('link', { name: /plano para pessoa 59\+/i })).toHaveAttribute('href', '/planos/idoso');
+    await expect(specificSearches.getByRole('link', { name: /plano de saúde em piabetá/i })).toHaveAttribute('href', '/plano-saude-piabeta');
   });
 
   test('home valida consentimento antes de enviar', async ({ page }) => {
