@@ -14,9 +14,25 @@ function text(value, fallback = '') {
   return String(value ?? '').trim().slice(0, 160) || fallback;
 }
 
-function sessionKey(value) {
+function safeKeyPart(value, fallback = 'geral') {
+  return String(value ?? fallback)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 48) || fallback;
+}
+
+function sessionKey(value, sourceTag, pagePath, targetKey) {
   const clean = String(value ?? '').trim().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
-  return clean || `sessao_${Date.now()}`;
+  if (clean) return clean;
+
+  return [
+    'bucket',
+    safeKeyPart(sourceTag, 'site'),
+    safeKeyPart(pagePath, 'pagina'),
+    safeKeyPart(targetKey, 'acao'),
+  ].join('_').slice(0, 80);
 }
 
 function scoreFor(actionType, pageDepth = 1) {
@@ -75,7 +91,7 @@ export default async function handler(req, res) {
       )
       VALUES (
         CURRENT_DATE,
-        ${sessionKey(body.session_key)},
+        ${sessionKey(body.session_key, sourceTag, pagePath, targetKey)},
         ${pagePath},
         ${pagePath},
         ${sourceTag},
