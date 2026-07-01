@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import AdminLogin from '../components/AdminLogin.jsx';
 
-function total(items = []) {
-  return items.reduce((sum, item) => sum + Number(item.total || 0), 0);
-}
-
 function labelAction(action = '') {
   const labels = {
     page_view: 'Visitas',
