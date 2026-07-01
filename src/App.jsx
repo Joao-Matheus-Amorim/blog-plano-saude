@@ -8,6 +8,7 @@ import PopupSaida from './components/Popupsaida.jsx';
 import PremiumMotion from './components/PremiumMotion.jsx';
 import PaginaHomeConversao from './pages/PaginaHomeConversao.jsx';
 import PaginaPlanoIntencao from './pages/PaginaPlanoIntencao.jsx';
+import PaginaLinksOrganicos from './pages/PaginaLinksOrganicos.jsx';
 import PaginaContato from './pages/PaginaContato.jsx';
 import PaginaSobre from './pages/PaginaSobrePremium.jsx';
 import PaginaOperadoras from './pages/PaginaOperadoras.jsx';
@@ -170,6 +171,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={routeKey}>
         <Route path="/" element={<PageTransition><PaginaHomeConversao /></PageTransition>} />
         <Route path="/cotacao" element={<PageTransition><PaginaHomeConversao /></PageTransition>} />
+        <Route path="/links" element={<PageTransition><PaginaLinksOrganicos /></PageTransition>} />
         <Route path="/planos/mei" element={<PageTransition><PaginaPlanoIntencao tipo="mei" /></PageTransition>} />
         <Route path="/planos/familiar" element={<PageTransition><PaginaPlanoIntencao tipo="familiar" /></PageTransition>} />
         <Route path="/planos/empresarial" element={<PageTransition><PaginaPlanoIntencao tipo="empresarial" /></PageTransition>} />
@@ -190,7 +192,7 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const location = useLocation();
-  const isLanding = location.pathname === '/' || location.pathname === '/cotacao' || location.pathname.startsWith('/planos/');
+  const isLanding = location.pathname === '/' || location.pathname === '/cotacao' || location.pathname.startsWith('/planos/') || location.pathname === '/links';
 
   return (
     <>
