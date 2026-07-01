@@ -205,20 +205,21 @@ function AnimatedRoutes() {
 function AppShell() {
   const location = useLocation();
   const isLanding = location.pathname === '/' || location.pathname === '/cotacao' || location.pathname.startsWith('/planos/') || location.pathname.startsWith('/plano-saude-') || location.pathname === '/links';
+  const isAdmin = location.pathname.startsWith('/admin');
 
   return (
     <>
       <GoogleAnalytics />
-      {!isLanding && <PremiumMotion />}
+      {!isLanding && !isAdmin && <PremiumMotion />}
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden', position: 'relative' }}>
-        {!isLanding && <Header />}
+        {!isLanding && !isAdmin && <Header />}
+        {isAdmin && <AdminDock />}
         <main style={{ flex: 1, width: '100%', position: 'relative', isolation: 'isolate', WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' }}>
           <AnimatedRoutes />
         </main>
       </div>
-      <AdminDock />
-      {!isLanding && <FloatingWhatsApp />}
-      {!isLanding && <PopupSaida />}
+      {!isLanding && !isAdmin && <FloatingWhatsApp />}
+      {!isLanding && !isAdmin && <PopupSaida />}
     </>
   );
 }
