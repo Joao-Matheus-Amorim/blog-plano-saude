@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-const productionDomain = 'https://www.planosdesaudemaisavalentim.com.br';
+const productionDomain = 'https://consultoriadesaude.vercel.app';
+const wrongDomain = 'https://www.planosdesaudemaisavalentim.com.br';
 const requiredSitemapUrls = [
   '/',
   '/links',
@@ -23,7 +24,7 @@ test.describe('SEO técnico', () => {
     const body = await response.text();
     expect(body).toContain(`Sitemap: ${productionDomain}/sitemap.xml`);
     expect(body).toContain('Disallow: /admin/');
-    expect(body).not.toContain('consultoriadesaude.vercel.app');
+    expect(body).not.toContain(wrongDomain);
   });
 
   test('sitemap lista páginas orgânicas e locais', async ({ request }) => {
@@ -32,7 +33,7 @@ test.describe('SEO técnico', () => {
 
     const body = await response.text();
     expect(body).toContain('<urlset');
-    expect(body).not.toContain('consultoriadesaude.vercel.app');
+    expect(body).not.toContain(wrongDomain);
 
     for (const path of requiredSitemapUrls) {
       expect(body).toContain(`<loc>${productionDomain}${path}</loc>`);
