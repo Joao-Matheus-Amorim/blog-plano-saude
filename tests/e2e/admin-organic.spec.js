@@ -42,9 +42,9 @@ test.describe('Admin orgânico', () => {
     await page.goto('/admin/organico');
 
     await expect(page.getByRole('heading', { name: /radar orgânico/i })).toBeVisible();
-    await expect(page.getByText('whatsapp_status')).toBeVisible();
-    await expect(page.getByText('Instagram orgânico')).toBeVisible();
-    await expect(page.getByText('/planos/mei?origem=whatsapp_status')).toBeVisible();
+    await expect(page.locator('section').filter({ hasText: 'Origem orgânica' }).getByRole('cell', { name: 'whatsapp_status' })).toBeVisible();
+    await expect(page.locator('section').filter({ hasText: 'Origem orgânica' }).getByText('Instagram orgânico')).toBeVisible();
+    await expect(page.locator('section').filter({ hasText: 'Páginas e intenção' }).getByText('/planos/mei?origem=whatsapp_status')).toBeVisible();
     await expect(page.getByRole('link', { name: /voltar ao crm/i })).toHaveAttribute('href', '/admin');
   });
 });
