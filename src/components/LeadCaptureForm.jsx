@@ -150,17 +150,26 @@ function sendOrganicSummary(actionType, tracking, targetKey) {
   if (typeof window === 'undefined') return;
 
   try {
+    const payload = {
+      action_type: actionType,
+      page_path: tracking.pagina_origem || getPagePath(),
+      source_tag: tracking.tag_origem || 'site_organico',
+      source_channel: tracking.canal || 'Direto/orgânico',
+      plan_type: tracking.tipo_plano || 'Plano de saúde',
+      target_key: targetKey || 'formulario',
+    };
+
     fetch('/api/organic/summary', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action_type: actionType,
-        page_path: tracking.pagina_origem || getPagePath(),
-        source_tag: tracking.tag_origem || 'site_organico',
-        source_channel: tracking.canal || 'Direto/orgânico',
-        plan_type: tracking.tipo_plano || 'Plano de saúde',
-        target_key: targetKey || 'formulario',
-      }),
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+
+    fetch('/api/organic/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
       keepalive: true,
     }).catch(() => {});
   } catch {
