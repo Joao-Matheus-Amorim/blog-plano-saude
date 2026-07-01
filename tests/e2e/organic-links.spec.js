@@ -21,9 +21,9 @@ test.describe('Central de links orgânicos', () => {
     await page.goto('/links?origem=instagram_bio');
 
     await expect(page.getByRole('heading', { name: /central de links/i })).toBeVisible();
-    await expect(page.getByText('WhatsApp Status')).toBeVisible();
-    await expect(page.getByText('Google Perfil da Empresa')).toBeVisible();
-    await expect(page.getByText('Radarplan B2B')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'WhatsApp Status' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Google Perfil da Empresa' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Radarplan B2B' })).toBeVisible();
     await expect(page.getByRole('link', { name: /^Abrir$/ }).nth(1)).toHaveAttribute('href', '/planos/mei?origem=links_organicos');
     await expect(page.getByText('https://www.planosdesaudemaisavalentim.com.br/links?origem=instagram_bio')).toBeVisible();
     await expect.poll(() => summaries.length).toBeGreaterThan(0);
