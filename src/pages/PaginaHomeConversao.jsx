@@ -9,6 +9,14 @@ const moneyPages = [
   { label: 'Troca', title: 'Portabilidade', text: 'Para quem já tem plano e quer avaliar troca, rede, preço ou carência.', href: '/planos/portabilidade' },
 ];
 
+const intentPages = [
+  { label: 'Individual', title: 'Plano individual', text: 'Para quem quer contratar sozinho e precisa comparar rede, preço e perfil.', href: '/planos/individual' },
+  { label: '59+', title: 'Plano para pessoa 59+', text: 'Para famílias que querem avaliar alternativas com mais cuidado.', href: '/planos/idoso' },
+  { label: 'Gestante', title: 'Plano para gestante', text: 'Para dúvidas sobre obstetrícia, rede, prazos e contratação.', href: '/planos/gestante' },
+  { label: 'Magé', title: 'Plano de saúde em Magé', text: 'Entrada local para Magé, Piabetá e Baixada Fluminense.', href: '/plano-saude-mage' },
+  { label: 'Piabetá', title: 'Plano de saúde em Piabetá', text: 'Entrada local para moradores, MEIs e empresas da região.', href: '/plano-saude-piabeta' },
+];
+
 export default function PaginaHomeConversao() {
   return (
     <>
@@ -16,7 +24,7 @@ export default function PaginaHomeConversao() {
         title="Cotação de Plano de Saúde no RJ"
         description="Compare plano de saúde individual, familiar, MEI ou empresarial com pré-análise gratuita por WhatsApp."
         keywords="cotação plano de saúde RJ, plano de saúde MEI, plano familiar, plano empresarial, plano de saúde Magé, plano de saúde Piabetá"
-        url="https://maisavalentim.com.br/"
+        url="https://www.planosdesaudemaisavalentim.com.br/"
       />
 
       <main className="home-conversion">
@@ -52,11 +60,25 @@ export default function PaginaHomeConversao() {
           </div>
         </section>
 
-        <section className="home-conversion__section">
-          <h2>Entre pela porta certa.</h2>
+        <section className="home-conversion__section" aria-labelledby="portas-principais">
+          <h2 id="portas-principais">Entre pela porta certa.</h2>
           <p>Quem procura plano de saúde tem necessidades diferentes. Por isso o site separa o caminho por perfil.</p>
           <div className="home-conversion__cards">
             {moneyPages.map((page) => (
+              <a className="home-conversion__card" href={page.href} key={page.href}>
+                <b>{page.label}</b>
+                <h3>{page.title}</h3>
+                <p>{page.text}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="home-conversion__section" aria-labelledby="buscas-especificas">
+          <h2 id="buscas-especificas">Buscas específicas também têm caminho.</h2>
+          <p>Estas páginas ajudam quem chegou pesquisando por perfil, idade, gestação ou cidade. Elas também criam ligação interna para o SEO local.</p>
+          <div className="home-conversion__cards">
+            {intentPages.map((page) => (
               <a className="home-conversion__card" href={page.href} key={page.href}>
                 <b>{page.label}</b>
                 <h3>{page.title}</h3>
