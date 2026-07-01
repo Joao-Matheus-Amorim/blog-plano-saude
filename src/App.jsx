@@ -6,6 +6,7 @@ import PageTransition from './components/PageTransition.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import PopupSaida from './components/Popupsaida.jsx';
 import PremiumMotion from './components/PremiumMotion.jsx';
+import AdminDock from './components/AdminDock.jsx';
 import PaginaHomeConversao from './pages/PaginaHomeConversao.jsx';
 import PaginaPlanoIntencao from './pages/PaginaPlanoIntencao.jsx';
 import PaginaLinksOrganicos from './pages/PaginaLinksOrganicos.jsx';
@@ -215,6 +216,7 @@ function AppShell() {
           <AnimatedRoutes />
         </main>
       </div>
+      <AdminDock />
       {!isLanding && <FloatingWhatsApp />}
       {!isLanding && <PopupSaida />}
     </>
