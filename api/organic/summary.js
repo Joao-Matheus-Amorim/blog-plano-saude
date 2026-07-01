@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { ensureVisitSummaryTable } from '../_lib/visit-summary.js';
-import { parseJsonBody } from '../_lib/security.js';
+import { parseJsonBody, rateLimit } from '../_lib/security.js';
 
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -16,6 +16,10 @@ function text(value, fallback = '') {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
+
+  if (!rateLimit(req, res, { keyPrefix: 'organic-summary', windowMs: 60_000, max: 80 })) {
+    return;
+  }
 
   try {
     const body = await parseJsonBody(req);
