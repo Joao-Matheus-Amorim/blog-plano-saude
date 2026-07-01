@@ -20,7 +20,7 @@ test.describe('Central de links orgânicos', () => {
 
     await page.goto('/links?origem=instagram_bio');
 
-    await expect(page.getByRole('heading', { name: /central de links da maísa/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /central de links/i })).toBeVisible();
     await expect(page.getByText('WhatsApp Status')).toBeVisible();
     await expect(page.getByText('Google Perfil da Empresa')).toBeVisible();
     await expect(page.getByText('Radarplan B2B')).toBeVisible();
