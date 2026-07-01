@@ -1,11 +1,8 @@
-# Permitir todos os robôs
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://consultoriadesaude.vercel.app/sitemap.xml
+Sitemap: https://www.planosdesaudemaisavalentim.com.br/sitemap.xml
 
-# Bloquear páginas administrativas (se houver no futuro)
 Disallow: /admin/
 Disallow: /api/
 Disallow: /*.json$
