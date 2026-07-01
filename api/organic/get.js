@@ -65,12 +65,12 @@ export default async function handler(req, res) {
     `;
 
     const byPage = await sql`
-      SELECT page_path, plan_type, action_type, SUM(total)::int AS total
+      SELECT page_path, source_tag, source_channel, plan_type, action_type, SUM(total)::int AS total
       FROM visit_summary_daily
       WHERE summary_day >= CURRENT_DATE - (${days}::int - 1)
-      GROUP BY page_path, plan_type, action_type
+      GROUP BY page_path, source_tag, source_channel, plan_type, action_type
       ORDER BY total DESC, page_path ASC
-      LIMIT 120
+      LIMIT 160
     `;
 
     const byAction = await sql`
