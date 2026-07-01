@@ -3,8 +3,6 @@ import crypto from 'crypto';
 import { ensureLeadTable } from '../_lib/leads.js';
 import { rateLimit } from '../_lib/security.js';
 
-// ─── DB ───────────────────────────────────────────────────────────────────────
-
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
 
@@ -27,8 +25,6 @@ function getSqlClient() {
   return neon(parsedUrl.toString());
 }
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-
 function sha256(value) {
   if (!value) return null;
   return crypto.createHash('sha256').update(String(value).trim().toLowerCase()).digest('hex');
@@ -41,6 +37,51 @@ function toDigitsOnly(value) {
 function normalizePhone(phone) {
   const digits = toDigitsOnly(phone);
   return digits.startsWith('55') ? digits : `55${digits}`;
+}
+
+function asText(value, fallback = '') {
+  const text = String(value ?? '').trim();
+  return text || fallback;
+}
+
+function asNullableText(value) {
+  const text = asText(value);
+  return text || null;
+}
+
+function asBoolean(value) {
+  if (typeof value === 'boolean') return value;
+  return ['true', '1', 'sim', 'yes'].includes(String(value || '').toLowerCase());
+}
+
+function asScore(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score)) return 0;
+  return Math.max(0, Math.min(Math.round(score), 100));
+}
+
+function calculateFallbackScore({ telefone, cidade, tipo_plano, vidas, tag_origem, canal, mensagem }) {
+  let score = 20;
+  const tipo = String(tipo_plano || '').toLowerCase();
+  const tag = String(tag_origem || '').toLowerCase();
+  const canalText = String(canal || '').toLowerCase();
+  const msg = String(mensagem || '').toLowerCase();
+  const lives = Number(vidas) || 0;
+
+  if (telefone) score += 15;
+  if (cidade) score += 15;
+  if (tipo.includes('mei')) score += 25;
+  if (tipo.includes('empresa') || tipo.includes('pme')) score += 30;
+  if (tipo.includes('trocar') || tipo.includes('portabilidade')) score += 25;
+  if (tipo.includes('família') || tipo.includes('familia')) score += 15;
+  if (lives >= 2) score += 10;
+  if (lives >= 3) score += 15;
+  if (lives >= 6) score += 20;
+  if (tag.includes('radar')) score += 20;
+  if (tag.includes('whatsapp') || tag.includes('instagram') || canalText.includes('google')) score += 10;
+  if (/urgente|mei|empresa|trocar|portabilidade|gestante|idoso|mãe|mae|filho|funcionário|funcionario/.test(msg)) score += 15;
+
+  return asScore(score);
 }
 
 function getPublicErrorPayload(error) {
@@ -57,8 +98,6 @@ function getPublicErrorPayload(error) {
   return payload;
 }
 
-// ─── CALLMEBOT ────────────────────────────────────────────────────────────────
-
 async function sendWhatsapp(lead) {
   const phone  = process.env.CALLMEBOT_PHONE;
   const apikey = process.env.CALLMEBOT_APIKEY;
@@ -70,13 +109,16 @@ async function sendWhatsapp(lead) {
 
   const text = encodeURIComponent(
     [
-      '🔔 Novo lead recebido!',
-      `👤 Nome: ${lead.nome || '-'}`,
-      `📞 Telefone: ${lead.telefone || '-'}`,
-      `📧 Email: ${lead.email || '-'}`,
-      `🏥 Operadora: ${lead.operadora || '-'}`,
-      `👥 Vidas: ${lead.vidas ?? '-'}`,
-      `📍 Origem: ${lead.origem || '-'}`,
+      'Novo lead recebido!',
+      `Nome: ${lead.nome || '-'}`,
+      `Telefone: ${lead.telefone || '-'}`,
+      `Email: ${lead.email || '-'}`,
+      `Tipo: ${lead.tipo_plano || lead.operadora || '-'}`,
+      `Vidas: ${lead.vidas ?? '-'}`,
+      `Cidade: ${lead.cidade || '-'}${lead.uf ? `/${lead.uf}` : ''}`,
+      `Canal: ${lead.canal || '-'}`,
+      `Tag origem: ${lead.tag_origem || lead.origem || '-'}`,
+      `Score: ${lead.score ?? 0}`,
     ].join('\n')
   );
 
@@ -89,14 +131,6 @@ async function sendWhatsapp(lead) {
   return { ok: res.ok, status: res.status };
 }
 
-// ─── META CAPI ────────────────────────────────────────────────────────────────
-//
-// DEDUPLICAÇÃO:
-// O frontend gera um UUID (eventId) e o passa no fbq('track', 'Lead', {}, { eventID })
-// O mesmo UUID é enviado aqui no payload como `event_id`.
-// A Meta compara os dois e descarta o duplicado — conta apenas 1 conversão.
-// Referência: https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events
-//
 async function sendMetaCapi(lead, eventId) {
   const pixelId      = process.env.META_PIXEL_ID;
   const accessToken  = process.env.META_ACCESS_TOKEN;
@@ -122,7 +156,10 @@ async function sendMetaCapi(lead, eventId) {
       event_id:      resolvedEventId,
       user_data:     userData,
       custom_data: {
-        content_name: lead.operadora || 'Plano de Saúde',
+        content_name: lead.tipo_plano || lead.operadora || 'Plano de Saúde',
+        canal: lead.canal || 'Orgânico',
+        tag_origem: lead.tag_origem || lead.origem || '',
+        score: lead.score || 0,
       },
     }],
   };
@@ -139,8 +176,6 @@ async function sendMetaCapi(lead, eventId) {
   console.log('Meta CAPI response:', res.status, JSON.stringify(body));
   return { ok: res.ok, status: res.status, body };
 }
-
-// ─── HANDLER ──────────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -168,16 +203,36 @@ export default async function handler(req, res) {
     mensagem,
     origem,
     event_id,
+    cidade,
+    uf,
+    tipo_plano,
+    pagina_origem,
+    tag_origem,
+    canal,
+    referrer,
+    score,
+    consentimento_lgpd,
   } = body || {};
 
-  const nomeFinal      = String(nome || name || '').trim();
-  const emailFinal     = String(email    || '').trim() || null;
-  const telefoneFinal  = String(telefone || whatsapp || '').trim() || null;
-  const operadoraFinal = String(operadora || '').trim() || null;
-  const mensagemFinal  = String(mensagem  || '').trim() || null;
-  const origemFinal    = String(origem    || 'Direto').trim() || 'Direto';
-  const vidasFinal     = Number.isFinite(Number(vidas)) ? Number(vidas) : null;
-  const eventIdFinal   = String(event_id || '').trim() || null;
+  const nomeFinal = asText(nome || name);
+  const emailFinal = asNullableText(email);
+  const telefoneFinal = asNullableText(telefone || whatsapp);
+  const tipoPlanoFinal = asNullableText(tipo_plano || operadora) || 'Plano de saúde';
+  const operadoraFinal = asNullableText(operadora || tipoPlanoFinal);
+  const mensagemFinal = asNullableText(mensagem);
+  const origemFinal = asText(origem, 'Direto');
+  const vidasFinal = Number.isFinite(Number(vidas)) ? Number(vidas) : null;
+  const eventIdFinal = asNullableText(event_id);
+  const cidadeFinal = asNullableText(cidade);
+  const ufFinal = asNullableText(uf);
+  const paginaOrigemFinal = asNullableText(pagina_origem);
+  const tagOrigemFinal = asNullableText(tag_origem || origemFinal);
+  const canalFinal = asText(canal, 'Orgânico');
+  const referrerFinal = asNullableText(referrer);
+  const consentimentoFinal = asBoolean(consentimento_lgpd);
+  const scoreFinal = score === undefined || score === null
+    ? calculateFallbackScore({ telefone: telefoneFinal, cidade: cidadeFinal, tipo_plano: tipoPlanoFinal, vidas: vidasFinal, tag_origem: tagOrigemFinal, canal: canalFinal, mensagem: mensagemFinal })
+    : asScore(score);
 
   if (!nomeFinal) {
     return res.status(400).json({ error: 'Informe seu nome para continuar.' });
@@ -193,11 +248,16 @@ export default async function handler(req, res) {
     await ensureLeadTable(sql);
 
     const result = await sql`
-      INSERT INTO lead (nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status)
+      INSERT INTO lead (
+        nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status,
+        cidade, uf, tipo_plano, pagina_origem, tag_origem, canal, referrer, score, consentimento_lgpd
+      )
       VALUES (
         ${nomeFinal}, ${emailFinal}, ${telefoneFinal},
         ${operadoraFinal}, ${mensagemFinal}, ${vidasFinal},
-        ${origemFinal}, NOW(), 'Novo'
+        ${origemFinal}, NOW(), 'Novo',
+        ${cidadeFinal}, ${ufFinal}, ${tipoPlanoFinal}, ${paginaOrigemFinal}, ${tagOrigemFinal},
+        ${canalFinal}, ${referrerFinal}, ${scoreFinal}, ${consentimentoFinal}
       )
       RETURNING *
     `;
