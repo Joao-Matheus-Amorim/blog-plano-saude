@@ -40,9 +40,28 @@ function GoogleAnalytics() {
   }, []);
 
   useEffect(() => {
+    const pagePath = location.pathname + location.search;
     window.gtag?.('event', 'page_view', {
-      page_path: location.pathname + location.search,
+      page_path: pagePath,
     });
+
+    if (!location.pathname.startsWith('/admin')) {
+      const params = new URLSearchParams(location.search);
+      const sourceTag = params.get('origem') || params.get('tag_origem') || 'site_organico';
+      fetch('/api/organic/summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action_type: 'page_view',
+          page_path: pagePath,
+          source_tag: sourceTag,
+          source_channel: sourceTag.includes('whatsapp') ? 'WhatsApp orgânico' : 'Direto/orgânico',
+          plan_type: location.pathname.includes('/planos/mei') ? 'MEI' : 'Plano de saúde',
+          target_key: 'pagina',
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
   }, [location]);
 
   return null;
