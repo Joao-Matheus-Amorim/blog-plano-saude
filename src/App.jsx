@@ -48,6 +48,8 @@ function inferPlanType(pathname = '') {
   if (pathname.includes('/planos/individual')) return 'Individual';
   if (pathname.includes('/planos/idoso')) return 'Sênior';
   if (pathname.includes('/planos/gestante')) return 'Gestante';
+  if (pathname.includes('/plano-saude-mage')) return 'Magé';
+  if (pathname.includes('/plano-saude-piabeta')) return 'Piabetá';
   return 'Plano de saúde';
 }
 
@@ -176,7 +178,12 @@ function AnimatedRoutes() {
         <Route path="/planos/mei" element={<PageTransition><PaginaPlanoIntencao tipo="mei" /></PageTransition>} />
         <Route path="/planos/familiar" element={<PageTransition><PaginaPlanoIntencao tipo="familiar" /></PageTransition>} />
         <Route path="/planos/empresarial" element={<PageTransition><PaginaPlanoIntencao tipo="empresarial" /></PageTransition>} />
+        <Route path="/planos/individual" element={<PageTransition><PaginaPlanoIntencao tipo="individual" /></PageTransition>} />
+        <Route path="/planos/idoso" element={<PageTransition><PaginaPlanoIntencao tipo="idoso" /></PageTransition>} />
+        <Route path="/planos/gestante" element={<PageTransition><PaginaPlanoIntencao tipo="gestante" /></PageTransition>} />
         <Route path="/planos/portabilidade" element={<PageTransition><PaginaPlanoIntencao tipo="portabilidade" /></PageTransition>} />
+        <Route path="/plano-saude-mage" element={<PageTransition><PaginaPlanoIntencao tipo="mage" /></PageTransition>} />
+        <Route path="/plano-saude-piabeta" element={<PageTransition><PaginaPlanoIntencao tipo="piabeta" /></PageTransition>} />
         <Route path="/contato" element={<PageTransition><PaginaContato /></PageTransition>} />
         <Route path="/sobre" element={<PageTransition><PaginaSobre /></PageTransition>} />
         <Route path="/operadoras" element={<PageTransition><PaginaOperadoras /></PageTransition>} />
@@ -194,7 +201,7 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const location = useLocation();
-  const isLanding = location.pathname === '/' || location.pathname === '/cotacao' || location.pathname.startsWith('/planos/') || location.pathname === '/links';
+  const isLanding = location.pathname === '/' || location.pathname === '/cotacao' || location.pathname.startsWith('/planos/') || location.pathname.startsWith('/plano-saude-') || location.pathname === '/links';
 
   return (
     <>
