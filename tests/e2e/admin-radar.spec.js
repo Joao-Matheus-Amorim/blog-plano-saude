@@ -83,14 +83,15 @@ test.describe('Admin Radarplan', () => {
 
     await expect(page.getByRole('article').filter({ hasText: 'Contabilidade Serra Verde' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'odontologia' }).click();
+    const segmentFilter = page.locator('.radar-filter-grid > div').filter({ hasText: 'Segmento bruto' });
+    await segmentFilter.getByRole('button', { name: 'odontologia', exact: true }).click();
     await expect(odontoCard).toBeVisible();
     await expect(page.getByRole('article').filter({ hasText: 'Contabilidade Serra Verde' })).toHaveCount(0);
 
     await page.getByLabel('Filtrar prioridade').selectOption('alta');
     await expect(odontoCard).toBeVisible();
 
-    await page.getByRole('button', { name: 'Todos' }).first().click();
+    await segmentFilter.getByRole('button', { name: 'todos', exact: true }).click();
     await page.getByLabel('Filtrar prioridade').selectOption('todas');
     await odontoCard.getByRole('button', { name: 'Converter em lead' }).click();
     await expect.poll(() => conversions.length).toBe(1);
