@@ -57,35 +57,52 @@ export async function ensureRadarProspectTable(sql) {
     )
   `;
 
-  const textColumns = [
-    'nome_empresa', 'segmento', 'cidade', 'uf', 'telefone_publico', 'whatsapp', 'email_publico',
-    'site_url', 'perfil_url', 'endereco', 'fonte_url', 'consulta_google', 'origem', 'prioridade',
-    'score_motivos', 'abordagem', 'status', 'observacao_interna', 'fingerprint', 'cnpj', 'cnae_codigo',
-    'cnae_descricao', 'porte_receita', 'data_abertura', 'vaga_titulo', 'post_cresc_texto', 'nivel_label',
-    'revisitar_em', 'proxima_acao'
-  ];
-
-  for (const column of textColumns) {
-    await sql.unsafe(`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS ${column} TEXT`);
-  }
-
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS nome_empresa TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS segmento TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS cidade TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS uf TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS telefone_publico TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS whatsapp TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS email_publico TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS site_url TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS perfil_url TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS endereco TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fonte_url TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS consulta_google TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS origem TEXT DEFAULT 'radarplan'`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS prioridade TEXT DEFAULT 'baixa'`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_motivos TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS abordagem TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS evidencias JSONB DEFAULT '[]'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS raw JSONB DEFAULT '{}'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Novo'`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS observacao_interna TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fingerprint TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS convertido_lead_id INTEGER`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS cnpj TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS cnae_codigo TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS cnae_descricao TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS porte_receita TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS data_abertura TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS funcionarios_est INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_vaga_ativa BOOLEAN DEFAULT false`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS vaga_titulo TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS vaga_dias INTEGER`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_post_cresc BOOLEAN DEFAULT false`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS post_cresc_texto TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_filial_nova BOOLEAN DEFAULT false`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS nivel_maturidade INTEGER DEFAULT 1`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS nivel_label TEXT DEFAULT 'Catalogado'`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS revisitar_em TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d1 INTEGER DEFAULT 0`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d2 INTEGER DEFAULT 0`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d3 INTEGER DEFAULT 0`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d4 INTEGER DEFAULT 0`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d5 INTEGER DEFAULT 0`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d6 INTEGER DEFAULT 0`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_vaga_ativa BOOLEAN DEFAULT false`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_post_cresc BOOLEAN DEFAULT false`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_filial_nova BOOLEAN DEFAULT false`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS evidencias JSONB DEFAULT '[]'::jsonb`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]'::jsonb`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS raw JSONB DEFAULT '{}'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS proxima_acao TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS flags JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fontes JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS market_context JSONB DEFAULT '{}'::jsonb`;
