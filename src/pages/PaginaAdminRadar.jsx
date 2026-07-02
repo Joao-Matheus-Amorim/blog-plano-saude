@@ -12,14 +12,13 @@ function priorityLabel(priority = '') {
 }
 
 function serviceLabel(value = '') {
-  const labels = {
+  return {
     todos: 'Todos',
     saude_odonto: 'Saúde / Odonto',
     servicos_b2b: 'Serviços B2B',
     juridico: 'Jurídico',
     local: 'Empresas locais',
-  };
-  return labels[value] || value;
+  }[value] || value;
 }
 
 function normalizeText(value = '') {
@@ -27,7 +26,7 @@ function normalizeText(value = '') {
 }
 
 function classifyService(prospect) {
-  const text = normalizeText(`${prospect.segmento || ''} ${prospect.nome_empresa || ''} ${prospect.consulta_google || ''}`);
+  const text = normalizeText(`${prospect.segmento || ''} ${prospect.nome_empresa || ''} ${prospect.consulta_google || ''} ${prospect.cnae_descricao || ''}`);
   if (/(odonto|dent|clinica|saude|medic|laboratorio|exame)/.test(text)) return 'saude_odonto';
   if (/(contab|contador|escritorio|consultoria|empresa|mei|rh|beneficio)/.test(text)) return 'servicos_b2b';
   if (/(advoc|jurid|direito)/.test(text)) return 'juridico';
@@ -55,7 +54,8 @@ function whatsappUrl(prospect) {
 function scoreReasons(prospect) {
   const raw = String(prospect.score_motivos || '').split(',').map((item) => item.trim()).filter(Boolean);
   const tags = Array.isArray(prospect.tags) ? prospect.tags : [];
-  return Array.from(new Set([...raw, ...tags])).slice(0, 8);
+  const flags = Array.isArray(prospect.flags) ? prospect.flags : [];
+  return Array.from(new Set([...raw, ...tags, ...flags])).slice(0, 10);
 }
 
 function reasonLabel(reason = '') {
@@ -65,51 +65,72 @@ function reasonLabel(reason = '') {
   if (value.includes('rede_social')) return 'Canal social público';
   if (value.includes('segmento_confirmado')) return 'Segmento confirmado na busca';
   if (value.includes('diretorio') || value.includes('indireto')) return 'Fonte indireta: validar antes';
+  if (value.includes('vaga')) return 'Sinal de contratação ou vaga';
+  if (value.includes('cnpj')) return 'Cadastro CNPJ catalogado';
   if (value.includes('google')) return 'Coleta via Google Browser';
   if (value.includes('local:')) return `Praça ${reason.replace('local:', '')}`;
   return reason.replaceAll('_', ' ');
+}
+
+function radarLevel(prospect) {
+  const level = Number(prospect.nivel_maturidade || 0);
+  const label = prospect.nivel_label || '';
+  if (level || label) return { level: level || 1, label: label || 'Catalogado' };
+  const score = Number(prospect.score || 0);
+  if (score >= 140) return { level: 5, label: 'Quente Agora' };
+  if (score >= 110) return { level: 4, label: 'Preparar' };
+  if (score >= 80) return { level: 3, label: 'Monitorar' };
+  if (score >= 50) return { level: 2, label: 'Pipeline Frio' };
+  return { level: 1, label: 'Catalogado' };
 }
 
 function engineeringGrade(prospect) {
   const score = Number(prospect.score || 0);
   const hasPhone = Boolean(prospect.telefone_publico || prospect.whatsapp);
   const direct = hasDirectSource(prospect);
-  const confirmed = scoreReasons(prospect).some((reason) => normalizeText(reason).includes('segmento_confirmado'));
+  const level = radarLevel(prospect);
 
-  if (score >= 90 && hasPhone && direct) return { label: 'Pronto para abordagem', className: 'grade-a', detail: 'Tem score alto, canal público e fonte auditável.' };
-  if (score >= 80 && direct) return { label: 'Validar e abordar', className: 'grade-b', detail: 'Boa fonte e aderência, falta checagem rápida.' };
-  if (score >= 65 || confirmed) return { label: 'Avaliação manual', className: 'grade-c', detail: 'Pode ser bom, mas precisa qualificação antes.' };
-  return { label: 'Baixo sinal', className: 'grade-d', detail: 'Guardar ou descartar se não houver evidência.' };
+  if (level.level >= 5 || (score >= 140 && hasPhone)) return { label: 'Pronto para abordagem', className: 'grade-a', detail: 'Score V2 alto, sinal ativo e ação comercial imediata.' };
+  if (level.level >= 4 || score >= 110) return { label: 'Preparar abordagem', className: 'grade-b', detail: 'Boa temperatura. Validar responsável e canal antes de abordar.' };
+  if (score >= 80 || direct) return { label: 'Monitorar', className: 'grade-c', detail: 'Pista útil. Guardar, enriquecer e aguardar novo sinal.' };
+  return { label: 'Catalogar', className: 'grade-d', detail: 'Dado frio. Não descartar: manter memória e revisita.' };
 }
 
 function valueProfile(prospect) {
   const score = Number(prospect.score || 0);
   const hasPhone = Boolean(prospect.telefone_publico || prospect.whatsapp);
   const direct = hasDirectSource(prospect);
-  const segment = classifyService(prospect);
+  const hasIntent = Boolean(prospect.tem_vaga_ativa || prospect.tem_post_cresc || prospect.tem_filial_nova);
 
-  if (score >= 90 && hasPhone && direct) {
-    return {
-      label: 'Alto valor operacional',
-      detail: segment === 'saude_odonto'
-        ? 'Negócio local de saúde/odonto, bom encaixe para plano empresarial e benefício de equipe.'
-        : 'Empresa com canal público e sinal comercial suficiente para abordagem direta.',
-    };
+  if (score >= 140 || (score >= 100 && hasPhone && hasIntent)) {
+    return { label: 'Alto valor operacional', detail: 'Tem temperatura comercial, evidência e caminho de abordagem.' };
   }
 
-  if (score >= 75 || direct) {
-    return { label: 'Valor médio', detail: 'Boa pista comercial, mas precisa confirmar responsável, equipe e interesse.' };
+  if (score >= 80 || direct) {
+    return { label: 'Valor médio', detail: 'Boa pista comercial, mas precisa enriquecer responsável, porte e timing.' };
   }
 
-  return { label: 'Valor incerto', detail: 'Dado público fraco. Use só para pesquisa ou descarte.' };
+  return { label: 'Valor incerto', detail: 'Dado público fraco. Manter catalogado e programar revisita.' };
 }
 
 function nextAction(prospect) {
+  if (prospect.proxima_acao) return prospect.proxima_acao;
   if (prospect.status === 'Convertido') return 'Já convertido em lead. Continuar no CRM.';
-  if (prospect.status === 'Descartado') return 'Descartado. Não abordar.';
+  if (prospect.status === 'Descartado') return 'Não abordar agora. Manter histórico para revisão futura.';
   if (prospect.telefone_publico || prospect.whatsapp) return 'Abrir WhatsApp e fazer abordagem curta.';
   if (prospect.fonte_url || prospect.site_url) return 'Abrir fonte, validar telefone e responsável.';
-  return 'Sem canal claro. Marcar como avaliação ou descartar.';
+  return 'Sem canal claro. Catalogar e revisitar.';
+}
+
+function dimensionRows(prospect) {
+  return [
+    ['D1 Fonte', Number(prospect.score_d1 || 0)],
+    ['D2 Intenção', Number(prospect.score_d2 || 0)],
+    ['D3 Porte', Number(prospect.score_d3 || 0)],
+    ['D4 Contato', Number(prospect.score_d4 || 0)],
+    ['D5 Timing', Number(prospect.score_d5 || 0)],
+    ['D6 Concorrência', Number(prospect.score_d6 || 0)],
+  ];
 }
 
 function copyText(text, setCopied) {
@@ -193,11 +214,11 @@ export default function PaginaAdminRadar() {
   }).sort((a, b) => Number(b.score || 0) - Number(a.score || 0)), [rawProspects, segmento, prioridade, service, statusFiltro]);
 
   const intelligence = useMemo(() => {
-    const actionable = rawProspects.filter((item) => ['Novo', 'Avaliar', 'Bom prospect'].includes(item.status || 'Novo'));
+    const actionable = rawProspects.filter((item) => radarLevel(item).level >= 4 || ['Novo', 'Avaliar', 'Bom prospect'].includes(item.status || 'Novo'));
     const withPhone = rawProspects.filter((item) => item.telefone_publico || item.whatsapp);
-    const direct = rawProspects.filter(hasDirectSource);
+    const hot = rawProspects.filter((item) => radarLevel(item).level >= 5);
     const avg = rawProspects.length ? Math.round(rawProspects.reduce((sum, item) => sum + Number(item.score || 0), 0) / rawProspects.length) : 0;
-    return { actionable: actionable.length, withPhone: withPhone.length, direct: direct.length, avg };
+    return { actionable: actionable.length, withPhone: withPhone.length, hot: hot.length, avg };
   }, [rawProspects]);
 
   const statusStats = useMemo(() => Object.fromEntries(statuses.map((status) => [status, rawProspects.filter((item) => (item.status || 'Novo') === status).length])), [rawProspects]);
@@ -244,7 +265,7 @@ export default function PaginaAdminRadar() {
         .radar-select, .radar-btn.secondary, .radar-tab { background: rgba(5,8,5,.46); box-shadow: none; color: rgba(237,248,230,.72); }
         .radar-tab.active { color: #eff8e7; background: linear-gradient(135deg, var(--g2), var(--g0)); }
         .radar-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 22px; }
-        .radar-stat, .radar-panel, .radar-card, .radar-intel { border: 1px solid rgba(168,196,138,.24); background: linear-gradient(160deg, rgba(45,74,36,.30), rgba(13,22,10,.74)); box-shadow: 0 28px 90px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.08); }
+        .radar-stat, .radar-panel, .radar-card, .radar-intel, .radar-scoreboard { border: 1px solid rgba(168,196,138,.24); background: linear-gradient(160deg, rgba(45,74,36,.30), rgba(13,22,10,.74)); box-shadow: 0 28px 90px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.08); }
         .radar-stat { border-radius: 28px; padding: 24px; min-height: 126px; }
         .radar-stat span, .radar-label { color: var(--muted); font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; display: block; margin-bottom: 7px; }
         .radar-stat strong { display: block; color: var(--g3); font-family: 'Playfair Display', serif; font-size: clamp(30px, 4.2vw, 48px); line-height: 1; margin: 18px 0 8px; }
@@ -257,7 +278,7 @@ export default function PaginaAdminRadar() {
         .radar-card-head { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: start; }
         .radar-card h2 { margin: 0 0 8px; font-size: 22px; color: #fff; }
         .radar-meta { color: var(--muted); line-height: 1.6; font-size: 13px; }
-        .radar-score { min-width: 92px; text-align: center; border-radius: 22px; padding: 12px; background: rgba(168,196,138,.10); border: 1px solid rgba(168,196,138,.24); }
+        .radar-score { min-width: 98px; text-align: center; border-radius: 22px; padding: 12px; background: rgba(168,196,138,.10); border: 1px solid rgba(168,196,138,.24); }
         .radar-score strong { display: block; color: var(--g3); font-size: 34px; line-height: 1; }
         .radar-chip { display: inline-flex; align-items: center; min-height: 30px; padding: 0 11px; border-radius: 999px; background: rgba(168,196,138,.08); border: 1px solid rgba(168,196,138,.18); color: rgba(237,248,230,.78); font-size: 12px; font-weight: 800; }
         .radar-chip.high, .radar-chip.grade-a { color: #fff; background: rgba(168,196,138,.18); }
@@ -267,21 +288,25 @@ export default function PaginaAdminRadar() {
         .radar-intel { border-radius: 24px; padding: 16px; margin: 16px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
         .radar-intel strong { display: block; color: #fff; margin-bottom: 5px; }
         .radar-intel p { margin: 0; color: rgba(237,248,230,.66); line-height: 1.55; font-size: 13px; }
+        .radar-scoreboard { border-radius: 22px; padding: 14px; margin: 14px 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+        .score-cell { border-radius: 16px; padding: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(168,196,138,.12); }
+        .score-cell span { display: block; color: var(--muted); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        .score-cell strong { color: #fff; font-size: 20px; }
         .radar-reasons { display: grid; gap: 8px; margin-top: 12px; }
         .radar-reason-line { display: flex; gap: 8px; align-items: baseline; color: rgba(237,248,230,.72); font-size: 13px; }
         .radar-reason-line::before { content: '✓'; color: var(--g3); font-weight: 900; }
         .radar-card-actions { margin-top: 18px; }
         .radar-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
         .copied-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: #edf8e6; color: #13200f; padding: 12px 16px; border-radius: 999px; font-weight: 900; box-shadow: 0 18px 60px rgba(0,0,0,.28); z-index: 20; }
-        @media (max-width: 1120px) { .radar-topbar, .radar-filter-grid, .radar-cards { grid-template-columns: 1fr; } .radar-actions { justify-content: flex-start; } .radar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 720px) { .radar-grid, .radar-intel { grid-template-columns: 1fr; } .radar-btn, .radar-select { width: 100%; } .radar-card-head { grid-template-columns: 1fr; } }
+        @media (max-width: 1120px) { .radar-topbar, .radar-filter-grid, .radar-cards { grid-template-columns: 1fr; } .radar-actions { justify-content: flex-start; } .radar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .radar-scoreboard { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (max-width: 720px) { .radar-grid, .radar-intel, .radar-scoreboard { grid-template-columns: 1fr; } .radar-btn, .radar-select { width: 100%; } .radar-card-head { grid-template-columns: 1fr; } }
       `}</style>
 
       <div className="radar-shell">
         <header className="radar-topbar">
           <div>
             <h1 className="radar-title">Radarplan <em>B2B</em></h1>
-            <p className="radar-sub">Mesa de inteligência para prospectos públicos. A tela separa oportunidade fria de lead real, mostra valor operacional, origem auditável e próxima ação antes de qualquer conversão para o CRM.</p>
+            <p className="radar-sub">Mesa de inteligência para prospectos públicos. A tela separa oportunidade fria de lead real, mostra score 0-200, dimensões D1-D6, origem auditável e próxima ação antes de qualquer conversão para o CRM.</p>
           </div>
           <div className="radar-actions">
             <select className="radar-select" value={prioridade} onChange={(event) => setPrioridade(event.target.value)} aria-label="Filtrar prioridade">
@@ -297,7 +322,7 @@ export default function PaginaAdminRadar() {
 
         <section className="radar-grid" aria-label="Resumo Radarplan">
           <div className="radar-stat"><span>Prospectos</span><strong>{payload.overview?.total || 0}</strong><small>Total importado do Radarplan</small></div>
-          <div className="radar-stat"><span>Fila acionável</span><strong>{intelligence.actionable}</strong><small>Novo, avaliar ou bom prospect</small></div>
+          <div className="radar-stat"><span>Quentes agora</span><strong>{payload.overview?.quentes || intelligence.hot}</strong><small>Nível 5 ou score crítico</small></div>
           <div className="radar-stat"><span>Com telefone</span><strong>{intelligence.withPhone}</strong><small>Prontos para contato manual</small></div>
           <div className="radar-stat"><span>Score médio</span><strong>{intelligence.avg}</strong><small>Qualidade geral da coleta</small></div>
         </section>
@@ -332,21 +357,25 @@ export default function PaginaAdminRadar() {
               const grade = engineeringGrade(prospect);
               const value = valueProfile(prospect);
               const reasons = scoreReasons(prospect);
+              const level = radarLevel(prospect);
+              const dims = dimensionRows(prospect);
               return (
                 <article className="radar-card" key={prospect.id}>
                   <div className="radar-card-head">
                     <div>
                       <h2>{prospect.nome_empresa}</h2>
                       <div className="radar-meta">{prospect.segmento || 'Sem segmento'} · {prospect.cidade || '-'}, {prospect.uf || 'RJ'} · Origem: {originLabel(prospect.origem)}</div>
+                      {(prospect.cnpj || prospect.cnae_descricao || prospect.porte_receita) && <div className="radar-meta">CNPJ: {prospect.cnpj || '-'} · CNAE: {prospect.cnae_descricao || prospect.cnae_codigo || '-'} · Porte: {prospect.porte_receita || '-'}</div>}
                     </div>
-                    <div className="radar-score"><strong>{prospect.score || 0}</strong><span>{priority}</span></div>
+                    <div className="radar-score"><strong>{prospect.score || 0}</strong><span>/200</span></div>
                   </div>
 
                   <div className="radar-chips">
                     <span className={`radar-chip ${prospect.prioridade === 'alta' ? 'high' : ''}`}>Prioridade {priority}</span>
-                    <span className={`radar-chip ${grade.className}`}>{grade.label}</span>
+                    <span className={`radar-chip ${grade.className}`}>N{level.level} {level.label}</span>
                     <span className="radar-chip">Status {prospect.status || 'Novo'}</span>
                     <span className="radar-chip">{serviceLabel(classifyService(prospect))}</span>
+                    {prospect.tem_vaga_ativa && <span className="radar-chip high">Vaga ativa</span>}
                   </div>
 
                   <div className="radar-intel">
@@ -355,8 +384,12 @@ export default function PaginaAdminRadar() {
                     <div><span className="radar-label">Origem auditável</span><strong>{originLabel(prospect.origem)}</strong><p>{prospect.consulta_google || 'Consulta não registrada'}<br />{prospect.fonte_url || prospect.site_url || 'Fonte ausente'}</p></div>
                   </div>
 
+                  <div className="radar-scoreboard" aria-label={`Anatomia do score de ${prospect.nome_empresa}`}>
+                    {dims.map(([label, valueScore]) => <div className="score-cell" key={label}><span>{label}</span><strong>{valueScore}</strong></div>)}
+                  </div>
+
                   <div className="radar-reasons" aria-label={`Motivos do score de ${prospect.nome_empresa}`}>
-                    {(reasons.length ? reasons : ['Prospecto importado do Radarplan']).slice(0, 5).map((reason) => <div className="radar-reason-line" key={reason}>{reasonLabel(reason)}</div>)}
+                    {(reasons.length ? reasons : ['Prospecto importado do Radarplan']).slice(0, 6).map((reason) => <div className="radar-reason-line" key={reason}>{reasonLabel(reason)}</div>)}
                   </div>
 
                   <div className="radar-card-actions">
