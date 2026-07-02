@@ -13,10 +13,10 @@ const radarPayload = {
       site_url: 'https://clinica.example.com',
       fonte_url: 'https://google.example/resultado',
       consulta_google: 'odontologia Piabetá RJ',
-      origem: 'radarplan',
+      origem: 'radarplan_google_browser',
       score: 96,
       prioridade: 'alta',
-      score_motivos: 'google_browser, site_direto, segmento_confirmado',
+      score_motivos: 'google_browser, contato_encontrado, site_direto, segmento_confirmado',
       abordagem: 'Validar empresa local para plano empresarial.',
       status: 'Novo',
     },
@@ -42,7 +42,7 @@ const radarPayload = {
 };
 
 test.describe('Admin Radarplan', () => {
-  test('mostra prospectos, prioridades e filtros por segmento', async ({ page }) => {
+  test('mostra inteligência, prioridade e filtros de engenharia', async ({ page }) => {
     const updates = [];
     const conversions = [];
 
@@ -71,20 +71,28 @@ test.describe('Admin Radarplan', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: /radarplan b2b/i })).toBeVisible();
     await expect(page.getByLabel('Resumo Radarplan').getByText('Prospectos')).toBeVisible();
-    await expect(page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' })).toBeVisible();
-    await expect(page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' }).getByText('Prioridade Alta')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Engenharia de triagem' })).toBeVisible();
+
+    const odontoCard = page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' });
+    await expect(odontoCard).toBeVisible();
+    await expect(odontoCard.getByText('Prioridade Alta')).toBeVisible();
+    await expect(odontoCard.getByText('Valor operacional')).toBeVisible();
+    await expect(odontoCard.getByText('Próxima ação')).toBeVisible();
+    await expect(odontoCard.getByText('Origem auditável')).toBeVisible();
+    await expect(odontoCard.getByText('Contato público encontrado')).toBeVisible();
+
     await expect(page.getByRole('article').filter({ hasText: 'Contabilidade Serra Verde' })).toBeVisible();
 
     await page.getByRole('button', { name: 'odontologia' }).click();
-    await expect(page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' })).toBeVisible();
+    await expect(odontoCard).toBeVisible();
     await expect(page.getByRole('article').filter({ hasText: 'Contabilidade Serra Verde' })).toHaveCount(0);
 
     await page.getByLabel('Filtrar prioridade').selectOption('alta');
-    await expect(page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' })).toBeVisible();
+    await expect(odontoCard).toBeVisible();
 
-    await page.getByRole('button', { name: 'todos' }).click();
+    await page.getByRole('button', { name: 'Todos' }).first().click();
     await page.getByLabel('Filtrar prioridade').selectOption('todas');
-    await page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' }).getByRole('button', { name: 'Converter em lead' }).click();
+    await odontoCard.getByRole('button', { name: 'Converter em lead' }).click();
     await expect.poll(() => conversions.length).toBe(1);
     expect(conversions[0]).toMatchObject({ id: 1 });
   });
