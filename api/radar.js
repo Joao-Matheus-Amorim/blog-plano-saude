@@ -46,6 +46,7 @@ async function listProspects(req, res, sql) {
       AND (${cidade} = '' OR cidade = ${cidade})
       AND (${prioridade} = '' OR prioridade = ${prioridade})
     ORDER BY
+      COALESCE(nivel_maturidade, 1) DESC,
       CASE prioridade WHEN 'alta' THEN 1 WHEN 'media' THEN 2 ELSE 3 END,
       score DESC,
       atualizado_em DESC,
@@ -60,6 +61,8 @@ async function listProspects(req, res, sql) {
       COUNT(*) FILTER (WHERE status = 'Novo') AS novos,
       COUNT(*) FILTER (WHERE status = 'Convertido') AS convertidos,
       COUNT(*) FILTER (WHERE status = 'Descartado') AS descartados,
+      COUNT(*) FILTER (WHERE nivel_maturidade >= 5) AS quentes,
+      COUNT(*) FILTER (WHERE tem_vaga_ativa = true) AS com_vaga,
       AVG(score) AS score_medio
     FROM radar_prospect
   `;
@@ -113,14 +116,25 @@ async function importProspects(req, res, sql) {
       INSERT INTO radar_prospect (
         nome_empresa, segmento, cidade, uf, telefone_publico, whatsapp, email_publico,
         site_url, perfil_url, endereco, fonte_url, consulta_google, origem, score,
-        prioridade, score_motivos, abordagem, evidencias, tags, raw, fingerprint
+        prioridade, score_motivos, abordagem, evidencias, tags, raw, fingerprint,
+        cnpj, cnae_codigo, cnae_descricao, porte_receita, data_abertura, funcionarios_est,
+        tem_vaga_ativa, vaga_titulo, vaga_dias, tem_post_cresc, post_cresc_texto,
+        tem_filial_nova, nivel_maturidade, nivel_label, revisitar_em, score_d1, score_d2,
+        score_d3, score_d4, score_d5, score_d6, proxima_acao, flags, fontes, market_context
       ) VALUES (
         ${prospect.nome_empresa}, ${prospect.segmento}, ${prospect.cidade}, ${prospect.uf},
         ${prospect.telefone_publico}, ${prospect.whatsapp}, ${prospect.email_publico},
         ${prospect.site_url}, ${prospect.perfil_url}, ${prospect.endereco}, ${prospect.fonte_url},
         ${prospect.consulta_google}, ${prospect.origem}, ${prospect.score}, ${prospect.prioridade},
         ${prospect.score_motivos}, ${prospect.abordagem}, ${JSON.stringify(prospect.evidencias)}::jsonb,
-        ${JSON.stringify(prospect.tags)}::jsonb, ${JSON.stringify(prospect.raw)}::jsonb, ${prospect.fingerprint}
+        ${JSON.stringify(prospect.tags)}::jsonb, ${JSON.stringify(prospect.raw)}::jsonb, ${prospect.fingerprint},
+        ${prospect.cnpj}, ${prospect.cnae_codigo}, ${prospect.cnae_descricao}, ${prospect.porte_receita},
+        ${prospect.data_abertura}, ${prospect.funcionarios_est}, ${prospect.tem_vaga_ativa}, ${prospect.vaga_titulo},
+        ${prospect.vaga_dias}, ${prospect.tem_post_cresc}, ${prospect.post_cresc_texto}, ${prospect.tem_filial_nova},
+        ${prospect.nivel_maturidade}, ${prospect.nivel_label}, ${prospect.revisitar_em}, ${prospect.score_d1},
+        ${prospect.score_d2}, ${prospect.score_d3}, ${prospect.score_d4}, ${prospect.score_d5}, ${prospect.score_d6},
+        ${prospect.proxima_acao}, ${JSON.stringify(prospect.flags)}::jsonb, ${JSON.stringify(prospect.fontes)}::jsonb,
+        ${JSON.stringify(prospect.market_context)}::jsonb
       )
       ON CONFLICT (fingerprint) WHERE fingerprint IS NOT NULL AND fingerprint <> '' DO UPDATE SET
         nome_empresa = EXCLUDED.nome_empresa,
@@ -143,6 +157,31 @@ async function importProspects(req, res, sql) {
         evidencias = EXCLUDED.evidencias,
         tags = EXCLUDED.tags,
         raw = EXCLUDED.raw,
+        cnpj = EXCLUDED.cnpj,
+        cnae_codigo = EXCLUDED.cnae_codigo,
+        cnae_descricao = EXCLUDED.cnae_descricao,
+        porte_receita = EXCLUDED.porte_receita,
+        data_abertura = EXCLUDED.data_abertura,
+        funcionarios_est = EXCLUDED.funcionarios_est,
+        tem_vaga_ativa = EXCLUDED.tem_vaga_ativa,
+        vaga_titulo = EXCLUDED.vaga_titulo,
+        vaga_dias = EXCLUDED.vaga_dias,
+        tem_post_cresc = EXCLUDED.tem_post_cresc,
+        post_cresc_texto = EXCLUDED.post_cresc_texto,
+        tem_filial_nova = EXCLUDED.tem_filial_nova,
+        nivel_maturidade = GREATEST(COALESCE(radar_prospect.nivel_maturidade, 1), EXCLUDED.nivel_maturidade),
+        nivel_label = EXCLUDED.nivel_label,
+        revisitar_em = EXCLUDED.revisitar_em,
+        score_d1 = EXCLUDED.score_d1,
+        score_d2 = EXCLUDED.score_d2,
+        score_d3 = EXCLUDED.score_d3,
+        score_d4 = EXCLUDED.score_d4,
+        score_d5 = EXCLUDED.score_d5,
+        score_d6 = EXCLUDED.score_d6,
+        proxima_acao = EXCLUDED.proxima_acao,
+        flags = EXCLUDED.flags,
+        fontes = EXCLUDED.fontes,
+        market_context = EXCLUDED.market_context,
         atualizado_em = NOW(),
         importado_em = NOW()
       RETURNING (xmax = 0) AS inserted
@@ -196,9 +235,13 @@ async function convertProspect(req, res, sql) {
     `Segmento: ${prospect.segmento || '-'}`,
     `Cidade/UF: ${prospect.cidade || '-'}/${prospect.uf || '-'}`,
     `Score Radar: ${prospect.score || 0}`,
+    `Nível Radar: ${prospect.nivel_label || '-'}`,
     `Prioridade: ${prospect.prioridade || '-'}`,
+    `CNPJ: ${prospect.cnpj || '-'}`,
+    `CNAE: ${prospect.cnae_descricao || prospect.cnae_codigo || '-'}`,
     `Fonte: ${prospect.fonte_url || prospect.site_url || '-'}`,
     `Motivos: ${prospect.score_motivos || '-'}`,
+    `Próxima ação Radar: ${prospect.proxima_acao || '-'}`,
   ].join('\n');
 
   const leads = await sql`
