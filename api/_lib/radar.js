@@ -26,36 +26,69 @@ export async function ensureRadarProspectTable(sql) {
       observacao_interna TEXT,
       fingerprint TEXT,
       convertido_lead_id INTEGER,
+      cnpj TEXT,
+      cnae_codigo TEXT,
+      cnae_descricao TEXT,
+      porte_receita TEXT,
+      data_abertura TEXT,
+      funcionarios_est INTEGER DEFAULT 0,
+      tem_vaga_ativa BOOLEAN DEFAULT false,
+      vaga_titulo TEXT,
+      vaga_dias INTEGER,
+      tem_post_cresc BOOLEAN DEFAULT false,
+      post_cresc_texto TEXT,
+      tem_filial_nova BOOLEAN DEFAULT false,
+      nivel_maturidade INTEGER DEFAULT 1,
+      nivel_label TEXT DEFAULT 'Catalogado',
+      revisitar_em TEXT,
+      score_d1 INTEGER DEFAULT 0,
+      score_d2 INTEGER DEFAULT 0,
+      score_d3 INTEGER DEFAULT 0,
+      score_d4 INTEGER DEFAULT 0,
+      score_d5 INTEGER DEFAULT 0,
+      score_d6 INTEGER DEFAULT 0,
+      proxima_acao TEXT,
+      flags JSONB DEFAULT '[]'::jsonb,
+      fontes JSONB DEFAULT '[]'::jsonb,
+      market_context JSONB DEFAULT '{}'::jsonb,
       criado_em TIMESTAMPTZ DEFAULT NOW(),
       atualizado_em TIMESTAMPTZ DEFAULT NOW(),
       importado_em TIMESTAMPTZ DEFAULT NOW()
     )
   `;
 
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS nome_empresa TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS segmento TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS cidade TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS uf TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS telefone_publico TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS whatsapp TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS email_publico TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS site_url TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS perfil_url TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS endereco TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fonte_url TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS consulta_google TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS origem TEXT DEFAULT 'radarplan'`;
+  const textColumns = [
+    'nome_empresa', 'segmento', 'cidade', 'uf', 'telefone_publico', 'whatsapp', 'email_publico',
+    'site_url', 'perfil_url', 'endereco', 'fonte_url', 'consulta_google', 'origem', 'prioridade',
+    'score_motivos', 'abordagem', 'status', 'observacao_interna', 'fingerprint', 'cnpj', 'cnae_codigo',
+    'cnae_descricao', 'porte_receita', 'data_abertura', 'vaga_titulo', 'post_cresc_texto', 'nivel_label',
+    'revisitar_em', 'proxima_acao'
+  ];
+
+  for (const column of textColumns) {
+    await sql.unsafe(`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS ${column} TEXT`);
+  }
+
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score INTEGER DEFAULT 0`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS prioridade TEXT DEFAULT 'baixa'`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_motivos TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS abordagem TEXT`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS convertido_lead_id INTEGER`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS funcionarios_est INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS vaga_dias INTEGER`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS nivel_maturidade INTEGER DEFAULT 1`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d1 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d2 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d3 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d4 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d5 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS score_d6 INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_vaga_ativa BOOLEAN DEFAULT false`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_post_cresc BOOLEAN DEFAULT false`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tem_filial_nova BOOLEAN DEFAULT false`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS evidencias JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS raw JSONB DEFAULT '{}'::jsonb`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Novo'`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS observacao_interna TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fingerprint TEXT`;
-  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS convertido_lead_id INTEGER`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS flags JSONB DEFAULT '[]'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fontes JSONB DEFAULT '[]'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS market_context JSONB DEFAULT '{}'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS criado_em TIMESTAMPTZ DEFAULT NOW()`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMPTZ DEFAULT NOW()`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS importado_em TIMESTAMPTZ DEFAULT NOW()`;
@@ -66,6 +99,12 @@ export function sanitizeText(value, max = 500) {
   return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
 }
 
+export function sanitizeInteger(value, min = 0, max = 200) {
+  const parsed = Number(value || 0);
+  if (!Number.isFinite(parsed)) return min;
+  return Math.max(min, Math.min(max, Math.round(parsed)));
+}
+
 export function normalizePriority(score = 0, priority = '') {
   const normalized = String(priority || '').toLowerCase();
   if (['alta', 'media', 'baixa'].includes(normalized)) return normalized;
@@ -74,11 +113,21 @@ export function normalizePriority(score = 0, priority = '') {
   return 'baixa';
 }
 
+function normalizeJsonArray(value, limit = 16) {
+  return Array.isArray(value) ? value.slice(0, limit) : [];
+}
+
+function normalizeJsonObject(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value) ? value : {};
+}
+
 export function normalizeProspect(input = {}, fallback = {}) {
-  const score = Math.max(0, Math.min(135, Number(input.score || 0)));
+  const raw = normalizeJsonObject(input.raw);
+  const dimensions = normalizeJsonObject(raw.score_dimensoes || input.score_dimensoes);
+  const score = sanitizeInteger(input.score, 0, 200);
   const siteUrl = sanitizeText(input.site_url || input.url || input.public_url, 700);
   const fonteUrl = sanitizeText(input.fonte_url || input.source_url || input.url || siteUrl, 700);
-  const fingerprint = sanitizeText(input.fingerprint || input.id_externo || input.external_id || `${input.name || input.nome_empresa}|${input.city || fallback.city}|${input.uf || fallback.uf}|${fonteUrl}`, 700).toLowerCase();
+  const fingerprint = sanitizeText(input.fingerprint || input.id_externo || input.external_id || `${input.cnpj || ''}|${input.name || input.nome_empresa}|${input.city || input.cidade || fallback.city}|${input.uf || fallback.uf}|${fonteUrl}`, 700).toLowerCase();
 
   return {
     nome_empresa: sanitizeText(input.nome_empresa || input.name || input.business_name || input.title, 160) || 'Prospecto sem nome',
@@ -96,11 +145,36 @@ export function normalizeProspect(input = {}, fallback = {}) {
     origem: sanitizeText(input.origem || input.source || fallback.source || 'radarplan', 80),
     score,
     prioridade: normalizePriority(score, input.prioridade || input.priority),
-    score_motivos: sanitizeText(input.score_motivos || input.reason || input.motivos, 700),
-    abordagem: sanitizeText(input.abordagem || input.approach, 700),
-    evidencias: Array.isArray(input.evidencias || input.evidence) ? (input.evidencias || input.evidence).slice(0, 8) : [],
-    tags: Array.isArray(input.tags) ? input.tags.slice(0, 16) : [],
-    raw: typeof input.raw === 'object' && input.raw ? input.raw : input,
+    score_motivos: sanitizeText(input.score_motivos || input.reason || input.motivos, 900),
+    abordagem: sanitizeText(input.abordagem || input.approach, 1200),
+    evidencias: normalizeJsonArray(input.evidencias || input.evidence, 12),
+    tags: normalizeJsonArray(input.tags, 24),
+    raw: raw && Object.keys(raw).length ? raw : input,
     fingerprint,
+    cnpj: sanitizeText(input.cnpj, 32),
+    cnae_codigo: sanitizeText(input.cnae_codigo, 32),
+    cnae_descricao: sanitizeText(input.cnae_descricao, 220),
+    porte_receita: sanitizeText(input.porte_receita || input.porte, 80),
+    data_abertura: sanitizeText(input.data_abertura, 40),
+    funcionarios_est: sanitizeInteger(input.funcionarios_est, 0, 100000),
+    tem_vaga_ativa: Boolean(input.tem_vaga_ativa),
+    vaga_titulo: sanitizeText(input.vaga_titulo, 220),
+    vaga_dias: input.vaga_dias === null || input.vaga_dias === undefined ? null : sanitizeInteger(input.vaga_dias, 0, 3650),
+    tem_post_cresc: Boolean(input.tem_post_cresc),
+    post_cresc_texto: sanitizeText(input.post_cresc_texto, 600),
+    tem_filial_nova: Boolean(input.tem_filial_nova),
+    nivel_maturidade: sanitizeInteger(input.nivel_maturidade, 1, 5),
+    nivel_label: sanitizeText(input.nivel_label || 'Catalogado', 80),
+    revisitar_em: sanitizeText(input.revisitar_em, 80),
+    score_d1: sanitizeInteger(input.score_d1 ?? dimensions.d1_fonte, 0, 50),
+    score_d2: sanitizeInteger(input.score_d2 ?? dimensions.d2_intencao, 0, 60),
+    score_d3: sanitizeInteger(input.score_d3 ?? dimensions.d3_porte, 0, 40),
+    score_d4: sanitizeInteger(input.score_d4 ?? dimensions.d4_contato, 0, 50),
+    score_d5: sanitizeInteger(input.score_d5 ?? dimensions.d5_timing, 0, 40),
+    score_d6: sanitizeInteger(input.score_d6 ?? dimensions.d6_concorrencia, 0, 20),
+    proxima_acao: sanitizeText(input.proxima_acao, 500),
+    flags: normalizeJsonArray(input.flags, 24),
+    fontes: normalizeJsonArray(input.fontes, 16),
+    market_context: normalizeJsonObject(input.market_context),
   };
 }
