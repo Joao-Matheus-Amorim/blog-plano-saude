@@ -63,6 +63,7 @@ async function listProspects(req, res, sql) {
       COUNT(*) FILTER (WHERE status = 'Descartado') AS descartados,
       COUNT(*) FILTER (WHERE nivel_maturidade >= 5) AS quentes,
       COUNT(*) FILTER (WHERE tem_vaga_ativa = true) AS com_vaga,
+      COUNT(*) FILTER (WHERE jsonb_array_length(COALESCE(contatos_associados, '[]'::jsonb)) > 0) AS com_contato_associado,
       AVG(score) AS score_medio
     FROM radar_prospect
   `;
@@ -120,7 +121,8 @@ async function importProspects(req, res, sql) {
         cnpj, cnae_codigo, cnae_descricao, porte_receita, data_abertura, funcionarios_est,
         tem_vaga_ativa, vaga_titulo, vaga_dias, tem_post_cresc, post_cresc_texto,
         tem_filial_nova, nivel_maturidade, nivel_label, revisitar_em, score_d1, score_d2,
-        score_d3, score_d4, score_d5, score_d6, proxima_acao, flags, fontes, market_context
+        score_d3, score_d4, score_d5, score_d6, proxima_acao, flags, fontes,
+        contatos_associados, market_context
       ) VALUES (
         ${prospect.nome_empresa}, ${prospect.segmento}, ${prospect.cidade}, ${prospect.uf},
         ${prospect.telefone_publico}, ${prospect.whatsapp}, ${prospect.email_publico},
@@ -134,7 +136,7 @@ async function importProspects(req, res, sql) {
         ${prospect.nivel_maturidade}, ${prospect.nivel_label}, ${prospect.revisitar_em}, ${prospect.score_d1},
         ${prospect.score_d2}, ${prospect.score_d3}, ${prospect.score_d4}, ${prospect.score_d5}, ${prospect.score_d6},
         ${prospect.proxima_acao}, ${JSON.stringify(prospect.flags)}::jsonb, ${JSON.stringify(prospect.fontes)}::jsonb,
-        ${JSON.stringify(prospect.market_context)}::jsonb
+        ${JSON.stringify(prospect.contatos_associados)}::jsonb, ${JSON.stringify(prospect.market_context)}::jsonb
       )
       ON CONFLICT (fingerprint) WHERE fingerprint IS NOT NULL AND fingerprint <> '' DO UPDATE SET
         nome_empresa = EXCLUDED.nome_empresa,
@@ -181,6 +183,7 @@ async function importProspects(req, res, sql) {
         proxima_acao = EXCLUDED.proxima_acao,
         flags = EXCLUDED.flags,
         fontes = EXCLUDED.fontes,
+        contatos_associados = EXCLUDED.contatos_associados,
         market_context = EXCLUDED.market_context,
         atualizado_em = NOW(),
         importado_em = NOW()
@@ -229,6 +232,9 @@ async function convertProspect(req, res, sql) {
   const prospect = prospects[0];
   if (!prospect) return res.status(404).json({ error: 'Prospecto não encontrado.' });
 
+  const contatos = Array.isArray(prospect.contatos_associados) ? prospect.contatos_associados : [];
+  const contatoResumo = contatos.slice(0, 3).map((contato) => [contato.nome, contato.cargo, contato.email || contato.telefone].filter(Boolean).join(' · ')).join('\n');
+
   const mensagem = [
     `Prospecto convertido do Radarplan`,
     `Empresa: ${prospect.nome_empresa}`,
@@ -240,6 +246,7 @@ async function convertProspect(req, res, sql) {
     `CNPJ: ${prospect.cnpj || '-'}`,
     `CNAE: ${prospect.cnae_descricao || prospect.cnae_codigo || '-'}`,
     `Fonte: ${prospect.fonte_url || prospect.site_url || '-'}`,
+    `Contatos associados: ${contatoResumo || '-'}`,
     `Motivos: ${prospect.score_motivos || '-'}`,
     `Próxima ação Radar: ${prospect.proxima_acao || '-'}`,
   ].join('\n');
@@ -249,7 +256,7 @@ async function convertProspect(req, res, sql) {
       nome, email, telefone, mensagem, vidas, origem, status, cidade, uf,
       tipo_plano, pagina_origem, tag_origem, canal, score, consentimento_lgpd
     ) VALUES (
-      ${prospect.nome_empresa}, ${prospect.email_publico || ''}, ${prospect.whatsapp || prospect.telefone_publico || ''},
+      ${prospect.nome_empresa}, ${prospect.email_publico || contatos[0]?.email || ''}, ${prospect.whatsapp || prospect.telefone_publico || contatos[0]?.telefone || ''},
       ${mensagem}, 0, 'Radarplan B2B', 'Novo', ${prospect.cidade || ''}, ${prospect.uf || ''},
       'Empresarial', ${prospect.fonte_url || prospect.site_url || ''}, 'radar_b2b', 'Radar B2B', ${Number(prospect.score || 0)}, false
     )
