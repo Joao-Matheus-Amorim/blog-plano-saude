@@ -50,6 +50,7 @@ export async function ensureRadarProspectTable(sql) {
       proxima_acao TEXT,
       flags JSONB DEFAULT '[]'::jsonb,
       fontes JSONB DEFAULT '[]'::jsonb,
+      contatos_associados JSONB DEFAULT '[]'::jsonb,
       market_context JSONB DEFAULT '{}'::jsonb,
       criado_em TIMESTAMPTZ DEFAULT NOW(),
       atualizado_em TIMESTAMPTZ DEFAULT NOW(),
@@ -105,6 +106,7 @@ export async function ensureRadarProspectTable(sql) {
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS proxima_acao TEXT`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS flags JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS fontes JSONB DEFAULT '[]'::jsonb`;
+  await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS contatos_associados JSONB DEFAULT '[]'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS market_context JSONB DEFAULT '{}'::jsonb`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS criado_em TIMESTAMPTZ DEFAULT NOW()`;
   await sql`ALTER TABLE radar_prospect ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMPTZ DEFAULT NOW()`;
@@ -136,6 +138,22 @@ function normalizeJsonArray(value, limit = 16) {
 
 function normalizeJsonObject(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value) ? value : {};
+}
+
+function normalizeContactHint(contact = {}) {
+  return {
+    nome: sanitizeText(contact.nome || contact.name, 120),
+    cargo: sanitizeText(contact.cargo || contact.role || contact.title, 120),
+    area: sanitizeText(contact.area || contact.department, 80),
+    email: sanitizeText(contact.email, 160),
+    telefone: sanitizeText(contact.telefone || contact.phone, 80),
+    perfil_url: sanitizeText(contact.perfil_url || contact.profile_url, 700),
+    fonte_url: sanitizeText(contact.fonte_url || contact.source_url, 700),
+    fonte_tipo: sanitizeText(contact.fonte_tipo || contact.source_type || 'public_professional', 80),
+    confianca: sanitizeInteger(contact.confianca || contact.confidence, 0, 100),
+    uso_sugerido: sanitizeText(contact.uso_sugerido || 'Pedir direcionamento sobre benefícios corporativos', 300),
+    restricao: sanitizeText(contact.restricao || 'abordagem_manual', 120),
+  };
 }
 
 export function normalizeProspect(input = {}, fallback = {}) {
@@ -192,6 +210,7 @@ export function normalizeProspect(input = {}, fallback = {}) {
     proxima_acao: sanitizeText(input.proxima_acao, 500),
     flags: normalizeJsonArray(input.flags, 24),
     fontes: normalizeJsonArray(input.fontes, 16),
+    contatos_associados: normalizeJsonArray(input.contatos_associados || input.associated_contacts, 12).map(normalizeContactHint),
     market_context: normalizeJsonObject(input.market_context),
   };
 }
