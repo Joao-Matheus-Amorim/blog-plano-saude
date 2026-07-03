@@ -29,9 +29,22 @@ const radarPayload = {
       score_d5: 25,
       score_d6: 5,
       tem_vaga_ativa: true,
-      score_motivos: 'google_browser, contato_encontrado, site_direto, segmento_confirmado, vaga_ativa',
+      score_motivos: 'google_browser, contato_encontrado, site_direto, segmento_confirmado, vaga_ativa, contato_associado',
       abordagem: 'Validar empresa local para plano empresarial.',
       proxima_acao: 'Abrir WhatsApp e fazer abordagem curta.',
+      contatos_associados: [
+        {
+          nome: 'Mariana Silva',
+          cargo: 'RH',
+          area: 'recursos_humanos',
+          email: 'mariana@clinica.example.com',
+          telefone: '21988887777',
+          fonte_url: 'https://clinica.example.com/equipe',
+          fonte_tipo: 'site_equipe',
+          confianca: 88,
+          restricao: 'abordagem_manual',
+        },
+      ],
       status: 'Novo',
     },
     {
@@ -52,13 +65,13 @@ const radarPayload = {
       status: 'Avaliar',
     },
   ],
-  overview: { total: 2, alta: 1, novos: 1, convertidos: 0, quentes: 1, com_vaga: 1 },
+  overview: { total: 2, alta: 1, novos: 1, convertidos: 0, quentes: 1, com_vaga: 1, com_contato_associado: 1 },
   bySegment: [],
   byCity: [],
 };
 
 test.describe('Admin Radarplan', () => {
-  test('mostra inteligência V2, prioridade e filtros de engenharia', async ({ page }) => {
+  test('mostra inteligência V2, contatos associados e filtros de engenharia', async ({ page }) => {
     const updates = [];
     const conversions = [];
 
@@ -87,6 +100,7 @@ test.describe('Admin Radarplan', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: /radarplan b2b/i })).toBeVisible();
     await expect(page.getByLabel('Resumo Radarplan').getByText('Prospectos')).toBeVisible();
+    await expect(page.getByLabel('Resumo Radarplan').getByText('Contatos associados')).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Engenharia de triagem' })).toBeVisible();
 
     const odontoCard = page.getByRole('article').filter({ hasText: 'Clínica Odonto Piabetá' });
@@ -94,6 +108,9 @@ test.describe('Admin Radarplan', () => {
     await expect(odontoCard.getByText('/200', { exact: true })).toBeVisible();
     await expect(odontoCard.getByText('Prioridade Alta', { exact: true })).toBeVisible();
     await expect(odontoCard.getByText('N5 Quente Agora', { exact: true })).toBeVisible();
+    await expect(odontoCard.getByText('Contato associado', { exact: true })).toBeVisible();
+    await expect(odontoCard.getByText('Mariana Silva', { exact: true })).toBeVisible();
+    await expect(odontoCard.getByText(/mariana@clinica\.example\.com/)).toBeVisible();
     await expect(odontoCard.getByText('Valor operacional', { exact: true })).toBeVisible();
     await expect(odontoCard.getByText('Próxima ação', { exact: true })).toBeVisible();
     await expect(odontoCard.getByText('Origem auditável', { exact: true })).toBeVisible();
