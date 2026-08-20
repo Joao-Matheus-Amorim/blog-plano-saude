@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "og-contracts/1.0/acquisition-event.v1",
+  "title": "OG Acquisition Event Contract v1",
+  "type": "object",
+  "required": ["contract_version", "source_system", "event_id", "event_name", "occurred_at"],
+  "properties": {
+    "contract_version": { "const": "og-contracts/1.0" },
+    "source_system": { "const": "blog-plano-saude" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "event_name": {
+      "type": "string",
+      "enum": ["page_view", "cta_click", "whatsapp_click", "form_start", "form_submit", "form_error", "lead_created"]
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "page_path": { "type": ["string", "null"] },
+    "source_tag": { "type": ["string", "null"] },
+    "source_channel": { "type": ["string", "null"] },
+    "plan_type": { "type": ["string", "null"] },
+    "lead_external_id": { "type": ["string", "null"] },
+    "attribution": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
