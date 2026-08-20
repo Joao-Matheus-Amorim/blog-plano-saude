@@ -1,189 +1,106 @@
-# Motor de Inteligência Orgânica
+# Inteligência de Aquisição do OG Plano Saúde
 
-Este documento estrutura a captação sem compra de tráfego e com separação clara entre sinal, entidade, contato e lead.
+Este documento descreve apenas a inteligência ligada ao **site e aquisição**.
 
-- Sinal: evidência pública ou anônima de intenção.
-- Entidade: pessoa pública, empresa, operadora ou fonte de mercado.
-- Contato: canal legítimo, preferencialmente institucional ou fornecido com consentimento.
-- Lead: alguém que pediu contato, chamou no WhatsApp ou preencheu formulário.
+Para inteligência de prospecção B2B, score, enriquecimento e evidências públicas, o dono é o repositório `radarplan`.
 
-## 1. Recepção
+Para pipeline, follow-up, vendas e resultado comercial, o dono é `og-crm`.
 
-Captura o que acontece dentro do nosso site.
+## 1. Entidades deste repositório
 
-Tabelas principais:
+### Sessão/evento público
 
-- lead
-- site_event
-- consent_log
+Comportamento de navegação necessário para medir aquisição, sem transformar visitante anônimo em ficha pessoal.
 
 Eventos recomendados:
 
-- page_view
-- cta_click
-- whatsapp_click
-- form_start
-- form_submit
-- form_error
+- `page_view`
+- `cta_click`
+- `whatsapp_click`
+- `form_start`
+- `form_submit`
+- `form_error`
 
-## 2. Sinais de intenção
+### Lead
 
-Guarda posts e páginas públicas recentes que indicam demanda.
+Só nasce quando existe manifestação clara de intenção, como formulário enviado ou contato fornecido para atendimento.
 
-Tabelas principais:
+O site cria a entrada pelo `Lead Intake Contract`; a operação posterior pertence ao OG CRM.
 
-- intent_signal
-- public_actor_snapshot
-- signal_action
-- content_opportunity
+### Oportunidade de conteúdo
 
-Campos mínimos:
+Insight agregado vindo de:
 
-- source_key
-- niche_key
-- usuario_publico
-- url_perfil
-- url_post
-- texto_trecho
-- keyword
-- tema
-- intencao
-- cidade_detectada
-- operadora_detectada
-- data_post
-- score
-- temperatura
-- acao_recomendada
-- link_sugerido
-- expires_at
+- buscas;
+- páginas que convertem;
+- CRM;
+- RadarPlan;
+- dúvidas e objeções recorrentes.
 
-Regra de retenção: 45 dias para sinais pessoais públicos. Depois disso, arquivar ou manter apenas estatística agregada.
+Não deve conter ficha pessoal de lead em conteúdo público.
 
-## 3. Reputação pública
+## 2. Atribuição
 
-Reclamações, elogios, dúvidas e dores citando operadoras ou temas.
+Preservar quando disponíveis:
 
-Tabelas principais:
+- origem;
+- canal;
+- página;
+- referrer;
+- UTMs;
+- `fbclid`;
+- `gclid`;
+- IDs de campanha/conjunto/anúncio;
+- event ID.
 
-- reputation_signal
-- content_opportunity
+A atribuição criada aqui acompanha o lead no OG CRM.
 
-Temas úteis:
+## 3. Dados públicos e Radar
 
-- reajuste
-- portabilidade
-- rede_credenciada
-- negativa_cobertura
-- carencia
-- coparticipacao
-- reembolso
-- comparacao_operadora
+Coleta de sinais públicos B2B, empresa, CNPJ/CNAE, vagas, crescimento, score e maturidade pertence ao RadarPlan.
 
-## 4. Caça B2B pública
+Este repositório não deve criar um segundo motor Radar.
 
-Empresas locais com contato institucional público.
+Durante a migração, `/api/radar` e `/admin/radar` permanecem como compatibilidade temporária conforme `MIGRACAO_ADMIN_OG_CRM.md`.
 
-Tabelas principais:
+## 4. Operadoras e dados de mercado
 
-- company_entity
-- company_contact_channel
-- company_hunt_signal
+Dados públicos de operadoras/ANS podem ser usados para:
 
-Regra: contato pessoal não entra. Canal permitido é institucional: site, telefone comercial, WhatsApp comercial, Instagram comercial ou e-mail genérico.
+- conteúdo;
+- contexto de aquisição;
+- validação editorial;
+- páginas informativas.
 
-## 5. Operadoras e documentos públicos
+Não usar material público para prometer elegibilidade, preço, rede ou carência sem validação atual no atendimento humano.
 
-Base de materiais públicos de operadoras.
+## 5. Governança
 
-Tabelas principais:
+- trabalhar com finalidade definida;
+- minimizar dados;
+- não expor segredos;
+- não enviar mensagem privada automática a partir de sinal público;
+- não transformar sinal público em contato privado sem base apropriada;
+- guardar origem/evidência necessária;
+- respeitar retenção e LGPD;
+- separar analytics anônimo de lead identificado.
 
-- operator_catalog
-- operator_document
+## 6. Fluxo oficial
 
-Materiais:
+```text
+visita/campanha
+    |
+evento + atribuição
+    |
+formulário/WhatsApp
+    |
+Lead Intake Contract
+    |
+OG CRM
+    |
+resultado comercial agregado
+    |
+insight para conteúdo/aquisição
+```
 
-- PDFs públicos
-- páginas institucionais
-- rede credenciada pública
-- abrangência
-- carências
-- coparticipação
-- reembolso
-- regulamentos públicos
-
-## 6. ANS e dados públicos
-
-Base regulatória e de mercado, sempre separada de leads.
-
-Tabelas principais:
-
-- ans_dataset_import
-- ans_market_metric
-- operator_catalog
-
-Usos:
-
-- validar operadora
-- cruzar cidade e disponibilidade
-- criar conteúdo com dados públicos
-- melhorar argumentos comerciais
-- comparar mercado por região
-
-## 7. Governança
-
-Tabelas principais:
-
-- intelligence_source
-- source_keyword_rule
-- collection_run
-- suppression_list
-- consent_log
-
-Regras duras:
-
-- trabalhar apenas com fontes permitidas e abertas
-- não enviar mensagem privada automática
-- não coletar canal pessoal de perfil pessoal
-- não transformar sinal público em contato privado
-- não reter sinal pessoal público por mais de 45 dias sem base clara
-- sempre guardar URL de origem e motivo do alerta
-
-## Fluxo ideal
-
-1. O coletor encontra um sinal público recente.
-2. O sistema salva em intent_signal ou reputation_signal.
-3. O classificador calcula tema, nicho, cidade, operadora, score e risco.
-4. O painel recomenda uma ação pública ou conteúdo.
-5. A pessoa entra em link rastreável.
-6. Se preencher formulário ou chamar WhatsApp, vira lead.
-7. O CRM recebe origem, canal, score e consentimento.
-
-## Status padrão
-
-Sinais:
-
-- Novo
-- Avaliado
-- Respondido
-- Conteúdo criado
-- Convertido
-- Ignorado
-- Expirado
-
-Empresas:
-
-- Novo
-- Qualificado
-- Contatar
-- Chamado
-- Em negociação
-- Fechado
-- Ignorado
-
-Operadoras/documentos:
-
-- Novo
-- Indexado
-- Revisar
-- Usado em conteúdo
-- Arquivado
+O RadarPlan entra como fonte adicional de inteligência e não como submódulo deste motor.
