@@ -1,395 +1,274 @@
-# Inteligência Operacional do Blog Plano de Saúde
+# Inteligência Operacional — OG Plano Saúde
 
-Documento de doutrina para o projeto `blog-plano-saude`.
+Versão: **2.0**  
+Data-base: **2026-08-20**
 
-Este documento define como o blog deve capturar, qualificar e entregar leads para atendimento humano, mantendo comunicação estrita com o RadarPlan. Ele substitui decisões soltas por uma regra operacional única.
+Este documento define a doutrina específica do `blog-plano-saude` dentro do OG Ecosystem.
 
-## 1. Princípio central
+Documentos superiores:
 
-O blog não é apenas uma vitrine. O blog é a frente pública da operação comercial.
+- `docs/ECOSSISTEMA_OG.md`
+- `docs/CONTRATOS_INTEGRACAO.md`
 
-A função dele é:
+## 1. Missão
 
-1. atrair pessoas por busca orgânica, WhatsApp, indicação e páginas locais;
-2. capturar intenção com o menor atrito possível;
-3. enriquecer o lead sem transformar o formulário em interrogatório;
-4. entregar para o atendimento humano uma ficha clara, objetiva e acionável;
-5. receber feedback do atendimento para melhorar conteúdo, abordagem e priorização.
+O OG Plano Saúde é a frente pública de aquisição.
 
-Regra absoluta: a venda continua humana.
+Sua função é:
 
-A tecnologia prepara o terreno. A pessoa conduz confiança, valida informação sensível, explica possibilidades e vende o plano adequado.
+1. atrair demanda;
+2. explicar e educar;
+3. captar intenção com pouco atrito;
+4. preservar origem/atribuição;
+5. entregar a oportunidade ao OG CRM;
+6. receber inteligência agregada do CRM/Radar para melhorar conteúdo.
 
-## 2. O que o blog deve capturar
+Regra:
 
-O formulário deve permanecer curto. Lead demais perguntado no início vira lead perdido.
+> O site captura. O CRM opera. O Radar encontra e prioriza oportunidades.
 
-Campos mínimos recomendados:
+## 2. O site não é o CRM
+
+O painel administrativo atual continua existindo apenas como legado durante a migração.
+
+Novas funções como pipeline completo, tarefas, responsáveis, follow-up, propostas, vendas e métricas comerciais devem ser projetadas no `og-crm`, não neste repositório.
+
+A retirada do admin segue `docs/MIGRACAO_ADMIN_OG_CRM.md`.
+
+## 3. Captação mínima
+
+O formulário público deve permanecer curto.
+
+Campos mínimos:
 
 - nome;
-- WhatsApp;
+- WhatsApp.
+
+Campos recomendados quando o contexto permitir:
+
+- email;
 - cidade;
-- UF, padrão RJ quando não informado;
+- UF;
 - tipo de interesse;
 - quantidade aproximada de vidas;
 - se possui MEI/CNPJ;
-- origem/página de origem;
-- consentimento LGPD.
+- mensagem;
+- consentimento LGPD;
+- página de origem;
+- origem/canal;
+- UTMs e identificadores de campanha.
 
-Campo `tipo de interesse` deve aceitar valores próximos destes:
+Não exigir CNPJ numérico ou dado sensível desnecessário no primeiro contato.
 
-- MEI para mim/família;
-- CNPJ pequeno;
-- Plano para funcionários;
-- Trocar plano atual;
-- Cotação familiar sem CNPJ;
-- Não sei ainda.
+## 4. Perfis comerciais canônicos
 
-O objetivo não é qualificar tudo no formulário. O objetivo é identificar a próxima pergunta humana.
+- `mei_familia`
+- `mei_profissional`
+- `micro_pme`
+- `pme_local`
+- `troca_reajuste`
+- `indefinido`
 
-## 3. Perfis comerciais oficiais
+O site pode sugerir perfil por regra simples, mas o OG CRM é o dono final da ficha comercial.
 
-Todo lead deve ser classificado, por regra ou IA interna, em um dos perfis abaixo.
+Perfil não significa elegibilidade de operadora.
+
+## 5. Próxima pergunta humana
+
+A tecnologia deve facilitar o atendimento sem prometer resultado.
+
+Exemplos:
 
 ### `mei_familia`
-
-Pessoa com MEI/CNPJ pequeno que quer avaliar plano para si e familiares.
-
-Dor provável:
-
-- quer pagar menos;
-- não sabe se pode usar CNPJ;
-- quer colocar cônjuge, filho ou dependente;
-- tem receio de carência/preço/rede.
-
-Próxima pergunta humana:
 
 > Você já tem MEI/CNPJ ativo? Seria para quantas pessoas e quais idades?
 
 ### `mei_profissional`
 
-Autônomo formalizado ou profissional solo.
-
-Dor provável:
-
-- quer plano individual usando estrutura de CNPJ;
-- ainda não sabe se vale a pena incluir dependente;
-- pode virar indicação futura.
-
-Próxima pergunta humana:
-
 > Você quer cotar só para você ou pretende incluir familiar também?
 
 ### `micro_pme`
-
-Empresa pequena, normalmente 2 a 9 vidas, com dono e poucos funcionários.
-
-Dor provável:
-
-- quer benefício sem custo alto;
-- quer reter funcionário;
-- quer entender se CNPJ pequeno consegue contratar.
-
-Próxima pergunta humana:
 
 > Seria para sócios, funcionários ou os dois?
 
 ### `pme_local`
 
-Empresa com equipe maior e dor mais corporativa.
-
-Dor provável:
-
-- benefício, retenção, contratação, reajuste, troca de operadora.
-
-Próxima pergunta humana:
-
 > Vocês já têm plano hoje ou estão implantando pela primeira vez?
 
 ### `troca_reajuste`
-
-Pessoa ou empresa que já tem plano e está incomodada com valor, rede, carência ou reajuste.
-
-Próxima pergunta humana:
 
 > Qual plano vocês têm hoje e em que mês costuma acontecer o reajuste?
 
 ### `indefinido`
 
-Lead sem dados suficientes.
-
-Próxima pergunta humana:
-
 > Você procura plano para você/família ou para empresa/equipe?
 
-## 4. Lead rico não significa formulário pesado
+## 6. Atribuição é dado de primeira classe
 
-O lead inicial pode ser simples. A entidade comercial rica deve ser montada depois.
+O site deve preservar, quando disponíveis:
 
-A ficha operacional deve conter:
+- `origem`;
+- `canal`;
+- `pagina_origem`;
+- `referrer`;
+- `utm_source`;
+- `utm_medium`;
+- `utm_campaign`;
+- `utm_content`;
+- `utm_term`;
+- `fbclid`;
+- `gclid`;
+- `campaign_id`;
+- `adset_id`;
+- `ad_id`;
+- `external_event_id`/`event_id`.
 
-- perfil comercial detectado;
-- cidade/UF;
-- quantidade de vidas;
-- possível uso de MEI/CNPJ;
-- dor provável;
-- próxima pergunta;
-- risco de promessa indevida;
-- status comercial;
-- origem;
-- página de origem;
-- observações humanas;
-- vínculo opcional com prospect do RadarPlan;
-- histórico de interação.
+Atribuição não deve ser apagada quando o status comercial muda.
 
-Exemplo de ficha interna:
+## 7. Lead Intake
 
-```json
-{
-  "perfil_comercial": "mei_familia",
-  "cidade": "Magé",
-  "uf": "RJ",
-  "vidas": 3,
-  "dor_provavel": "quer usar CNPJ para viabilizar plano familiar",
-  "proxima_pergunta": "Você já tem MEI/CNPJ ativo e quais são as idades das pessoas?",
-  "risco_compliance": "não prometer preço antes de validar elegibilidade, idades, rede e regra vigente",
-  "status": "Novo"
-}
-```
+Contrato oficial: `og-contracts/1.0` em `docs/CONTRATOS_INTEGRACAO.md`.
 
-## 5. Status padronizados do lead
+Estado atual:
 
-O blog deve usar status comerciais claros.
+- `POST /api/leads` valida nome/WhatsApp;
+- usa Neon via `DATABASE_URL`;
+- grava na tabela `lead`;
+- calcula score fallback;
+- pode enviar CallMeBot;
+- pode enviar Meta CAPI.
 
-Status oficiais:
+Estado alvo:
 
-- `Novo`;
-- `Qualificando`;
-- `Aguardando dados`;
-- `Em cotação`;
-- `Proposta enviada`;
-- `Follow-up`;
-- `Fechado`;
-- `Perdido`;
-- `Sem resposta`;
-- `Descartado`.
+- o site continua validando e enriquecendo dados de aquisição;
+- envia o Lead Intake Contract para o OG CRM;
+- o OG CRM torna-se dono lógico da operação comercial.
 
-Nenhum lead deve ficar em `Novo` depois da primeira interação humana.
+Até essa migração estar testada, o endpoint atual não deve ser removido.
 
-## 6. Campos que devem entrar no banco do blog
+## 8. Status comerciais
 
-A tabela atual `lead` já contém boa base. A evolução recomendada é adicionar gradualmente:
+Valores canônicos do ecossistema:
 
-```sql
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS perfil_comercial TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS dor_provavel TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS proxima_pergunta TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS objecao_principal TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS mes_reajuste TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS possui_cnpj BOOLEAN;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS cnpj_informado TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS radar_prospect_id INTEGER;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS ultima_interacao_em TIMESTAMPTZ;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS proxima_acao TEXT;
-```
+- `Novo`
+- `Qualificando`
+- `Aguardando dados`
+- `Em cotação`
+- `Proposta enviada`
+- `Follow-up`
+- `Fechado`
+- `Perdido`
+- `Sem resposta`
+- `Descartado`
 
-Esses campos não precisam aparecer todos no formulário. Eles podem ser preenchidos por atendimento humano, regras, RadarPlan ou análise assistida.
+O endpoint legado ainda aceita `Chamado`. Novos fluxos devem usar `Qualificando`.
 
-## 7. Contrato com o RadarPlan
+A migração de dados antigos deve ser explícita e retrocompatível.
 
-O blog deve aceitar prospectos do RadarPlan via endpoint protegido.
+## 9. RadarPlan
 
-Contrato mínimo esperado ao importar prospect:
+RadarPlan é um produto separado.
 
-```json
-{
-  "nome_empresa": "Studio Exemplo",
-  "segmento": "beleza/estética",
-  "cidade": "Magé",
-  "uf": "RJ",
-  "telefone_publico": "",
-  "whatsapp": "",
-  "email_publico": "",
-  "site_url": "",
-  "fonte_url": "",
-  "cnpj": "",
-  "cnae_codigo": "",
-  "cnae_descricao": "",
-  "porte_receita": "MEI/ME/EPP",
-  "perfil_comercial": "mei_familia",
-  "score": 0,
-  "prioridade": "baixa|media|alta|critica",
-  "nivel_maturidade": 1,
-  "nivel_label": "Catalogado|Pipeline Frio|Monitorar|Preparar|QUENTE AGORA",
-  "score_motivos": "",
-  "abordagem": "",
-  "proxima_acao": "",
-  "evidencias": [],
-  "tags": [],
-  "market_context": {},
-  "fingerprint": ""
-}
-```
+O site não deve executar scraping ou inteligência pesada do Radar.
 
-Regra: o Blog não deve recalcular toda a inteligência do Radar. Ele deve exibir, filtrar, converter e registrar feedback.
+Estado atual de compatibilidade:
 
-## 8. O que o painel administrativo precisa mostrar
+- `api/radar.js` recebe/importa prospectos;
+- o admin atual possui `/admin/radar`;
+- o endpoint pode converter prospecto em lead.
 
-A tela de atendimento deve ser reorganizada em torno da ação humana.
+Estado alvo:
 
-Para cada lead, mostrar:
+- RadarPlan envia prospectos diretamente ao OG CRM;
+- OG CRM opera prospectos e conversão;
+- Radar recebe feedback comercial do CRM;
+- o site consome apenas inteligência agregada para conteúdo/aquisição.
 
-- status;
-- perfil comercial;
-- nome;
-- WhatsApp;
-- cidade;
-- vidas;
-- possui MEI/CNPJ;
-- dor provável;
-- próxima pergunta;
-- mensagem sugerida;
-- observação humana;
-- próxima ação;
-- botão WhatsApp;
-- histórico curto.
+## 10. Conteúdo guiado por dados
 
-Para prospectos do Radar:
+Priorizar pautas vindas de:
 
-- score;
-- maturidade;
-- prioridade;
-- motivo do score;
-- evidências;
-- fonte;
-- CNPJ/CNAE quando houver;
-- contexto ANS da praça quando houver;
-- botão converter para lead;
-- botão descartar;
-- botão revisitar.
+- buscas que geram lead;
+- páginas que geram lead qualificado;
+- dúvidas reais;
+- objeções recorrentes;
+- cidades com demanda;
+- nichos encontrados pelo Radar;
+- perfis de maior conversão;
+- perdas comerciais recorrentes que podem ser tratadas por educação.
 
-## 9. Regras de atendimento humano
+Páginas prioritárias continuam incluindo:
 
-A abordagem deve sempre ser transparente.
+- plano de saúde para MEI no RJ;
+- plano de saúde para MEI em Magé;
+- plano de saúde para CNPJ pequeno;
+- MEI pode colocar família no plano?;
+- plano empresarial para 2 vidas;
+- plano para pequenas empresas no RJ;
+- plano para clínicas pequenas;
+- plano para salão/estética;
+- plano para restaurante pequeno;
+- plano para funcionários.
+
+## 11. Segurança e compliance
 
 Permitido:
 
 - explicar possibilidades;
-- pedir dados necessários;
-- informar que a cotação depende de regras da operadora/corretora;
-- comparar caminhos possíveis;
-- registrar objeções e retorno.
+- captar dados necessários;
+- registrar consentimento;
+- classificar intenção;
+- sugerir pergunta/CTA;
+- enviar evento de marketing compatível com consentimento/base aplicável.
 
 Proibido:
 
 - prometer preço antes de validação;
-- prometer aceitação de MEI/CNPJ sem checagem;
-- prometer carência/rede sem conferir regra vigente;
-- fingir parceria oficial com operadora;
-- automatizar abordagem em massa sem controle humano;
-- usar dados pessoais sem base adequada.
+- prometer aceitação de MEI/CNPJ;
+- prometer carência ou rede sem conferência vigente;
+- fingir parceria oficial;
+- guardar segredo no frontend;
+- expor `DATABASE_URL`;
+- coletar dado pessoal sem finalidade;
+- automatizar disparo comercial massivo sem controle humano.
 
-Frase de segurança recomendada:
+Frase segura:
 
 > Consigo verificar opções possíveis, mas preciso confirmar idades, cidade, CNPJ/MEI e regras vigentes antes de te passar uma cotação correta.
 
-## 10. Conteúdo guiado pela inteligência
+## 12. Métricas do site
 
-O blog não deve publicar no escuro.
+O site deve medir aquisição, não tentar substituir o CRM.
 
-Pautas devem nascer de:
+Métricas principais:
 
-- dúvidas reais dos leads;
-- objeções recorrentes;
-- cidades com volume de prospectos;
-- nichos encontrados pelo Radar;
-- perfis de maior conversão;
-- buscas orgânicas que geraram contato.
+- sessões;
+- origem/canal;
+- CTA click;
+- WhatsApp click;
+- form start;
+- form submit;
+- taxa de conversão por página;
+- leads por origem;
+- CPL quando mídia paga for conhecida;
+- páginas que geram leads qualificados/fechados via feedback do CRM.
 
-Páginas prioritárias:
+Status, proposta, fechamento, CAC e receita são consolidados no OG CRM.
 
-- Plano de saúde para MEI no RJ;
-- Plano de saúde para MEI em Magé;
-- Plano de saúde para CNPJ pequeno;
-- MEI pode colocar família no plano de saúde?;
-- Plano de saúde empresarial para 2 vidas;
-- Plano de saúde para pequenas empresas no RJ;
-- Plano de saúde para clínicas pequenas;
-- Plano de saúde para salão de beleza e estética;
-- Plano de saúde para restaurante pequeno;
-- Plano de saúde para funcionários.
+## 13. Definition of Done do site
 
-Cada página deve ter CTA humano, não promessa automática.
+Uma mudança de aquisição está pronta quando:
 
-## 11. RAG no blog
+- captação funciona em mobile/desktop;
+- nome/WhatsApp chegam corretamente;
+- atribuição não se perde;
+- consentimento é registrado quando aplicável;
+- erro não expõe segredo;
+- integração é retrocompatível;
+- lead aparece no sistema comercial;
+- Meta/analytics não duplicam evento indevidamente;
+- documentação do contrato foi atualizada se payload mudou.
 
-O blog não deve hospedar processamento pesado de RAG.
+## 14. Regra final
 
-Função do blog no RAG:
-
-- enviar leads e feedbacks para a base de inteligência;
-- consultar dossier pronto do Radar;
-- consultar sugestões de próxima ação;
-- exibir evidências e alertas para o atendente;
-- sugerir pautas de conteúdo.
-
-O processamento pesado fica no RadarPlan ou worker separado.
-
-## 12. Roadmap do blog
-
-### Fase 1: padronização
-
-- padronizar status comerciais;
-- adicionar campos de perfil comercial;
-- adaptar formulário para perguntar MEI/CNPJ sem pesar;
-- exibir próxima pergunta no admin;
-- registrar objeção e próxima ação.
-
-### Fase 2: integração Radar
-
-- melhorar aba de prospectos;
-- exibir maturidade, score, perfil e evidências;
-- converter prospecto em lead preservando vínculo;
-- registrar feedback de conversão/perda.
-
-### Fase 3: inteligência de conteúdo
-
-- criar fila de pautas sugeridas pelo Radar;
-- marcar páginas que geraram lead;
-- relacionar página de origem com perfil comercial;
-- criar relatório cidade + nicho + conversão.
-
-### Fase 4: copiloto interno
-
-- gerar resumo curto do lead;
-- gerar próxima pergunta;
-- sugerir abordagem;
-- detectar risco de promessa indevida;
-- buscar casos parecidos.
-
-A IA nunca envia mensagem sozinha. A decisão e o contato são humanos.
-
-## 13. Não escopo
-
-Fora do escopo deste projeto:
-
-- importação de CSV/tabela comercial da corretora;
-- precificação automática para cliente final;
-- promessa automática de aceitação;
-- chatbot vendedor autônomo;
-- disparo em massa sem revisão humana;
-- scraping pesado dentro da Vercel Function.
-
-## 14. Definição de pronto
-
-Uma etapa só está pronta quando:
-
-- o dado aparece no admin;
-- o atendente entende a próxima ação;
-- o feedback volta para a base;
-- existe rastreabilidade da origem;
-- nenhuma promessa sensível é feita sem validação humana.
-
-A regra final do blog:
-
-> Capturar pouco, entender muito, vender com humano, registrar tudo.
+> Capturar pouco, atribuir corretamente, entregar ao CRM e usar o aprendizado para captar melhor.
