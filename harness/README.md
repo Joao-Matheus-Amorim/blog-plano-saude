@@ -28,6 +28,23 @@ Este diretório é a base operacional de produção do `blog-plano-saude`.
 20. `contracts/LOCK.json`
 21. `STATE.json`
 
+## Gate executável local
+
+Sem dependência adicional:
+
+```bash
+node scripts/harness-check.mjs
+```
+
+O comando falha com exit code `1` quando:
+- arquivo obrigatório do harness sumiu;
+- `PROJECT_MEMORY.md` perdeu versão canônica;
+- `STATE.json` divergiu do projeto/harness/contrato;
+- `LOCK.json` é inválido;
+- schema versionado não bate com o SHA-256 travado.
+
+Este check deve ser executado antes de mudanças de produção relevantes e antes do merge do harness.
+
 ## Regra
 
 Se código, schema, configuração ou integração contradiz este harness, a mudança não está pronta. Se a arquitetura legitimamente muda, memória e harness mudam na mesma PR.
