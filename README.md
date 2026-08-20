@@ -1,61 +1,94 @@
-# Maisa Valentim — Consultoria de Planos de Saúde
+# OG Plano Saúde — Aquisição e Conteúdo
 
-Site institucional e blog da corretora **Maisa Valentim**, especializada em planos de saúde no Rio de Janeiro. Desenvolvido com React + Vite e hospedado na Vercel.
+Repositório do **OG Plano Saúde**, frente pública de aquisição do **OG Ecosystem**.
 
-## 📌 Sobre o Projeto
+## Papel no ecossistema
 
-Plataforma completa de captacão e conversão de leads para venda de planos de saúde. Inclui simulador de cotacão, blog informativo, página de operadoras, depoimentos e painel administrativo.
+Este projeto é responsável por:
 
-## ✨ Funcionalidades
+- site institucional;
+- SEO e blog;
+- landing pages;
+- páginas por intenção/cidade;
+- simuladores e formulários;
+- captação de leads;
+- consentimento LGPD;
+- atribuição de origem e eventos de marketing;
+- entrega de oportunidades ao sistema comercial por contrato estável.
 
-- **Simulador de Cotacão** — Captura leads com nome, email e WhatsApp antes de mostrar o resultado
-- **Blog** — Artigos educativos para SEO e nutricão de leads
-- **Página de Operadoras** — Bradesco, Unimed, SulAmérica, Amil, Notre Dame
-- **Depoimentos** — Prova social de clientes
-- **FAQ** — Dúvidas frequentes
-- **Formulario de Contato** — Integrado via API serverless com Neon
-- **Painel Admin** — Gestão de leads e posts
-- **Popup de Saída** — Recuperacão de visitantes
-- **WhatsApp Flutuante** — CTA permanente em todas as páginas
+O ecossistema possui três produtos independentes:
 
-## 🛠️ Tecnologias
+1. **OG Plano Saúde (`blog-plano-saude`)** — aquisição.
+2. **RadarPlan (`radarplan`)** — inteligência e prospecção.
+3. **OG CRM (`og-crm`)** — operação comercial e PWA interna.
+
+> OG Plano Saúde encontra demanda. RadarPlan encontra oportunidade. OG CRM transforma oportunidade em venda e devolve aprendizado ao ecossistema.
+
+## Estado atual
+
+O código ainda contém o painel administrativo legado e endpoints operacionais. Hoje existem rotas como `/admin`, `/admin/organico`, `/admin/links` e `/admin/radar` no mesmo SPA.
+
+Isso é **compatibilidade temporária**, não arquitetura final.
+
+A migração será feita sem interromper captação ou perder dados. Consulte:
+
+- `docs/README.md`
+- `docs/ECOSSISTEMA_OG.md`
+- `docs/CONTRATOS_INTEGRACAO.md`
+- `docs/MIGRACAO_ADMIN_OG_CRM.md`
+- `docs/INTELIGENCIA_OPERACIONAL_BLOG.md`
+
+## Funcionalidades públicas
+
+- simulador/cotação;
+- páginas de intenção de plano;
+- páginas locais;
+- blog para SEO;
+- páginas de operadoras;
+- depoimentos e FAQ;
+- formulário de contato;
+- WhatsApp;
+- eventos orgânicos/atribuição;
+- Meta CAPI quando configurada.
+
+## Stack atual
 
 | Tecnologia | Uso |
 |---|---|
-| React 18 + Vite 5 | Frontend |
-| React Router DOM v6 | Navegacão SPA |
-| Framer Motion | Animacões |
-| Neon + Vercel Functions | Backend / Banco de dados |
+| React 18 + Vite 5 | frontend |
+| React Router DOM v6 | navegação SPA |
+| Framer Motion | animações |
+| Vercel Functions | APIs server-side |
+| Neon | PostgreSQL atual via `DATABASE_URL` |
 | React Helmet Async | SEO dinâmico |
-| Google Analytics | Rastreamento |
-| Vercel | Deploy |
+| Google Analytics | rastreamento |
+| Vercel | deploy |
 
-## 🚀 Instalacão e Uso
+## Regras arquiteturais
+
+- nenhum segredo no frontend;
+- o site não deve virar CRM;
+- novos fluxos internos devem nascer no OG CRM;
+- RadarPlan não deve depender de componentes deste frontend;
+- integrações entre projetos usam `og-contracts/1.0`;
+- banco físico pode permanecer compartilhado durante a migração, mas cada domínio tem dono lógico;
+- remoção de admin/endpoints legados só ocorre após paridade e teste ponta a ponta.
+
+## Desenvolvimento local
 
 ```bash
-# Instalar dependências
 npm install
-
-# Rodar em desenvolvimento
 npm run dev
-
-# Build para producão
 npm run build
-
-# Preview do build
 npm run preview
 ```
 
-## 🌍 Deploy
+## Deploy
 
-O projeto está configurado para deploy automático na Vercel via `vercel.json`.
+Deploy automático pela Vercel conforme configuração do repositório.
 
-## 📞 Contato
+## Contato comercial
 
-- **WhatsApp:** [(21) 97747-2141](https://wa.me/5521977472141)
-- **Instagram:** [@planosdesaudemaisavalentim](https://www.instagram.com/planosdesaudemaisavalentim/)
-- **E-mail:** maisarvalentim@gmail.com
-
----
-
-> Desenvolvido por [Joao Matheus Amorim](https://github.com/Joao-Matheus-Amorim)
+- WhatsApp: (21) 97747-2141
+- Instagram: @planosdesaudemaisavalentim
+- E-mail: maisarvalentim@gmail.com
