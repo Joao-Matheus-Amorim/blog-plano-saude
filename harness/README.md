@@ -17,9 +17,12 @@ Este diretório é a base operacional de produção do `blog-plano-saude`.
 9. `ZERO_COST_POLICY.md`
 10. `DEBT_REGISTER.md`
 11. `CHANGE_PROTOCOL.md`
-12. `ADR_TEMPLATE.md`
-13. `contracts/README.md`
-14. `STATE.json`
+12. `WORK_SESSION_PROTOCOL.md`
+13. `ECOSYSTEM_COMPATIBILITY.md`
+14. `ADR_TEMPLATE.md`
+15. `contracts/README.md`
+16. `contracts/LOCK.json`
+17. `STATE.json`
 
 ## Regra
 
@@ -36,5 +39,6 @@ Se código, schema, configuração ou integração contradiz este harness, a mud
 - segurança e LGPD;
 - deploy e rollback reproduzíveis;
 - observabilidade mínima gratuita;
-- contratos versionados;
+- contratos versionados e travados por hash;
+- memória de sessão reproduzível;
 - dívida explícita.
