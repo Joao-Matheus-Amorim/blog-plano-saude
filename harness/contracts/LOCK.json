@@ -1,0 +1,11 @@
+{
+  "contract_version": "og-contracts/1.0",
+  "schemas": {
+    "lead.v1.schema.json": {
+      "sha256": "298725170cfa117287431ad7e789b14f9e5a4b00eb072c564b41ab9301001ee3"
+    },
+    "acquisition-event.v1.schema.json": {
+      "sha256": "dec7b7f6e9f869d5741f380ed859cc24377c5db7c33f71de60a0a25ecfe8e926"
+    }
+  }
+}
