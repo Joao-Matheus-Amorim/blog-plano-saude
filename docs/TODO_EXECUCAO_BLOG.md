@@ -1,522 +1,269 @@
-# TODO de Execução — Blog Plano de Saúde
+# Execução — OG Plano Saúde
 
-Este documento é o passo a passo técnico-operacional do `blog-plano-saude` para uso pessoal.
+Versão: **2.0**  
+Data-base: **2026-08-20**
 
-O projeto é individual. Não é para virar uma empresa inchada, nem uma plataforma genérica. A regra é: capturar lead, ajudar você a entender o caso, apoiar o atendimento humano e registrar o que aconteceu.
+Este documento é o plano técnico do `blog-plano-saude` depois da decisão de separar o OG CRM.
 
-Documento-base: `docs/INTELIGENCIA_OPERACIONAL_BLOG.md`.
+Documentos obrigatórios antes de alterar integração:
 
-## 0. Norte operacional
+- `docs/ECOSSISTEMA_OG.md`
+- `docs/CONTRATOS_INTEGRACAO.md`
+- `docs/MIGRACAO_ADMIN_OG_CRM.md`
 
-O blog deve fazer quatro coisas muito bem:
+## 0. Objetivo do repositório
 
-1. atrair pessoas interessadas em plano de saúde pelo Google, WhatsApp, indicação ou página local;
-2. capturar dados mínimos sem espantar o lead;
-3. transformar o lead em uma ficha útil para atendimento humano;
-4. devolver feedback para o RadarPlan aprender.
+Fazer muito bem cinco coisas:
 
-O blog não deve:
+1. atrair;
+2. converter visitante em lead;
+3. preservar atribuição;
+4. entregar o lead ao sistema comercial;
+5. aprender com o resultado agregado para melhorar aquisição.
 
-- vender sozinho;
-- prometer preço;
-- prometer aceitação;
-- depender de chatbot;
-- importar CSV/tabela de corretora;
-- fazer scraping pesado;
-- tentar resolver toda a inteligência dentro da Vercel.
+Não criar novas features de CRM neste repositório.
 
-## 1. Primeira passada no código atual
+## 1. Estado atual que deve continuar funcionando
 
-Antes de alterar, abrir estes arquivos:
+Arquivos críticos de captação:
 
-- `api/_lib/leads.js`;
-- `api/leads/index.js`;
-- `api/leads/get.js`;
-- `api/leads/update-status.js`;
-- `api/radar.js`;
-- `api/_lib/radar.js`;
-- `src/pages/PaginaAdmin.jsx`;
-- componentes de formulário/simulador que enviam lead para `/api/leads`.
+- `api/_lib/leads.js`
+- `api/leads/index.js`
+- formulários/simuladores que chamam `/api/leads`
+- rastreamento em `src/App.jsx`
 
-Objetivo da leitura:
+Compatibilidade operacional temporária:
 
-- confirmar campos atuais do lead;
-- confirmar onde o formulário manda payload;
-- confirmar onde o admin exibe lead;
-- confirmar como status é atualizado;
-- confirmar como prospectos do Radar entram no blog;
-- não sair alterando tela antes de ajustar o modelo.
+- `src/pages/PaginaAdmin.jsx`
+- `src/pages/PaginaAdminOrganico.jsx`
+- `src/pages/PaginaAdminLinks.jsx`
+- `src/pages/PaginaAdminRadar.jsx`
+- `api/leads/*`
+- `api/radar.js`
 
-## 2. Fase 1 — Ajustar banco do lead
+Esses arquivos não são destino arquitetural. Não remover até o OG CRM atingir paridade.
 
-Arquivo principal: `api/_lib/leads.js`.
+## 2. Prioridade A — atribuição completa
 
-Adicionar colunas novas em `ensureLeadTable` usando `ALTER TABLE ADD COLUMN IF NOT EXISTS`.
+Adicionar de forma retrocompatível ao intake e armazenamento:
 
-Campos recomendados:
-
-```sql
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS perfil_comercial TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS dor_provavel TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS proxima_pergunta TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS objecao_principal TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS mes_reajuste TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS possui_cnpj BOOLEAN;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS cnpj_informado TEXT;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS radar_prospect_id INTEGER;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS ultima_interacao_em TIMESTAMPTZ;
-ALTER TABLE lead ADD COLUMN IF NOT EXISTS proxima_acao TEXT;
-```
+- `utm_source`
+- `utm_medium`
+- `utm_campaign`
+- `utm_content`
+- `utm_term`
+- `fbclid`
+- `gclid`
+- `campaign_id`
+- `adset_id`
+- `ad_id`
+- `external_event_id`
 
 Critério de pronto:
 
-- build não quebra;
-- lead antigo continua funcionando;
-- lead novo salva mesmo sem esses campos;
-- admin consegue listar leads antigos e novos.
+- lead real preserva origem do primeiro envio;
+- campos ausentes não quebram formulário antigo;
+- dados aparecem no OG CRM quando o contrato estiver ligado;
+- event ID pode evitar duplicidade de eventos Meta quando usado.
 
-## 3. Fase 2 — Padronizar status comerciais
+## 3. Prioridade B — Lead Intake Contract
 
-Status oficiais:
+Contrato: `og-contracts/1.0`.
 
-- `Novo`;
-- `Qualificando`;
-- `Aguardando dados`;
-- `Em cotação`;
-- `Proposta enviada`;
-- `Follow-up`;
-- `Fechado`;
-- `Perdido`;
-- `Sem resposta`;
-- `Descartado`.
+Enquanto OG CRM não existir em produção:
 
-Alterar:
+- `/api/leads` continua sendo o endpoint de entrada;
+- gravação Neon continua funcionando;
+- alterações de schema são somente aditivas.
 
-- `src/pages/PaginaAdmin.jsx`, constante `leadStatuses`;
-- validação em `api/leads/update-status.js`, se houver lista fechada;
-- qualquer filtro visual que dependa de status antigo.
+Quando OG CRM disponibilizar intake:
 
-Regra operacional:
+1. manter validação pública no site;
+2. normalizar payload;
+3. encaminhar server-to-server para o CRM;
+4. tratar timeout/erro sem expor segredo;
+5. instrumentar falha;
+6. manter fallback definido durante a transição;
+7. testar lead real ponta a ponta.
 
-- `Novo` só existe antes do primeiro contato;
-- depois do primeiro WhatsApp, virar `Qualificando` ou `Sem resposta`;
-- se pediu dados, virar `Aguardando dados`;
-- se já tem informação suficiente, virar `Em cotação`;
-- se enviou proposta, virar `Proposta enviada`;
-- se precisa retorno, virar `Follow-up`.
+## 4. Prioridade C — formulário comercial leve
 
-Critério de pronto:
+Perguntas permitidas sem transformar formulário em interrogatório:
 
-- o admin filtra por todos os status;
-- status antigo não explode a tela;
-- status atualizado grava no banco.
+- você tem MEI/CNPJ?;
+- o plano seria para você/família ou empresa/equipe?;
+- quantidade aproximada de vidas;
+- cidade/UF.
 
-## 4. Fase 3 — Classificação simples sem IA
+Não exigir:
 
-Criar uma função pura, preferencialmente em um helper novo:
+- CNPJ completo no primeiro passo;
+- dado clínico;
+- documento pessoal;
+- informação que possa ser pedida no atendimento humano.
 
-`api/_lib/lead-intelligence.js`
+## 5. Prioridade D — páginas de conversão
 
-Funções mínimas:
+Manter/expandir:
 
-```js
-export function classifyLead(input) {}
-export function buildNextQuestion(profile, input) {}
-export function detectLikelyPain(input) {}
-```
+- `/planos/mei`
+- `/planos/familiar`
+- `/planos/empresarial`
+- `/planos/individual`
+- `/planos/idoso`
+- `/planos/gestante`
+- `/planos/portabilidade`
+- `/plano-saude-mage`
+- `/plano-saude-piabeta`
 
-Regras iniciais:
+Novas páginas devem registrar `pagina_origem` e UTMs no lead.
 
-### `mei_familia`
+## 6. Prioridade E — analytics de aquisição
 
-Quando:
+Eventos recomendados:
 
-- tipo de plano contém `mei`;
-- mensagem contém `familia`, `família`, `filho`, `esposa`, `marido`, `dependente`;
-- vidas >= 2 e possui CNPJ/MEI.
+- `page_view`
+- `cta_click`
+- `whatsapp_click`
+- `form_start`
+- `form_submit`
+- `form_error`
 
-Próxima pergunta:
+Regras:
 
-> Você já tem MEI/CNPJ ativo? Seria para quantas pessoas e quais idades?
+- evitar evento duplicado;
+- eventos não podem conter dado sensível desnecessário;
+- páginas admin não entram em analytics público;
+- resultado comercial volta ao site apenas para análise agregada/atribuição.
 
-### `mei_profissional`
+## 7. Status e perfil — compatibilidade apenas
 
-Quando:
+O site deve entender os valores canônicos para não quebrar dados, mas novas telas operacionais pertencem ao OG CRM.
 
-- tipo contém `mei`;
-- vidas <= 1;
-- mensagem fala de autônomo, profissional, CNPJ próprio.
+Status:
 
-Próxima pergunta:
+- `Novo`
+- `Qualificando`
+- `Aguardando dados`
+- `Em cotação`
+- `Proposta enviada`
+- `Follow-up`
+- `Fechado`
+- `Perdido`
+- `Sem resposta`
+- `Descartado`
 
-> Você quer cotar só para você ou pretende incluir familiar também?
+Perfis:
 
-### `micro_pme`
+- `mei_familia`
+- `mei_profissional`
+- `micro_pme`
+- `pme_local`
+- `troca_reajuste`
+- `indefinido`
 
-Quando:
+`Chamado` é status legado equivalente funcional a `Qualificando` para leitura/migração.
 
-- tipo contém `empresa`, `pme`, `funcionário`, `funcionario`, `colaborador`;
-- vidas entre 2 e 9.
+## 8. Radar — plano de saída do site
 
-Próxima pergunta:
+Hoje:
 
-> Seria para sócios, funcionários ou os dois?
+- `api/radar.js` importa/lista/atualiza/converte;
+- `/admin/radar` opera prospectos.
 
-### `pme_local`
+Meta:
 
-Quando:
+- RadarPlan -> OG CRM diretamente;
+- site deixa de ser intermediário operacional;
+- site recebe apenas inteligência agregada para conteúdo.
 
-- vidas >= 10;
-- mensagem fala de equipe, benefício, empresa ou contratação.
+Não mover enquanto:
 
-Próxima pergunta:
+- OG CRM não tiver autenticação;
+- contrato de prospect não estiver implementado;
+- conversão Radar -> lead não preservar vínculo/evidência;
+- feedback CRM -> Radar não estiver definido/testado.
 
-> Vocês já têm plano hoje ou estão implantando pela primeira vez?
+## 9. Admin legado — congelamento funcional
 
-### `troca_reajuste`
+Permitido no admin antigo:
 
-Quando mensagem contém:
+- correção de bug;
+- correção de segurança;
+- compatibilidade necessária à migração;
+- leitura de campo novo necessária para fallback.
 
-- `trocar`;
-- `reajuste`;
-- `aumentou`;
-- `caro`;
-- `portabilidade`;
-- `já tenho plano`.
+Evitar:
 
-Próxima pergunta:
+- novo dashboard complexo;
+- nova agenda;
+- novo pipeline;
+- múltiplos usuários;
+- notificações avançadas;
+- proposta/cotação estruturada;
+- PWA do admin antigo.
 
-> Qual plano você tem hoje e em que mês costuma acontecer o reajuste?
+Essas features pertencem ao `og-crm`.
 
-### `indefinido`
+## 10. Segurança
 
-Fallback.
+Antes de cada alteração server-side:
 
-Próxima pergunta:
+- confirmar que `DATABASE_URL` permanece server-only;
+- validar payload;
+- manter rate limit de endpoint público;
+- não devolver detalhe interno em produção;
+- não logar token/senha;
+- usar segredo dedicado entre serviços;
+- não reutilizar senha admin como API key.
 
-> Você procura plano para você/família ou para empresa/equipe?
+## 11. Testes mínimos antes de deploy
 
-Critério de pronto:
+### Lead inbound
 
-- função recebe payload do formulário e devolve JSON;
-- não usa LLM;
-- não chama API externa;
-- pode ser testada manualmente com objetos simples.
+1. abrir landing;
+2. preencher formulário;
+3. confirmar sucesso;
+4. verificar lead persistido;
+5. verificar telefone/nome;
+6. verificar origem/página;
+7. verificar UTMs quando presentes;
+8. verificar evento Meta sem duplicidade quando configurado.
 
-## 5. Fase 4 — Enriquecer lead ao salvar
+### Compatibilidade
 
-Arquivo: `api/leads/index.js`.
+- lead sem campos novos continua salvando;
+- lead antigo continua listável;
+- status legado não quebra a interface antiga;
+- site público funciona sem admin.
 
-Na hora de receber POST:
+### Integração futura CRM
 
-1. ler payload;
-2. normalizar campos;
-3. chamar `classifyLead`;
-4. salvar campos novos junto com o lead.
+- timeout do CRM tem comportamento definido;
+- resposta 4xx não é tratada como sucesso;
+- resposta 5xx gera observabilidade;
+- nenhuma credencial de serviço chega ao browser.
 
-Campos a salvar:
+## 12. Ordem de execução recomendada
 
-- `perfil_comercial`;
-- `dor_provavel`;
-- `proxima_pergunta`;
-- `possui_cnpj`;
-- `cnpj_informado`, se existir;
-- `proxima_acao`, padrão `Fazer primeira qualificação humana`.
+1. documentação comum;
+2. OG CRM criado em repo separado;
+3. atribuição completa no site;
+4. contrato de intake implementado no CRM;
+5. integração site -> CRM;
+6. paridade do admin no CRM;
+7. Radar -> CRM;
+8. operação real pelo CRM;
+9. congelar admin legado;
+10. remover admin legado em PR separado;
+11. remover endpoints operacionais obsoletos em PR posterior.
 
-Não alterar a regra principal: nome e WhatsApp continuam obrigatórios.
+## 13. Definition of Done do repositório após migração
 
-Critério de pronto:
-
-- lead novo aparece no admin com perfil;
-- se a classificação falhar, salva como `indefinido`;
-- API continua retornando `success: true`.
-
-## 6. Fase 5 — Ajustar formulário sem pesar
-
-Localizar componentes que enviam lead.
-
-Adicionar no formulário, sem deixar gigante:
-
-Pergunta curta:
-
-> Você tem MEI/CNPJ?
-
-Opções:
-
-- Tenho MEI;
-- Tenho CNPJ de empresa;
-- Não tenho;
-- Não sei;
-- Prefiro explicar no WhatsApp.
-
-Outra pergunta curta:
-
-> O plano seria para quem?
-
-Opções:
-
-- Só para mim;
-- Para mim e família;
-- Para funcionários;
-- Para sócios e funcionários;
-- Quero trocar um plano atual;
-- Ainda não sei.
-
-Payload sugerido:
-
-```json
-{
-  "possui_cnpj": true,
-  "tipo_interesse": "mei_familia",
-  "tipo_plano": "MEI/Família"
-}
-```
-
-Critério de pronto:
-
-- formulário ainda fica rápido;
-- mobile continua bom;
-- não exige CNPJ numérico no primeiro contato;
-- WhatsApp continua sendo o canal central.
-
-## 7. Fase 6 — Ajustar painel admin para atendimento humano
-
-Arquivo principal: `src/pages/PaginaAdmin.jsx`.
-
-Cada card/linha de lead deve mostrar:
-
-- perfil comercial;
-- dor provável;
-- próxima pergunta;
-- próxima ação;
-- cidade/UF;
-- vidas;
-- possui CNPJ/MEI;
-- status;
-- observação interna;
-- botão WhatsApp;
-- botão copiar abordagem.
-
-A mensagem do WhatsApp deve usar a próxima pergunta.
-
-Exemplo de mensagem para `mei_familia`:
-
-```txt
-Olá, [nome]! Aqui é a Maisa. Recebi seu pedido de cotação pelo site. Para eu te orientar melhor: você já tem MEI/CNPJ ativo? Seria para quantas pessoas e quais idades?
-```
-
-Regra:
-
-- não prometer preço;
-- não prometer aceitação;
-- sempre pedir dados necessários;
-- atendimento humano decide o próximo passo.
-
-Critério de pronto:
-
-- atendente abre admin e sabe exatamente o que perguntar;
-- botão WhatsApp usa mensagem coerente com perfil;
-- observação interna continua funcionando.
-
-## 8. Fase 7 — Melhorar endpoint Radar no blog
-
-Arquivos:
-
-- `api/radar.js`;
-- `api/_lib/radar.js`.
-
-Adicionar suporte a campos:
-
-- `perfil_comercial`;
-- `dor_provavel`;
-- `proxima_pergunta`;
-- `proxima_acao`;
-- `restricao_abordagem`, se vier do Radar.
-
-Na conversão de prospect para lead:
-
-- preservar `radar_prospect_id`;
-- copiar perfil comercial;
-- copiar abordagem;
-- copiar próxima ação;
-- copiar cidade/UF;
-- copiar score;
-- marcar origem como `Radarplan`.
-
-Critério de pronto:
-
-- prospect importado do Radar aparece completo;
-- converter prospect gera lead vinculado;
-- não perde evidência e score.
-
-## 9. Fase 8 — Feedback para o Radar
-
-Criar endpoint futuro:
-
-`api/radar/feedback.js` ou ação em `api/radar.js?action=feedback`.
-
-Payload mínimo:
-
-```json
-{
-  "lead_id": 123,
-  "radar_prospect_id": 456,
-  "status": "Em cotação",
-  "perfil_comercial": "mei_familia",
-  "possui_cnpj": true,
-  "vidas": 3,
-  "objecao_principal": "preço",
-  "mes_reajuste": "novembro",
-  "resultado": "pediu_cotacao",
-  "observacao": "Quer para ele, esposa e filho"
-}
-```
-
-No admin, quando salvar observação/status, futuramente mandar esse feedback para a base de inteligência.
-
-Critério de pronto:
-
-- o que você descobre no atendimento não morre na sua cabeça;
-- volta para o Radar;
-- vira aprendizado.
-
-## 10. Fase 9 — Conteúdo guiado por dados
-
-Criar uma aba ou arquivo simples com pautas.
-
-Começar manualmente com páginas:
-
-- Plano de saúde para MEI no RJ;
-- Plano de saúde para MEI em Magé;
-- Plano de saúde para CNPJ pequeno;
-- MEI pode colocar família no plano de saúde?;
-- Plano de saúde empresarial para 2 vidas;
-- Plano de saúde para pequenas empresas no RJ;
-- Plano de saúde para salão de beleza e estética;
-- Plano de saúde para clínicas pequenas;
-- Plano de saúde para restaurante pequeno;
-- Plano de saúde para funcionários.
-
-Regra de conteúdo:
-
-- explicar sem juridiquês;
-- sempre dizer que depende de regra da operadora/corretora;
-- CTA para atendimento humano;
-- não publicar preço fixo;
-- não prometer aceitação.
-
-Critério de pronto:
-
-- cada página tem CTA claro;
-- cada página grava `pagina_origem` no lead;
-- depois dá para saber qual página trouxe lead bom.
-
-## 11. Fase 10 — Copiloto interno simples
-
-Só depois das fases anteriores.
-
-Criar camada opcional:
-
-- regras primeiro;
-- LLM local/OpenRouter depois;
-- nunca obrigatório.
-
-Funções:
-
-- resumir lead;
-- sugerir próxima pergunta;
-- sugerir abordagem;
-- detectar risco de promessa;
-- buscar caso parecido.
-
-Critério de pronto:
-
-- se IA falhar, sistema continua;
-- IA não envia mensagem sozinha;
-- atendimento humano revisa tudo.
-
-## 12. Rotina diária de uso
-
-Todo dia:
-
-1. abrir admin;
-2. ver leads `Novo`;
-3. responder pelo WhatsApp;
-4. mudar status;
-5. preencher observação;
-6. registrar objeção;
-7. marcar próxima ação;
-8. revisar prospectos Radar;
-9. converter apenas o que vale abordar;
-10. anotar dúvida recorrente para virar conteúdo.
-
-## 13. Ordem rápida de implementação
-
-Sequência recomendada, sem inventar moda:
-
-1. campos novos no banco;
-2. status padronizados;
-3. helper de classificação sem IA;
-4. salvar perfil no lead;
-5. mostrar perfil no admin;
-6. ajustar mensagem de WhatsApp;
-7. adicionar pergunta MEI/CNPJ no formulário;
-8. melhorar conversão Radar -> Lead;
-9. criar feedback para Radar;
-10. só depois pensar em copiloto/IA.
-
-## 14. Teste manual mínimo
-
-Criar leads de teste:
-
-### Caso 1
-
-Nome: Carlos  
-Tipo: MEI/Família  
-Vidas: 3  
-Mensagem: Tenho MEI e quero para minha família.
-
-Esperado:
-
-- perfil `mei_familia`;
-- próxima pergunta sobre CNPJ ativo e idades.
-
-### Caso 2
-
-Nome: Ana  
-Tipo: Trocar plano  
-Vidas: 2  
-Mensagem: Meu plano aumentou muito.
-
-Esperado:
-
-- perfil `troca_reajuste`;
-- próxima pergunta sobre plano atual e mês de reajuste.
-
-### Caso 3
-
-Nome: Oficina Lima  
-Tipo: Empresarial  
-Vidas: 5  
-Mensagem: Quero ver plano para funcionários.
-
-Esperado:
-
-- perfil `micro_pme`;
-- próxima pergunta sobre sócios/funcionários.
-
-## 15. Definição pessoal de pronto
-
-Só considerar finalizado quando:
-
-- você abrir o admin e não precisar pensar do zero;
-- cada lead tiver próxima pergunta;
-- cada atendimento gerar observação;
-- cada observação puder voltar para o Radar;
-- o blog continuar leve;
-- nada depender obrigatoriamente de IA;
-- nada prometer preço ou aceitação sem validação humana.
-
-Regra final:
-
-> O blog captura pouco, organiza muito e ajuda você a atender melhor.
+- site público não depende do frontend do CRM;
+- formulário gera lead no CRM por contrato;
+- atribuição chega íntegra;
+- `/admin*` não é necessário para operação;
+- Radar não depende de endpoint do site;
+- código do site fica focado em aquisição/conteúdo;
+- documentação aponta para a mesma versão dos contratos dos outros repos.
