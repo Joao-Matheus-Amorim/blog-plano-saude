@@ -184,13 +184,24 @@ Ordem de leitura:
 
 1. `PROJECT_MEMORY.md`
 2. `harness/PRODUCTION_HARNESS.md`
-3. `harness/INTEGRATION_MATRIX.md`
-4. `harness/TEST_MATRIX.md`
-5. `harness/RUNBOOK.md`
-6. `harness/ZERO_COST_POLICY.md`
-7. `harness/DEBT_REGISTER.md`
-8. `docs/ECOSSISTEMA_OG.md`
-9. `docs/CONTRATOS_INTEGRACAO.md`
-10. documentos específicos de domínio.
+3. `harness/DATA_OWNERSHIP.md`
+4. `harness/SECURITY_MODEL.md`
+5. `harness/INTEGRATION_MATRIX.md`
+6. `harness/E2E_FLOWS.md`
+7. `harness/TEST_MATRIX.md`
+8. `harness/SCHEMA_EVOLUTION.md`
+9. `harness/ENVIRONMENT_MATRIX.md`
+10. `harness/OBSERVABILITY.md`
+11. `harness/RUNBOOK.md`
+12. `harness/RELEASE_CHECKLIST.md`
+13. `harness/ZERO_COST_POLICY.md`
+14. `harness/DEBT_REGISTER.md`
+15. `harness/CHANGE_PROTOCOL.md`
+16. `harness/WORK_SESSION_PROTOCOL.md`
+17. `harness/ECOSYSTEM_COMPATIBILITY.md`
+18. `harness/ADR_TEMPLATE.md`
+19. `docs/ECOSSISTEMA_OG.md`
+20. `docs/CONTRATOS_INTEGRACAO.md`
+21. documentos específicos de domínio.
 
 Se dois documentos entrarem em conflito, esta memória + harness vigente prevalecem, e o documento antigo deve ser corrigido na mesma mudança.
