@@ -1,0 +1,42 @@
+{
+  "harness_version": "OG-HARNESS/1.0",
+  "contract_version": "og-contracts/1.0",
+  "project": "blog-plano-saude",
+  "product_name": "OG Plano Saúde",
+  "role": "acquisition",
+  "production_state": "live_with_legacy_admin_transition",
+  "cost_policy": "zero_mandatory_incremental_cost",
+  "core_dependencies": [
+    "react-vite",
+    "vercel-runtime",
+    "postgresql-neon"
+  ],
+  "logical_ownership": [
+    "public_pages",
+    "seo_content",
+    "lead_capture",
+    "acquisition_attribution",
+    "public_site_events"
+  ],
+  "not_owned": [
+    "commercial_pipeline",
+    "follow_up",
+    "proposal",
+    "closing",
+    "radar_scoring"
+  ],
+  "legacy": [
+    "admin_ui_inside_site",
+    "radar_endpoint_inside_site"
+  ],
+  "authoritative_entrypoints": [
+    "PROJECT_MEMORY.md",
+    "harness/PRODUCTION_HARNESS.md",
+    "harness/INTEGRATION_MATRIX.md",
+    "harness/TEST_MATRIX.md",
+    "harness/RUNBOOK.md",
+    "harness/ZERO_COST_POLICY.md",
+    "harness/DEBT_REGISTER.md",
+    "harness/CHANGE_PROTOCOL.md"
+  ]
+}
