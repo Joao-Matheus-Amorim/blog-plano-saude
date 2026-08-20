@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "og-contracts/1.0/lead.v1",
+  "title": "OG Lead Contract v1",
+  "type": "object",
+  "required": ["contract_version", "source_system", "nome", "telefone", "origem", "canal"],
+  "properties": {
+    "contract_version": { "const": "og-contracts/1.0" },
+    "source_system": { "const": "blog-plano-saude" },
+    "external_id": { "type": ["string", "null"] },
+    "nome": { "type": "string", "minLength": 1 },
+    "telefone": { "type": "string", "minLength": 6 },
+    "email": { "type": ["string", "null"] },
+    "cidade": { "type": ["string", "null"] },
+    "uf": { "type": ["string", "null"], "maxLength": 2 },
+    "vidas": { "type": ["integer", "null"], "minimum": 0 },
+    "tipo_plano": { "type": ["string", "null"] },
+    "origem": { "type": "string", "minLength": 1 },
+    "canal": { "type": "string", "minLength": 1 },
+    "tag_origem": { "type": ["string", "null"] },
+    "pagina_origem": { "type": ["string", "null"] },
+    "referrer": { "type": ["string", "null"] },
+    "consentimento_lgpd": { "type": "boolean" },
+    "captured_at": { "type": ["string", "null"], "format": "date-time" },
+    "attribution": {
+      "type": "object",
+      "properties": {
+        "utm_source": { "type": ["string", "null"] },
+        "utm_medium": { "type": ["string", "null"] },
+        "utm_campaign": { "type": ["string", "null"] },
+        "utm_content": { "type": ["string", "null"] },
+        "utm_term": { "type": ["string", "null"] },
+        "fbclid": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
