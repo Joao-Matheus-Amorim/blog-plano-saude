@@ -1,52 +1,32 @@
-# Radar V2 no admin do blog-plano-saude
+# Radar V2 no admin — legado de transição
 
-Este documento descreve a expansão do `/admin/radar` para receber o Radarplan Motor V2.
+Status: compatibilidade temporária.
 
-## Regras principais
+A arquitetura final não mantém o Radar dentro do site. As responsabilidades oficiais são:
 
-- Prospecto público não é lead.
-- Lead real só nasce no CRM quando o admin converte manualmente.
-- Nada é descartado pelo motor. Prospectos frios ficam catalogados com `revisitar_em`.
-- Novas features continuam dentro de `/api/radar.js`, usando `action`, para respeitar o limite de Serverless Functions da Vercel Hobby.
+- `radarplan`: inteligência, prospecção, score e evidências;
+- `og-crm`: operação, revisão, conversão em lead e feedback comercial;
+- `blog-plano-saude`: aquisição pública e conteúdo.
 
-## Campos V2
+O código atual ainda mantém `/admin/radar` e `/api/radar` para não interromper a operação antes da criação do OG CRM.
 
-A tabela `radar_prospect` passa a aceitar:
+## Regras durante a migração
 
-- Dados CNPJ: `cnpj`, `cnae_codigo`, `cnae_descricao`, `porte_receita`, `capital_social`, `data_abertura`.
-- Dados de intenção: `tem_vaga_ativa`, `vaga_titulo`, `vaga_dias`, `tem_post_cresc`, `post_cresc_texto`, `tem_filial_nova`.
-- Score detalhado: `score_d1`, `score_d2`, `score_d3`, `score_d4`, `score_d5`, `score_d6`.
-- Classificação: `nivel_maturidade`, `nivel_label`, `revisitar_em`.
-- Operação: `cadencia_dia`, `cadencia_canal`, `ultimo_contato_em`, `proximo_contato_em`.
-- Memória: `historico_score`, `fontes`.
+- prospecto não é lead;
+- conversão deve continuar explícita;
+- fingerprint, score, fonte e evidências devem ser preservados;
+- correções de bug e segurança continuam permitidas;
+- novas funções operacionais do Radar devem nascer no OG CRM;
+- este módulo só pode ser removido depois de paridade funcional comprovada.
 
-O campo legado `score` continua existindo e deve receber `score_total`.
+## Contrato
 
-## Fila operacional
+O formato compartilhado oficial está em `CONTRATOS_INTEGRACAO.md`, versão `og-contracts/1.0`.
 
-O painel deve destacar:
+Hoje a ponte existente continua sendo `/api/radar`.
 
-- Quente agora.
-- Preparar.
-- Monitorar.
-- Pipeline frio.
-- Catalogado.
-- Revisitar hoje.
-- Sinal novo.
-- Sem contato.
+No destino final, RadarPlan envia prospectos ao OG CRM e o CRM devolve feedback de resultado ao RadarPlan.
 
-## Conversão
+## Critério de remoção
 
-A conversão continua chamando:
-
-```text
-POST /api/radar?action=convert
-```
-
-A conversão insere lead com:
-
-- `origem = Radarplan B2B`
-- `tag_origem = radar_b2b`
-- `canal = Radar B2B`
-- `tipo_plano = Empresarial`
-- `consentimento_lgpd = false`
+Só retirar `/admin/radar` quando o OG CRM tiver listagem, filtros, score, maturidade, evidências, revisão, conversão Radar -> lead, vínculo persistente e autenticação interna funcionando ponta a ponta.
