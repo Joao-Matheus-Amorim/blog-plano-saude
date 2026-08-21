@@ -2,19 +2,31 @@
 
 Autoridade: **ROSS Multi-Project CI**  
 Branch executada: `main`  
-SHA observado: `1369cea6b934d75f8b999c7833b41fd13890639d`
+SHA validado: `1369cea6b934d75f8b999c7833b41fd13890639d`
 
-## Execução de 2026-08-21
+## Execução validada em 2026-08-21
 
 | Etapa | Resultado |
 |---|---|
 | clone/reset | PASS |
-| `npm ci --ignore-scripts --no-audit --no-fund` | FAIL — exit 226 |
-| lint | NÃO EXECUTADO |
-| build | NÃO EXECUTADO |
-| resultado geral | FAIL |
+| `npm ci --ignore-scripts --no-audit --no-fund` | PASS |
+| `npm run lint` | PASS |
+| `npm run build` | PASS |
+| resultado geral ROSS | PASS |
 
-Erro determinante:
+Tempos observados:
+
+```text
+npm ci  19.068s
+lint     4.579s
+build   11.508s
+```
+
+O `prebuild` confirmou as `12/12` Vercel serverless functions esperadas antes do Vite build.
+
+## Incidente anterior do runner
+
+A execução anterior falhou antes dos gates com:
 
 ```text
 npm error code EROFS
@@ -22,37 +34,48 @@ npm error path /home/ross/.npm/_cacache/tmp/...
 npm error rofs EROFS: read-only file system
 ```
 
-## Classificação
+A causa foi classificada corretamente como **infraestrutura do ROSS**, não falha do Blog. O runner mantém `/home/ross` read-only por hardening e o npm tentava usar `$HOME/.npm` como cache.
 
-**Falha de infraestrutura do ROSS antes dos gates do projeto.**
+A correção preservou o hardening:
 
-O serviço ROSS deliberadamente mantém `/home/ross` read-only. O npm, sem configuração adicional, tenta usar `$HOME/.npm` como cache e logs. A solução correta é apontar o cache do npm para uma área de runtime gravável sob `/srv/ross/ci/tmp`; não liberar escrita geral no home e não desativar o hardening do serviço.
+- `ProtectHome=read-only` continua válido;
+- caches npm/pip/XDG foram direcionados para `/srv/ross/ci/tmp`;
+- clones passam por limpeza incluindo artefatos ignorados de execução anterior;
+- nenhuma permissão ampla no home foi adicionada.
 
-Warnings de pacotes deprecated e erros de limpeza de `node_modules` apareceram na mesma execução, mas não são a causa final registrada do exit 226. Eles serão avaliados depois que o setup for reproduzível.
+A nova execução comprovou que o setup reproduzível funciona e que lint/build estão verdes.
 
-## Critério para próxima rodada
+## Warnings de dependência
 
-A próxima execução só poderá ser marcada como sucesso quando observar:
+O npm ainda reportou pacotes deprecated, incluindo referências a `rimraf@3`, `glob@7`, `eslint@8` e dependências do ecossistema ESLint.
 
-```text
-npm ci exit=0
-lint exit=0
-build exit=0
-ROSS status=pass
-```
+Esses warnings:
 
-Se `npm ci` passar e um gate posterior falhar, a causa passa a ser analisada como falha do projeto naquele gate. Antes disso, não inferir resultado de lint/build.
+- não causaram o exit anterior;
+- não impediram `npm ci` atual;
+- não impediram lint;
+- não impediram build;
+- devem ser tratados como dívida de manutenção em mudança separada, com revalidação.
 
-## Correção de infraestrutura esperada
+## Limite da evidência
 
-Sem enfraquecer `ProtectHome=read-only`, o runner deve fornecer cache gravável por projeto, por exemplo conceitualmente:
+O PASS atual prova:
 
-```text
-npm_config_cache=/srv/ross/ci/tmp/npm-cache/blog-plano-saude
-```
+- instalação reproduzível pelo lockfile;
+- lint sem warnings aceitos pelo script configurado;
+- execução do guard de Vercel Functions;
+- build Vite de produção.
 
-Também é recomendável aplicar política equivalente ao cache do pip para projetos Python, evitando warnings de cache em `/home/ross/.cache`.
+Ele **não prova por si só**:
+
+- E2E das rotas serverless;
+- integração real com banco;
+- entrega Blog → OG CRM;
+- comportamento de produção;
+- contratos cross-repo.
+
+Esses itens precisam de gates específicos antes de serem declarados PASS.
 
 ## Produção
 
-Esta documentação foi preparada numa branch dedicada. A atualização documental não autoriza merge/deploy produtivo e não altera o resultado histórico da execução em `main`.
+A documentação canônica está sendo preparada na branch `docs/ross-validation-20260821`. O PASS registrado pertence ao SHA da `main` executado pelo worker. A branch documental não autoriza merge/deploy produtivo.
