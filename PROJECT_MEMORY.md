@@ -3,7 +3,7 @@
 Repositório: `blog-plano-saude`  
 Papel no ecossistema: **aquisição pública, SEO, conteúdo, simulador/formulários, atribuição e origem do lead**  
 Autoridade de validação técnica do worker: **ROSS Multi-Project CI**  
-Estado em 2026-08-21: **a última execução ROSS falhou na etapa de setup por infraestrutura de cache npm read-only; nenhum gate de lint/build foi executado nessa rodada.**
+Estado em 2026-08-21: **main validada no ROSS no SHA `1369cea6b934d75f8b999c7833b41fd13890639d`: npm ci PASS, lint PASS, build PASS.**
 
 ## 1. Missão
 
@@ -82,47 +82,41 @@ A integração deve compartilhar dados/contratos. Browser público não recebe c
 
 ## 6. ROSS
 
-Configuração observada da rodada de 2026-08-21:
+Execução validada em 2026-08-21:
 
 ```text
-setup:
-  npm ci --ignore-scripts --no-audit --no-fund
+branch: main
+sha: 1369cea6b934d75f8b999c7833b41fd13890639d
 
-gates planejados:
-  lint
-  build
+npm ci --ignore-scripts --no-audit --no-fund    PASS
+npm run lint                                     PASS
+npm run build                                    PASS
+ROSS status                                      PASS
 ```
 
-Resultado observado:
+O prebuild também confirmou `12/12` Vercel serverless functions esperadas antes do Vite build.
 
-```text
-npm ci = FAIL exit 226
-motivo = EROFS ao escrever /home/ross/.npm/_cacache
-lint = NÃO EXECUTADO
-build = NÃO EXECUTADO
-```
+A falha anterior de setup (`EROFS` em `/home/ross/.npm/_cacache`) era de infraestrutura do runner. Foi resolvida mantendo `ProtectHome=read-only` e redirecionando caches para `/srv/ross/ci/tmp`; nenhuma permissão ampla no home foi liberada.
 
-Isso é uma falha de infraestrutura do runner, porque o serviço ROSS protege `/home/ross` como read-only. O cache npm deve ser redirecionado para uma área gravável sob `/srv/ross/ci/tmp`.
-
-Até a correção e nova execução, o projeto não pode ser descrito como PASS nem como FAIL de build.
+Warnings de dependências deprecated permaneceram na instalação, mas **não foram a causa de falha** e não impediram lint/build. São dívida de manutenção separada.
 
 ## 7. Regras de validação
 
 - PASS só depois de execução real;
 - SKIP/não executado nunca vira PASS;
 - setup quebrado bloqueia os gates seguintes;
-- warnings de dependência não são automaticamente FAIL, mas devem ser registrados como dívida quando relevantes;
-- `npm ci` deve usar lockfile existente; não regenerar dependências implicitamente no CI;
-- correção do runner deve ser genérica e não enfraquecer o sandbox.
+- warnings de dependência não são automaticamente FAIL;
+- `npm ci` usa lockfile existente;
+- novo SHA precisa de nova evidência quando a certificação for exigida por SHA exato;
+- correções do runner devem preservar o hardening.
 
 ## 8. Débitos atuais
 
-1. Corrigir cache npm do ROSS para usar `/srv/ross/ci/tmp` sem liberar escrita em `/home/ross`.
-2. Reexecutar `npm ci`, lint e build no worker.
-3. Revisar dependências obsoletas sinalizadas pelo npm (`eslint@8`, `rimraf@3`, `glob@7`, etc.) separadamente; warning não deve ser confundido com a causa do EROFS.
-4. Definir contrato formal de entrega de lead para OG CRM e preservar origem/atribuição.
-5. Planejar retirada do admin comercial legado somente após paridade comprovada do OG CRM.
-6. Consolidar documentação de deploy/ambientes para não confundir Preview com Production.
+1. Revisar dependências obsoletas sinalizadas pelo npm (`eslint@8`, `rimraf@3`, `glob@7`, etc.) em mudança própria e com revalidação.
+2. Definir contrato formal de entrega de lead para OG CRM e preservar origem/atribuição.
+3. Planejar retirada do admin comercial legado somente após paridade comprovada do OG CRM.
+4. Consolidar documentação de deploy/ambientes para não confundir Preview com Production.
+5. Ampliar o ROSS além de lint/build para smoke determinístico das rotas serverless críticas sem depender de produção.
 
 ## 9. Ordem de autoridade documental
 
