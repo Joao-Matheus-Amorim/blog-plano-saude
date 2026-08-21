@@ -55,17 +55,26 @@ npm run preview
 
 ## Estado ROSS — 2026-08-21
 
-A última rodada observada na `main` **não chegou aos gates de lint/build**. O setup `npm ci` terminou com `EROFS` porque o npm tentou escrever seu cache em `/home/ross/.npm`, enquanto o serviço ROSS mantém o home read-only por hardening.
-
-Portanto o estado factual é:
+A `main` foi validada no worker no SHA:
 
 ```text
-npm ci = FAIL por infraestrutura do runner
-lint = NÃO EXECUTADO
-build = NÃO EXECUTADO
+1369cea6b934d75f8b999c7833b41fd13890639d
 ```
 
-A correção correta é redirecionar cache/log temporário do npm para `/srv/ross/ci/tmp`, sem liberar escrita geral em `/home/ross`. Depois disso o projeto precisa ser reexecutado no ROSS antes de qualquer afirmação de PASS.
+Resultado observado:
+
+```text
+npm ci = PASS
+lint = PASS
+build = PASS
+ROSS = PASS
+```
+
+O prebuild confirmou `12/12` Vercel serverless functions esperadas antes do build.
+
+A falha anterior de `EROFS` em `/home/ross/.npm` era de infraestrutura do runner e foi corrigida sem enfraquecer `ProtectHome=read-only`; os caches agora ficam em área gravável do ROSS.
+
+Warnings de dependências deprecated ainda existem e devem ser tratados em manutenção própria, mas não impediram a instalação, lint ou build atuais.
 
 ## Segurança e dados
 
@@ -80,6 +89,8 @@ A correção correta é redirecionar cache/log temporário do npm para `/srv/ros
 ## Deploy
 
 O projeto possui integração com Vercel. Mudanças em `main` podem ter efeito de deploy conforme a configuração externa vigente; por isso documentação/correções devem respeitar separação Preview/Production e autorização de produção.
+
+O PASS do ROSS não é autorização automática para promoção produtiva nem prova de E2E das Functions.
 
 ## Contato
 
