@@ -1,56 +1,87 @@
-# Maisa Valentim — Consultoria de Planos de Saúde
+# Maisa Valentim — OG Plano Saúde / blog-plano-saude
 
 Site institucional e blog da corretora **Maisa Valentim**, especializada em planos de saúde no Rio de Janeiro. Desenvolvido com React + Vite e hospedado na Vercel.
 
-## 📌 Sobre o Projeto
+> Estado técnico/ownership: `PROJECT_MEMORY.md`. Evidência ROSS: `docs/ROSS_VALIDATION.md`.
 
-Plataforma completa de captacão e conversão de leads para venda de planos de saúde. Inclui simulador de cotacão, blog informativo, página de operadoras, depoimentos e painel administrativo.
+## Papel no ecossistema
 
-## ✨ Funcionalidades
+Este repositório é a frente pública de **aquisição, SEO, conteúdo, simulador/formulários e atribuição de origem**.
 
-- **Simulador de Cotacão** — Captura leads com nome, email e WhatsApp antes de mostrar o resultado
-- **Blog** — Artigos educativos para SEO e nutricão de leads
-- **Página de Operadoras** — Bradesco, Unimed, SulAmérica, Amil, Notre Dame
-- **Depoimentos** — Prova social de clientes
-- **FAQ** — Dúvidas frequentes
-- **Formulario de Contato** — Integrado via API serverless com Neon
-- **Painel Admin** — Gestão de leads e posts
-- **Popup de Saída** — Recuperacão de visitantes
-- **WhatsApp Flutuante** — CTA permanente em todas as páginas
+O fluxo comercial interno está sendo separado para o **OG CRM**. O painel/admin de leads existente continua como legado de transição até paridade e cutover comprovados; não deve ser removido por big-bang.
 
-## 🛠️ Tecnologias
+O **RadarPlan** permanece responsável por prospecção/inteligência/scoring público. O Blog/OG Plano Saúde não deve duplicar esse ownership.
+
+## Funcionalidades atuais
+
+- **Simulador de Cotação** — captura demanda pública antes de exibir o fluxo/resultados previstos pela aplicação.
+- **Blog** — artigos educativos para SEO e nutrição.
+- **Página de Operadoras** — conteúdo institucional/comercial.
+- **Depoimentos** — prova social.
+- **FAQ** — dúvidas frequentes.
+- **Formulário de Contato** — integração server-side.
+- **Painel Admin** — legado atual para gestão de leads/posts durante a transição para OG CRM.
+- **Popup de Saída** — recuperação de visitantes.
+- **WhatsApp Flutuante** — CTA público.
+
+## Tecnologias
 
 | Tecnologia | Uso |
 |---|---|
 | React 18 + Vite 5 | Frontend |
-| React Router DOM v6 | Navegacão SPA |
-| Framer Motion | Animacões |
-| Neon + Vercel Functions | Backend / Banco de dados |
+| React Router DOM v6 | Navegação SPA |
+| Framer Motion | Animações |
+| Neon + Vercel Functions | Backend / banco server-side |
 | React Helmet Async | SEO dinâmico |
 | Google Analytics | Rastreamento |
 | Vercel | Deploy |
 
-## 🚀 Instalacão e Uso
+## Instalação e uso
+
+Em CI/ROSS, usar o lockfile de forma reproduzível:
 
 ```bash
-# Instalar dependências
+npm ci --ignore-scripts --no-audit --no-fund
+```
+
+Para desenvolvimento local:
+
+```bash
 npm install
-
-# Rodar em desenvolvimento
 npm run dev
-
-# Build para producão
 npm run build
-
-# Preview do build
 npm run preview
 ```
 
-## 🌍 Deploy
+## Estado ROSS — 2026-08-21
 
-O projeto está configurado para deploy automático na Vercel via `vercel.json`.
+A última rodada observada na `main` **não chegou aos gates de lint/build**. O setup `npm ci` terminou com `EROFS` porque o npm tentou escrever seu cache em `/home/ross/.npm`, enquanto o serviço ROSS mantém o home read-only por hardening.
 
-## 📞 Contato
+Portanto o estado factual é:
+
+```text
+npm ci = FAIL por infraestrutura do runner
+lint = NÃO EXECUTADO
+build = NÃO EXECUTADO
+```
+
+A correção correta é redirecionar cache/log temporário do npm para `/srv/ross/ci/tmp`, sem liberar escrita geral em `/home/ross`. Depois disso o projeto precisa ser reexecutado no ROSS antes de qualquer afirmação de PASS.
+
+## Segurança e dados
+
+- banco e segredos somente no servidor;
+- não expor credenciais em `VITE_*`;
+- coletar apenas dados necessários ao objetivo comercial;
+- preservar origem/UTM;
+- não introduzir dados clínicos/sensíveis de saúde no MVP de aquisição;
+- lead não pode ser perdido silenciosamente em falha de integração;
+- operação comercial pós-captura deve migrar de forma controlada para OG CRM.
+
+## Deploy
+
+O projeto possui integração com Vercel. Mudanças em `main` podem ter efeito de deploy conforme a configuração externa vigente; por isso documentação/correções devem respeitar separação Preview/Production e autorização de produção.
+
+## Contato
 
 - **WhatsApp:** [(21) 97747-2141](https://wa.me/5521977472141)
 - **Instagram:** [@planosdesaudemaisavalentim](https://www.instagram.com/planosdesaudemaisavalentim/)
