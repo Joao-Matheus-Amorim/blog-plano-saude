@@ -26,12 +26,31 @@
     },
     {
       "name": "TRI contract lock",
-      "command": "cd contracts/tri-contracts-1.0 && printf '%s  %s\\n%s  %s\\n' 'ee28b65e7ab628ff44aa8c054be361dcadca225104dd2ad6c72fb42e93ef6cd2' 'tri.lead.created.v1.schema.json' 'b5377a3791d9f4a813399700b0753febc7e26f6767be159f30bec872f4d24bdb' 'tri.prospect.upserted.v1.schema.json' | sha256sum -c -"
+      "command": "cd contracts/tri-contracts-1.0 && printf '%s  %s\\n%s  %s\\n' 'ee28b65e7ab628ff44aa8c054be361dcadca225104dd2ad6c72fb42e93ef6cd2' 'tri.lead.created.v1.schema.json' 'b5377a3791d9f4a813399700b0753febc7e26f6767be159f30bec872f4d24bdb' 'tri.prospect.upserted.v1.schema.json' | sha256sum -c -",
+      "timeout_seconds": 300
     }
   ],
+  "security": {
+    "commands": [
+      {
+        "name": "TRI Blog security boundary",
+        "command": "node scripts/tri-security-check.mjs",
+        "timeout_seconds": 300
+      }
+    ]
+  },
+  "evidence": {
+    "commands": [
+      {
+        "name": "TRI Blog certified baseline provenance",
+        "command": "node scripts/tri-evidence-check.mjs",
+        "timeout_seconds": 300
+      }
+    ]
+  },
   "policy": {
     "require_same_sha": true,
     "fail_on_skip": true,
-    "required_phases": ["local"]
+    "required_phases": ["local", "security", "evidence"]
   }
 }
