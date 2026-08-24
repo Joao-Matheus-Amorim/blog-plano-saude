@@ -2,6 +2,7 @@ export async function ensureLeadTable(sql) {
   await sql`
     CREATE TABLE IF NOT EXISTS lead (
       id SERIAL PRIMARY KEY,
+      tri_external_id TEXT,
       nome TEXT NOT NULL,
       email TEXT,
       telefone TEXT,
@@ -25,6 +26,7 @@ export async function ensureLeadTable(sql) {
     )
   `;
 
+  await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS tri_external_id TEXT`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS nome TEXT`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS email TEXT`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS telefone TEXT`;
@@ -45,4 +47,10 @@ export async function ensureLeadTable(sql) {
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS referrer TEXT`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS score INTEGER DEFAULT 0`;
   await sql`ALTER TABLE lead ADD COLUMN IF NOT EXISTS consentimento_lgpd BOOLEAN DEFAULT FALSE`;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS lead_tri_external_id_uidx
+    ON lead (tri_external_id)
+    WHERE tri_external_id IS NOT NULL
+  `;
 }
