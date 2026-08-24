@@ -1,0 +1,32 @@
+{
+  "schema": "ross-project/1",
+  "display_name": "Blog Plano Saude",
+  "setup": [
+    {
+      "name": "npm clean install",
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "timeout_seconds": 1200
+    }
+  ],
+  "local": [
+    {
+      "name": "eslint",
+      "command": "npm run lint",
+      "timeout_seconds": 600
+    },
+    {
+      "name": "production build",
+      "command": "npm run build",
+      "timeout_seconds": 900
+    },
+    {
+      "name": "TRI contract lock",
+      "command": "cd contracts/tri-contracts-1.0 && printf '%s  %s\\n%s  %s\\n' 'ee28b65e7ab628ff44aa8c054be361dcadca225104dd2ad6c72fb42e93ef6cd2' 'tri.lead.created.v1.schema.json' 'b5377a3791d9f4a813399700b0753febc7e26f6767be159f30bec872f4d24bdb' 'tri.prospect.upserted.v1.schema.json' | sha256sum -c -"
+    }
+  ],
+  "policy": {
+    "require_same_sha": true,
+    "fail_on_skip": true,
+    "required_phases": ["local"]
+  }
+}
