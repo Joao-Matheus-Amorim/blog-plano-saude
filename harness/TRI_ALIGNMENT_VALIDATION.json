@@ -1,0 +1,23 @@
+{
+  "schema": "tri-component-evidence/1.0",
+  "project": "blog-plano-saude",
+  "release_id": "TRI-RC-2026-08-24-01",
+  "certification_scope": "preview-integration",
+  "validated_functional_sha": "f5f85f7ed5eed8947b5247b70ba24a28afa84fb5",
+  "bundle_result": "/srv/ross/ci/results/tri-bundle-20260824T190754620Z.json",
+  "bundle_result_sha256": "8478ecee6a9d72c6870ca04ea26ac79efd9a7de0682a4e55303bb47da303e35d",
+  "bundle_certificate": "/srv/ross/ci/results/tri-bundle-TRI-RC-2026-08-24-01-20260824T190754635Z.cert.json",
+  "bundle_certificate_sha256": "ce080e003c4753e583770e5d3df17fc2697a4407d978c7bd1e37c963d25cdf70",
+  "bundle_fail": 0,
+  "bundle_skip": 0,
+  "status": "pass",
+  "production_authorized": false,
+  "allowed_post_validation_paths": [
+    ".ross/ci.json",
+    "PROJECT_MEMORY.md",
+    "SECURITY_MODEL.md",
+    "scripts/tri-security-check.mjs",
+    "scripts/tri-evidence-check.mjs",
+    "harness/TRI_ALIGNMENT_VALIDATION.json"
+  ]
+}
