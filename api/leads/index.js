@@ -7,6 +7,8 @@ import {
   createOutboxInsertQuery,
   drainTriOutbox,
   ensureTriOutboxTable,
+  listDeadTriEvents,
+  requeueDeadTriEvents,
   secureSecretEqual,
 } from '../_lib/tri-outbox.js';
 
@@ -87,13 +89,36 @@ function drainAuthorized(req) {
   return secureSecretEqual(direct || bearer, configured);
 }
 
-async function handleTriDrain(req, res) {
+function parseBody(req) {
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch { body = {}; }
+  }
+  if (Buffer.isBuffer(body)) {
+    try { body = JSON.parse(body.toString('utf8')); } catch { body = {}; }
+  }
+  return body && typeof body === 'object' && !Array.isArray(body) ? body : {};
+}
+
+async function handleTriOps(req, res) {
   if (!drainAuthorized(req)) {
     return res.status(401).json({ error: 'Não autorizado' });
   }
   try {
     const sql = getSqlClient();
     await ensureTriOutboxTable(sql);
+    const action = String(req.query?.action || 'tri-drain');
+
+    if (action === 'tri-dead-list') {
+      const rows = await listDeadTriEvents(sql, { limit: 100 });
+      return res.status(200).json({ ok: true, dead_letters: rows });
+    }
+
+    if (action === 'tri-requeue-dead') {
+      const rows = await requeueDeadTriEvents(sql, parseBody(req).event_ids);
+      return res.status(200).json({ ok: true, requeued: rows.map((row) => row.event_id) });
+    }
+
     const deliveries = await drainTriOutbox(sql, { limit: 10 });
     return res.status(200).json({
       ok: true,
@@ -102,7 +127,7 @@ async function handleTriDrain(req, res) {
       failed: deliveries.filter((item) => !item?.ok).length,
     });
   } catch (error) {
-    console.error('tri-outbox-drain-failed', { message: error?.message || 'unknown' });
+    console.error('tri-outbox-operation-failed', { message: error?.message || 'unknown' });
     return res.status(500).json({ ok: false, error: 'Falha ao processar outbox TRI' });
   }
 }
@@ -229,21 +254,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  if (String(req.query?.action || '') === 'tri-drain') {
-    return handleTriDrain(req, res);
+  const triAction = String(req.query?.action || '');
+  if (['tri-drain', 'tri-dead-list', 'tri-requeue-dead'].includes(triAction)) {
+    return handleTriOps(req, res);
   }
 
   if (!rateLimit(req, res, { keyPrefix: 'lead-create', windowMs: 60_000, max: 12 })) {
     return;
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
-  }
-  if (Buffer.isBuffer(body)) {
-    try { body = JSON.parse(body.toString('utf8')); } catch { body = {}; }
-  }
+  const body = parseBody(req);
 
   const {
     nome, name,
@@ -298,6 +318,10 @@ export default async function handler(req, res) {
 
   if (!telefoneFinal) {
     return res.status(400).json({ error: 'Informe seu WhatsApp para continuar.' });
+  }
+
+  if (telefoneFinal.length < 6) {
+    return res.status(400).json({ error: 'Informe um WhatsApp válido para continuar.' });
   }
 
   const triExternalId = crypto.randomUUID();
