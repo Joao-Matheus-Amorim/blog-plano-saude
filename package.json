@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/guard-vercel-functions.js",
+    "prebuild": "node scripts/guard-vercel-functions.js && npm run test:tri && npm run lint",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
