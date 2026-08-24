@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tri-contracts/1.0/tri.prospect.upserted.v1",
+  "title": "TRI Prospect Upserted v1",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "event_type",
+    "event_id",
+    "source_system",
+    "occurred_at",
+    "prospect"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "tri-contracts/1.0"
+    },
+    "event_type": {
+      "const": "tri.prospect.upserted.v1"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 160
+    },
+    "source_system": {
+      "const": "radarplan"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prospect": {
+      "type": "object",
+      "required": [
+        "fingerprint",
+        "company_name",
+        "score",
+        "priority",
+        "maturity_level",
+        "maturity_label"
+      ],
+      "properties": {
+        "fingerprint": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 160
+        },
+        "company_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "segment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z]{2}$"
+        },
+        "public_phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 32
+        },
+        "whatsapp": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 32
+        },
+        "public_email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 254
+        },
+        "website": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        },
+        "cnpj": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 32
+        },
+        "cnae_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 32
+        },
+        "cnae_description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "company_size": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "commercial_profile": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "opportunity_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "baixa",
+            "media",
+            "alta",
+            "critica"
+          ]
+        },
+        "maturity_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "maturity_label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "score_reasons": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "approach": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "next_action": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {}
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "flags": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "market_context": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
