@@ -1,0 +1,11 @@
+{
+  "contract_version": "tri-contracts/1.0",
+  "schemas": {
+    "tri.lead.created.v1.schema.json": {
+      "sha256": "ee28b65e7ab628ff44aa8c054be361dcadca225104dd2ad6c72fb42e93ef6cd2"
+    },
+    "tri.prospect.upserted.v1.schema.json": {
+      "sha256": "b5377a3791d9f4a813399700b0753febc7e26f6767be159f30bec872f4d24bdb"
+    }
+  }
+}
