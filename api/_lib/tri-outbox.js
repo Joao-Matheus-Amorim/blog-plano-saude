@@ -37,14 +37,27 @@ export function signTriEvent({ secret, timestamp, eventId, payload }) {
     .digest('hex');
 }
 
-function nullableText(value) {
+function boundedText(value, maxLength, { required = false, minLength = 1 } = {}) {
   const text = String(value ?? '').trim();
-  return text || null;
+  if (!text) {
+    if (required) throw new Error('TRI required field is empty');
+    return null;
+  }
+  const bounded = text.slice(0, maxLength);
+  if (bounded.length < minLength) {
+    if (required) throw new Error('TRI required field is shorter than contract minimum');
+    return null;
+  }
+  return bounded;
 }
 
 function normalizeState(value) {
-  const text = nullableText(value);
-  return text ? text.toUpperCase() : null;
+  const raw = String(value ?? '').trim().toUpperCase();
+  return /^[A-Z]{2}$/.test(raw) ? raw : null;
+}
+
+function normalizeLives(value) {
+  return Number.isInteger(value) && value >= 0 && value <= 10000 ? value : null;
 }
 
 export function buildTriLeadEvent({
@@ -60,7 +73,10 @@ export function buildTriLeadEvent({
   consentLgpd,
   attribution = {},
 }) {
-  const eventId = `blog-lead-${externalId}`;
+  const normalizedExternalId = boundedText(externalId, 160, { required: true });
+  const eventId = `blog-lead-${normalizedExternalId}`;
+  if (eventId.length > 160) throw new Error('TRI event_id exceeds contract maximum');
+
   return {
     contract_version: TRI_CONTRACT_VERSION,
     event_type: TRI_LEAD_EVENT,
@@ -68,29 +84,29 @@ export function buildTriLeadEvent({
     source_system: TRI_SOURCE_SYSTEM,
     occurred_at: new Date(occurredAt).toISOString(),
     lead: {
-      external_id: String(externalId),
-      name: String(name).trim(),
-      phone: String(phone).trim(),
-      email: nullableText(email),
-      city: nullableText(city),
+      external_id: normalizedExternalId,
+      name: boundedText(name, 120, { required: true }),
+      phone: boundedText(phone, 32, { required: true, minLength: 6 }),
+      email: boundedText(email, 254),
+      city: boundedText(city, 80),
       state: normalizeState(state),
-      lives: Number.isInteger(lives) ? lives : null,
+      lives: normalizeLives(lives),
       interest_profile: null,
-      plan_type: nullableText(planType),
+      plan_type: boundedText(planType, 120),
       consent_lgpd: Boolean(consentLgpd),
     },
     attribution: {
-      origin: nullableText(attribution.origin),
-      channel: nullableText(attribution.channel),
-      page: nullableText(attribution.page),
-      referrer: nullableText(attribution.referrer),
-      utm_source: nullableText(attribution.utm_source),
-      utm_medium: nullableText(attribution.utm_medium),
-      utm_campaign: nullableText(attribution.utm_campaign),
-      utm_content: nullableText(attribution.utm_content),
-      utm_term: nullableText(attribution.utm_term),
-      fbclid: nullableText(attribution.fbclid),
-      gclid: nullableText(attribution.gclid),
+      origin: boundedText(attribution.origin, 120),
+      channel: boundedText(attribution.channel, 120),
+      page: boundedText(attribution.page, 500),
+      referrer: boundedText(attribution.referrer, 1000),
+      utm_source: boundedText(attribution.utm_source, 250),
+      utm_medium: boundedText(attribution.utm_medium, 250),
+      utm_campaign: boundedText(attribution.utm_campaign, 250),
+      utm_content: boundedText(attribution.utm_content, 250),
+      utm_term: boundedText(attribution.utm_term, 250),
+      fbclid: boundedText(attribution.fbclid, 500),
+      gclid: boundedText(attribution.gclid, 500),
     },
   };
 }
