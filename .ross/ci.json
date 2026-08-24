@@ -10,6 +10,11 @@
   ],
   "local": [
     {
+      "name": "TRI outbox invariants",
+      "command": "npm run test:tri",
+      "timeout_seconds": 300
+    },
+    {
       "name": "eslint",
       "command": "npm run lint",
       "timeout_seconds": 600
