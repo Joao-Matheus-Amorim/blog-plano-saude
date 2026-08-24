@@ -7,6 +7,7 @@ import {
   createOutboxInsertQuery,
   drainTriOutbox,
   ensureTriOutboxTable,
+  secureSecretEqual,
 } from '../_lib/tri-outbox.js';
 
 function getSqlClient() {
@@ -64,6 +65,46 @@ function asScore(value) {
   const score = Number(value);
   if (!Number.isFinite(score)) return 0;
   return Math.max(0, Math.min(Math.round(score), 100));
+}
+
+function headerValue(req, name) {
+  const wanted = String(name).toLowerCase();
+  for (const [key, value] of Object.entries(req.headers || {})) {
+    if (String(key).toLowerCase() !== wanted) continue;
+    return Array.isArray(value) ? String(value[0] || '') : String(value || '');
+  }
+  return '';
+}
+
+function drainAuthorized(req) {
+  const configured = String(process.env.TRI_OUTBOX_DRAIN_SECRET || '');
+  if (configured.length < 32) return false;
+  const direct = headerValue(req, 'x-tri-drain-secret');
+  const authorization = headerValue(req, 'authorization');
+  const bearer = authorization.toLowerCase().startsWith('bearer ')
+    ? authorization.slice(7).trim()
+    : '';
+  return secureSecretEqual(direct || bearer, configured);
+}
+
+async function handleTriDrain(req, res) {
+  if (!drainAuthorized(req)) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  try {
+    const sql = getSqlClient();
+    await ensureTriOutboxTable(sql);
+    const deliveries = await drainTriOutbox(sql, { limit: 10 });
+    return res.status(200).json({
+      ok: true,
+      processed: deliveries.length,
+      delivered: deliveries.filter((item) => item?.ok).length,
+      failed: deliveries.filter((item) => !item?.ok).length,
+    });
+  } catch (error) {
+    console.error('tri-outbox-drain-failed', { message: error?.message || 'unknown' });
+    return res.status(500).json({ ok: false, error: 'Falha ao processar outbox TRI' });
+  }
 }
 
 function calculateFallbackScore({ telefone, cidade, tipo_plano, vidas, tag_origem, canal, mensagem }) {
@@ -130,11 +171,11 @@ async function sendWhatsapp(lead) {
 
   const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&apikey=${encodeURIComponent(apikey)}&text=${text}`;
 
-  const res = await fetch(url);
-  const responseBody = await res.text().catch(() => '');
+  const response = await fetch(url);
+  const responseBody = await response.text().catch(() => '');
 
-  console.log('Callmebot response:', res.status, responseBody);
-  return { ok: res.ok, status: res.status };
+  console.log('Callmebot response:', response.status, responseBody);
+  return { ok: response.ok, status: response.status };
 }
 
 async function sendMetaCapi(lead, eventId) {
@@ -172,20 +213,24 @@ async function sendMetaCapi(lead, eventId) {
 
   const url = `https://graph.facebook.com/v18.0/${encodeURIComponent(pixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
 
-  const res  = await fetch(url, {
+  const response = await fetch(url, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(payload),
   });
 
-  const responseBody = await res.json().catch(() => ({}));
-  console.log('Meta CAPI response:', res.status, JSON.stringify(responseBody));
-  return { ok: res.ok, status: res.status, body: responseBody };
+  const responseBody = await response.json().catch(() => ({}));
+  console.log('Meta CAPI response:', response.status, JSON.stringify(responseBody));
+  return { ok: response.ok, status: response.status, body: responseBody };
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
+  }
+
+  if (String(req.query?.action || '') === 'tri-drain') {
+    return handleTriDrain(req, res);
   }
 
   if (!rateLimit(req, res, { keyPrefix: 'lead-create', windowMs: 60_000, max: 12 })) {
