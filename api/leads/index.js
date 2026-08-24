@@ -2,6 +2,12 @@ import { neon } from '@neondatabase/serverless';
 import crypto from 'crypto';
 import { ensureLeadTable } from '../_lib/leads.js';
 import { rateLimit } from '../_lib/security.js';
+import {
+  buildTriLeadEvent,
+  createOutboxInsertQuery,
+  drainTriOutbox,
+  ensureTriOutboxTable,
+} from '../_lib/tri-outbox.js';
 
 function getSqlClient() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -125,9 +131,9 @@ async function sendWhatsapp(lead) {
   const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&apikey=${encodeURIComponent(apikey)}&text=${text}`;
 
   const res = await fetch(url);
-  const body = await res.text().catch(() => '');
+  const responseBody = await res.text().catch(() => '');
 
-  console.log('Callmebot response:', res.status, body);
+  console.log('Callmebot response:', res.status, responseBody);
   return { ok: res.ok, status: res.status };
 }
 
@@ -172,9 +178,9 @@ async function sendMetaCapi(lead, eventId) {
     body:    JSON.stringify(payload),
   });
 
-  const body = await res.json().catch(() => ({}));
-  console.log('Meta CAPI response:', res.status, JSON.stringify(body));
-  return { ok: res.ok, status: res.status, body };
+  const responseBody = await res.json().catch(() => ({}));
+  console.log('Meta CAPI response:', res.status, JSON.stringify(responseBody));
+  return { ok: res.ok, status: res.status, body: responseBody };
 }
 
 export default async function handler(req, res) {
@@ -212,6 +218,13 @@ export default async function handler(req, res) {
     referrer,
     score,
     consentimento_lgpd,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_content,
+    utm_term,
+    fbclid,
+    gclid,
   } = body || {};
 
   const nomeFinal = asText(nome || name);
@@ -224,7 +237,7 @@ export default async function handler(req, res) {
   const vidasFinal = Number.isFinite(Number(vidas)) ? Number(vidas) : null;
   const eventIdFinal = asNullableText(event_id);
   const cidadeFinal = asNullableText(cidade);
-  const ufFinal = asNullableText(uf);
+  const ufFinal = asNullableText(uf)?.toUpperCase() || null;
   const paginaOrigemFinal = asNullableText(pagina_origem);
   const tagOrigemFinal = asNullableText(tag_origem || origemFinal);
   const canalFinal = asText(canal, 'Orgânico');
@@ -242,17 +255,50 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Informe seu WhatsApp para continuar.' });
   }
 
-  let lead;
-  try {
-    const sql = getSqlClient();
-    await ensureLeadTable(sql);
+  const triExternalId = crypto.randomUUID();
+  const occurredAt = new Date().toISOString();
+  const triPayload = buildTriLeadEvent({
+    externalId: triExternalId,
+    occurredAt,
+    name: nomeFinal,
+    phone: telefoneFinal,
+    email: emailFinal,
+    city: cidadeFinal,
+    state: ufFinal,
+    lives: Number.isInteger(vidasFinal) ? vidasFinal : null,
+    planType: tipoPlanoFinal,
+    consentLgpd: consentimentoFinal,
+    attribution: {
+      origin: origemFinal,
+      channel: canalFinal,
+      page: paginaOrigemFinal,
+      referrer: referrerFinal,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      fbclid,
+      gclid,
+    },
+  });
 
-    const result = await sql`
+  let lead;
+  let outboxQueued = false;
+  let sql;
+  try {
+    sql = getSqlClient();
+    await ensureLeadTable(sql);
+    await ensureTriOutboxTable(sql);
+
+    const leadInsert = sql`
       INSERT INTO lead (
+        tri_external_id,
         nome, email, telefone, operadora, mensagem, vidas, origem, data_envio, status,
         cidade, uf, tipo_plano, pagina_origem, tag_origem, canal, referrer, score, consentimento_lgpd
       )
       VALUES (
+        ${triExternalId},
         ${nomeFinal}, ${emailFinal}, ${telefoneFinal},
         ${operadoraFinal}, ${mensagemFinal}, ${vidasFinal},
         ${origemFinal}, NOW(), 'Novo',
@@ -261,9 +307,13 @@ export default async function handler(req, res) {
       )
       RETURNING *
     `;
-    lead = result[0];
+
+    const outboxInsert = createOutboxInsertQuery(sql, triPayload);
+    const [leadRows, outboxRows] = await sql.transaction([leadInsert, outboxInsert]);
+    lead = leadRows[0];
+    outboxQueued = Boolean(outboxRows[0]);
   } catch (error) {
-    console.error('Erro ao criar lead:', {
+    console.error('Erro ao criar lead/outbox:', {
       message: error?.message,
       code:    error?.code,
       detail:  error?.detail,
@@ -272,10 +322,13 @@ export default async function handler(req, res) {
     return res.status(500).json(getPublicErrorPayload(error));
   }
 
-  const [whatsappResult, metaResult] = await Promise.allSettled([
+  const [whatsappResult, metaResult, triResult] = await Promise.allSettled([
     sendWhatsapp(lead),
     sendMetaCapi(lead, eventIdFinal),
+    drainTriOutbox(sql, { limit: 2 }),
   ]);
+
+  const triDeliveries = triResult.status === 'fulfilled' ? triResult.value : [];
 
   return res.status(200).json({
     success: true,
@@ -283,6 +336,9 @@ export default async function handler(req, res) {
     notifications: {
       whatsapp:  whatsappResult.status === 'fulfilled' ? whatsappResult.value?.ok  : false,
       meta_capi: metaResult.status     === 'fulfilled' ? metaResult.value?.ok      : false,
+      tri_outbox_queued: outboxQueued,
+      tri_delivery_attempted: triDeliveries.length > 0,
+      tri_delivery_ok: triDeliveries.some((item) => item?.ok === true),
     },
   });
 }
