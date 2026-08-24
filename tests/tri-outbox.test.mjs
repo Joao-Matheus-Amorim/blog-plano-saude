@@ -57,6 +57,61 @@ test('lead event is built with canonical contract and stable external id', () =>
   assert.equal(event.attribution.utm_campaign, 'teste');
 });
 
+test('lead event normalizes every contract boundary before enqueue', () => {
+  const event = buildTriLeadEvent({
+    externalId: '8dd41714-1c9a-465b-b06c-9239e9b13f00',
+    occurredAt: '2026-08-24T13:00:00.000Z',
+    name: 'N'.repeat(200),
+    phone: '1'.repeat(50),
+    email: `${'e'.repeat(300)}@example.com`,
+    city: 'C'.repeat(120),
+    state: 'Rio de Janeiro',
+    lives: 10001,
+    planType: 'P'.repeat(200),
+    consentLgpd: false,
+    attribution: {
+      origin: 'O'.repeat(200),
+      channel: 'C'.repeat(200),
+      page: 'P'.repeat(700),
+      referrer: 'R'.repeat(1200),
+      utm_source: 'S'.repeat(300),
+      fbclid: 'F'.repeat(700),
+    },
+  });
+
+  assert.equal(event.lead.name.length, 120);
+  assert.equal(event.lead.phone.length, 32);
+  assert.equal(event.lead.email.length, 254);
+  assert.equal(event.lead.city.length, 80);
+  assert.equal(event.lead.state, null);
+  assert.equal(event.lead.lives, null);
+  assert.equal(event.lead.plan_type.length, 120);
+  assert.equal(event.attribution.origin.length, 120);
+  assert.equal(event.attribution.channel.length, 120);
+  assert.equal(event.attribution.page.length, 500);
+  assert.equal(event.attribution.referrer.length, 1000);
+  assert.equal(event.attribution.utm_source.length, 250);
+  assert.equal(event.attribution.fbclid.length, 500);
+});
+
+test('lead event rejects required values that cannot satisfy the contract', () => {
+  assert.throws(() => buildTriLeadEvent({
+    externalId: '8dd41714-1c9a-465b-b06c-9239e9b13f00',
+    occurredAt: '2026-08-24T13:00:00.000Z',
+    name: '',
+    phone: '21999990000',
+    consentLgpd: true,
+  }));
+
+  assert.throws(() => buildTriLeadEvent({
+    externalId: '8dd41714-1c9a-465b-b06c-9239e9b13f00',
+    occurredAt: '2026-08-24T13:00:00.000Z',
+    name: 'Cliente',
+    phone: '123',
+    consentLgpd: true,
+  }));
+});
+
 test('retry backoff grows and remains capped', () => {
   assert.equal(retryDelaySeconds(1), 15);
   assert.equal(retryDelaySeconds(2), 30);
