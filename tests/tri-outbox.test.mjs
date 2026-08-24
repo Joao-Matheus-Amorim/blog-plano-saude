@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import test from 'node:test';
+import { URL } from 'node:url';
 
 import {
   TRI_CONTRACT_VERSION,
@@ -68,6 +69,14 @@ test('lead capture source keeps lead and outbox in the same Neon transaction', (
   assert.match(source, /createOutboxInsertQuery\(sql, triPayload\)/);
   assert.match(source, /sql\.transaction\(\[leadInsert, outboxInsert\]\)/);
   assert.match(source, /tri_external_id/);
+});
+
+test('recovery drain stays authenticated inside the existing lead function', () => {
+  const source = fs.readFileSync(new URL('../api/leads/index.js', import.meta.url), 'utf8');
+  assert.match(source, /req\.query\?\.action.*tri-drain/);
+  assert.match(source, /TRI_OUTBOX_DRAIN_SECRET/);
+  assert.match(source, /secureSecretEqual/);
+  assert.doesNotMatch(source, /tri_outbox_queued:\s*false/);
 });
 
 test('outbox implements lease recovery and unique event ids', () => {
