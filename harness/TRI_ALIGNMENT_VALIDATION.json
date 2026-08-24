@@ -16,6 +16,7 @@
     ".ross/ci.json",
     "PROJECT_MEMORY.md",
     "SECURITY_MODEL.md",
+    "ECOSYSTEM.md",
     "scripts/tri-security-check.mjs",
     "scripts/tri-evidence-check.mjs",
     "harness/TRI_ALIGNMENT_VALIDATION.json"
