@@ -1,13 +1,12 @@
 #!/usr/bin/env node
-/* eslint-env node */
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const ROOT = path.resolve(path.dirname(new globalThis.URL(import.meta.url).pathname), '..');
 const fail = (message) => {
-  console.error(`TRI_SECURITY_FAIL: ${message}`);
-  process.exit(1);
+  globalThis.console.error(`TRI_SECURITY_FAIL: ${message}`);
+  globalThis.process.exit(1);
 };
 const git = (args) => execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' }).trim();
 
@@ -43,6 +42,6 @@ if (!outbox.includes("createHmac('sha256'")) fail('produtor TRI não fixa HMAC S
 if (!/key\.length\s*<\s*32/.test(outbox)) fail('produtor TRI não preserva mínimo de 32 caracteres para segredo');
 if (!outbox.includes('TRI_BLOG_INGEST_SECRET')) fail('segredo dedicado de ingest TRI não está referenciado pelo produtor');
 
-console.log('TRI_SECURITY_PASS');
-console.log(`tracked_files=${tracked.length}`);
-console.log(`client_files_checked=${clientFiles.length}`);
+globalThis.console.log('TRI_SECURITY_PASS');
+globalThis.console.log(`tracked_files=${tracked.length}`);
+globalThis.console.log(`client_files_checked=${clientFiles.length}`);
