@@ -5,6 +5,7 @@ export const TRI_LEAD_EVENT = 'tri.lead.created.v1';
 export const TRI_SOURCE_SYSTEM = 'blog-plano-saude';
 export const TRI_BLOG_PATH = '/api/integrations/blog/leads';
 export const TRI_DELIVERY_TIMEOUT_MS = 2500;
+export const TRI_MAX_DELIVERY_ATTEMPTS = 10;
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -58,6 +59,11 @@ function normalizeState(value) {
 
 function normalizeLives(value) {
   return Number.isInteger(value) && value >= 0 && value <= 10000 ? value : null;
+}
+
+function boundedEventIds(value) {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.map((item) => String(item || '').trim()).filter(Boolean))].slice(0, 100);
 }
 
 export function buildTriLeadEvent({
@@ -131,11 +137,14 @@ export async function ensureTriOutboxTable(sql) {
       last_error TEXT,
       last_http_status INTEGER,
       delivered_at TIMESTAMPTZ,
+      dead_lettered_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       CONSTRAINT tri_outbox_status_chk CHECK (status IN ('pending', 'processing', 'failed', 'delivered'))
     )
   `;
+
+  await sql`ALTER TABLE tri_outbox ADD COLUMN IF NOT EXISTS dead_lettered_at TIMESTAMPTZ`;
 
   await sql`
     CREATE INDEX IF NOT EXISTS tri_outbox_delivery_idx
@@ -158,13 +167,33 @@ export function createOutboxInsertQuery(sql, payload) {
 }
 
 export async function claimNextTriOutboxEvent(sql) {
+  await sql`
+    UPDATE tri_outbox
+    SET status = 'failed',
+        lease_until = NULL,
+        dead_lettered_at = NOW(),
+        last_error = 'MAX_DELIVERY_ATTEMPTS',
+        updated_at = NOW()
+    WHERE delivered_at IS NULL
+      AND dead_lettered_at IS NULL
+      AND attempt_count >= ${TRI_MAX_DELIVERY_ATTEMPTS}
+      AND (
+        status IN ('pending', 'failed')
+        OR (status = 'processing' AND lease_until IS NOT NULL AND lease_until <= NOW())
+      )
+  `;
+
   const rows = await sql`
     WITH candidate AS (
       SELECT id
       FROM tri_outbox
-      WHERE
-        ((status IN ('pending', 'failed')) AND next_attempt_at <= NOW())
-        OR (status = 'processing' AND lease_until IS NOT NULL AND lease_until <= NOW())
+      WHERE delivered_at IS NULL
+        AND dead_lettered_at IS NULL
+        AND attempt_count < ${TRI_MAX_DELIVERY_ATTEMPTS}
+        AND (
+          ((status IN ('pending', 'failed')) AND next_attempt_at <= NOW())
+          OR (status = 'processing' AND lease_until IS NOT NULL AND lease_until <= NOW())
+        )
       ORDER BY created_at ASC
       LIMIT 1
       FOR UPDATE SKIP LOCKED
@@ -197,8 +226,22 @@ async function markDelivered(sql, row, httpStatus) {
 }
 
 async function markFailed(sql, row, error, httpStatus = null) {
-  const delaySeconds = retryDelaySeconds(row.attempt_count);
   const message = String(error?.message || error || 'TRI delivery failed').slice(0, 2000);
+  if (Number(row.attempt_count) >= TRI_MAX_DELIVERY_ATTEMPTS) {
+    await sql`
+      UPDATE tri_outbox
+      SET status = 'failed',
+          lease_until = NULL,
+          last_error = ${message},
+          last_http_status = ${httpStatus},
+          dead_lettered_at = NOW(),
+          updated_at = NOW()
+      WHERE id = ${row.id}
+    `;
+    return;
+  }
+
+  const delaySeconds = retryDelaySeconds(row.attempt_count);
   await sql`
     UPDATE tri_outbox
     SET
@@ -282,6 +325,40 @@ export async function drainTriOutbox(sql, { limit = 2, fetchImpl = fetch } = {})
     results.push(await deliverClaimedTriEvent(sql, row, { fetchImpl }));
   }
   return results;
+}
+
+export async function listDeadTriEvents(sql, { limit = 50 } = {}) {
+  const capped = Math.max(1, Math.min(Number(limit) || 1, 100));
+  return sql`
+    SELECT event_id, attempt_count, last_error, last_http_status, dead_lettered_at
+    FROM tri_outbox
+    WHERE delivered_at IS NULL AND dead_lettered_at IS NOT NULL
+    ORDER BY dead_lettered_at DESC
+    LIMIT ${capped}
+  `;
+}
+
+export async function requeueDeadTriEvents(sql, eventIds) {
+  const ids = boundedEventIds(eventIds);
+  if (!ids.length) return [];
+  const idsJson = JSON.stringify(ids);
+  return sql`
+    UPDATE tri_outbox
+    SET status = 'pending',
+        attempt_count = 0,
+        next_attempt_at = NOW(),
+        lease_until = NULL,
+        last_error = NULL,
+        last_http_status = NULL,
+        dead_lettered_at = NULL,
+        updated_at = NOW()
+    WHERE event_id IN (
+      SELECT jsonb_array_elements_text(${idsJson}::jsonb)
+    )
+      AND delivered_at IS NULL
+      AND dead_lettered_at IS NOT NULL
+    RETURNING event_id
+  `;
 }
 
 export function secureSecretEqual(left, right) {
