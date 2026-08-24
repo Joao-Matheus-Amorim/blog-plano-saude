@@ -7,6 +7,7 @@ import { URL } from 'node:url';
 import {
   TRI_CONTRACT_VERSION,
   TRI_LEAD_EVENT,
+  TRI_MAX_DELIVERY_ATTEMPTS,
   buildTriLeadEvent,
   canonicalJson,
   retryDelaySeconds,
@@ -117,6 +118,7 @@ test('retry backoff grows and remains capped', () => {
   assert.equal(retryDelaySeconds(2), 30);
   assert.equal(retryDelaySeconds(5), 240);
   assert.equal(retryDelaySeconds(20), 3600);
+  assert.equal(TRI_MAX_DELIVERY_ATTEMPTS, 10);
 });
 
 test('lead capture source keeps lead and outbox in the same Neon transaction', () => {
@@ -124,20 +126,26 @@ test('lead capture source keeps lead and outbox in the same Neon transaction', (
   assert.match(source, /createOutboxInsertQuery\(sql, triPayload\)/);
   assert.match(source, /sql\.transaction\(\[leadInsert, outboxInsert\]\)/);
   assert.match(source, /tri_external_id/);
+  assert.match(source, /telefoneFinal\.length < 6/);
 });
 
-test('recovery drain stays authenticated inside the existing lead function', () => {
+test('recovery operations stay authenticated inside the existing lead function', () => {
   const source = fs.readFileSync(new URL('../api/leads/index.js', import.meta.url), 'utf8');
-  assert.match(source, /req\.query\?\.action.*tri-drain/);
+  assert.match(source, /tri-drain/);
+  assert.match(source, /tri-dead-list/);
+  assert.match(source, /tri-requeue-dead/);
   assert.match(source, /TRI_OUTBOX_DRAIN_SECRET/);
   assert.match(source, /secureSecretEqual/);
   assert.doesNotMatch(source, /tri_outbox_queued:\s*false/);
 });
 
-test('outbox implements lease recovery and unique event ids', () => {
+test('outbox implements lease, dead-letter, requeue and unique event ids', () => {
   const source = fs.readFileSync(new URL('../api/_lib/tri-outbox.js', import.meta.url), 'utf8');
   assert.match(source, /event_id TEXT NOT NULL UNIQUE/);
   assert.match(source, /FOR UPDATE SKIP LOCKED/);
   assert.match(source, /lease_until/);
+  assert.match(source, /dead_lettered_at/);
+  assert.match(source, /MAX_DELIVERY_ATTEMPTS/);
+  assert.match(source, /requeueDeadTriEvents/);
   assert.match(source, /status = 'delivered'/);
 });
