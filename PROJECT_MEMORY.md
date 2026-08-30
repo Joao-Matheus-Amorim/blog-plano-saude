@@ -2,42 +2,39 @@
 
 Projeto: `blog-plano-saude`  
 Papel: aquisição inbound, SEO, conteúdo, landing pages, formulários, attribution e captura original de demanda.  
+Cross-project baseline: `TRI-STATE-2026-08-30-01`.  
 Autoridade cross-project: `Joao-Matheus-Amorim/tri-ecosystem`.  
 Autoridade de certificação: ROSS Multi-Project CI.
 
-## Estado atual — 2026-08-26
+Snapshot local: `harness/TRI_ECOSYSTEM_BASELINE.json`.
 
-`main`: `12e2669ed444018cc1f5b842720a6caaf2a7dc8e`  
-Production: **DEPLOYED / OBSERVED**  
-URL canônica: `https://consultoriadesaude.vercel.app`
+## Estado atual — 2026-08-30
 
-O Blog está em Production e o fluxo **Blog → OG CRM** foi validado em runtime real com:
+Baseline funcional Production: `12e2669ed444018cc1f5b842720a6caaf2a7dc8e`.  
+Main documental anterior ao goal: `6dd114984b0a8de881c42dfee3ba4d5e05cb1700`.  
+Production: **DEPLOYED / OBSERVED**.  
+URL canônica: `https://consultoriadesaude.vercel.app`.
 
-- captura sintética;
-- persistência local antes da entrega;
-- `tri_outbox` enfileirada;
-- entrega TRI com `tri_delivery_ok=true`;
-- ingest no CRM;
-- exactly-once;
-- cleanup do sintético no Blog e no CRM;
-- residual final igual a zero.
+O fluxo **Blog → OG CRM** permanece **OBSERVED_IN_PRODUCTION** com persistência local, outbox TRI, ingest no CRM, exactly-once e cleanup do sintético.
 
-Estado da perna Blog → CRM: **OBSERVED_IN_PRODUCTION**.
+## Radar V6 — baseline reconhecida pelo Blog
 
-## Evidência histórica preservada
+O ecossistema atual usa Radar **V6 People First especializado em plano de saúde**.
 
-Release histórico Preview certificado: `TRI-RC-2026-08-24-01`.  
-SHA funcional histórico usado naquele Bundle: `f5f85f7ed5eed8947b5247b70ba24a28afa84fb5`.
+Product epoch: `RADAR-V6-OPPORTUNITY-KRAKEN`.
 
-A certificação Preview continua válida como evidência histórica do SHA correspondente; ela não é apagada pelo cutover posterior.
+Brain: `OPPORTUNITY_POTENTIAL`.
 
-O controlled cutover de 2026-08-26 foi precedido pelo RC03 final (`TRI-RC-2026-08-26-03`) com gates cross-project verdes e autorização explícita para merge controlado.
+Latest certified product batch no snapshot: **Batch 19**, main SHA `4399816a534e1a683b224ebb776fbbd915d4ac28`.
 
-## Missão e ownership
+Essa evolução do Radar pode orientar temas/conteúdo/mercado de forma governada, mas **não amplia o consentimento do Blog**, não transforma dados clínicos em insumo de aquisição e não muda o ownership da captura inbound.
 
-O Blog atrai demanda e cria a captura inicial. Ele não é o CRM definitivo e não é o motor de prospecção/inteligência.
+KRAKEN é uma arquitetura do Radar. Scrapling e CNPJ / Company Signal continuam planned-only no snapshot atual.
+
+## Mission / ownership
 
 O Blog é dono de:
+
 - páginas públicas, SEO e conteúdo;
 - formulários e simuladores de entrada;
 - origem, campanha, página e attribution;
@@ -46,42 +43,65 @@ O Blog é dono de:
 - entrega durável do lead ao CRM.
 
 O Blog não é dono de:
+
 - pipeline comercial;
 - responsável pelo lead;
 - follow-up, proposta, fechamento ou perda;
-- descoberta pública, score ou evidência original do Radar.
+- descoberta pública/KRAKEN;
+- OPPORTUNITY_POTENTIAL, score ou evidência original do Radar.
 
-## Integração TRI em Production
+## Integrações TRI
 
 Fluxo vigente:
 
 `captura → persistência local → tri_outbox → tri.lead.created.v1 → OG CRM`
 
-Invariantes:
+Contratos globais reconhecidos na baseline `tri-contracts/1.0`:
+
+- `tri.lead.created.v1`;
+- `tri.prospect.upserted.v1`;
+- `tri.commercial.feedback.v1`.
+
+O Blog mantém localmente somente as cópias necessárias aos seus gates atuais. Mesmo nome/versão com hash diferente = FAIL.
+
+## Production truth
+
+```text
+Blog → CRM = OBSERVED_IN_PRODUCTION
+Radar → CRM → Radar = PRODUCTION_RUNTIME_PENDING_NOT_OBSERVED
+```
+
+A evolução funcional do Radar não muda esse status automaticamente.
+
+## Invariantes
+
 - falha temporária do CRM não pode apagar o lead;
 - retry não pode duplicar o lead no CRM;
 - mesmo event ID com payload diferente deve falhar fechado;
 - contratos são versionados e travados por hash;
 - segredos ficam somente no servidor;
-- falha de integrações auxiliares não bloqueia a persistência principal.
-
-Variáveis Production esperadas, sem valores versionados:
-- `TRI_CRM_BASE_URL`;
-- `TRI_BLOG_INGEST_SECRET`;
-- `TRI_OUTBOX_DRAIN_SECRET`.
+- falha de integrações auxiliares não bloqueia a persistência principal;
+- Radar evolution does not expand Blog consent scope;
+- dados clínicos, diagnósticos e inferências sensíveis de saúde não fazem parte da aquisição/comercial do Blog.
 
 ## Privacidade e segurança
 
 - coletar somente o necessário para aquisição/comercial;
-- dados clínicos, diagnósticos e inferências sensíveis de saúde não fazem parte da inteligência TRI;
+- dados clínicos, diagnósticos e inferências sensíveis de saúde não fazem parte da inteligência TRI usada pelo Blog;
 - `.env`, chaves privadas e credenciais não entram no Git;
 - nenhum segredo TRI/DATABASE_URL pode ser exposto via frontend;
 - integração usa HMAC SHA-256;
 - logs não devem despejar segredo ou payload pessoal completo.
 
+## ROSS / cross-project gate
+
+O Blog mantém `local + security + evidence` como fases obrigatórias do ROSS.
+
+`scripts/tri-ecosystem-consistency-check.mjs` valida `TRI-STATE-2026-08-30-01`, ownership, contratos, privacy boundary e claims de Production sem fetch de sibling repo durante CI.
+
 ## Release / rollback
 
-O Blog já passou pelo controlled merge para `main`. Mudanças futuras continuam branch-first:
+Mudanças futuras continuam branch-first:
 
 `branch → preview → gates → PR → autorização → merge → production`
 
@@ -89,9 +109,9 @@ Bridges/rotas legadas não devem ser removidas apenas porque Blog → CRM está 
 
 ## Ordem de autoridade
 
-1. `PROJECT_MEMORY.md` — estado local atual;
-2. `SECURITY_MODEL.md` — fronteira local de segurança;
-3. `ECOSYSTEM.md` — ponte cross-project;
-4. `tri-ecosystem` — estado e decisões compartilhadas.
-
-Documentação que disser que Production continua globalmente não autorizada é histórica e foi superseded pelo cutover de 2026-08-26.
+1. `harness/TRI_ECOSYSTEM_BASELINE.json` — baseline cross-project local;
+2. `PROJECT_MEMORY.md` — estado local;
+3. `SECURITY_MODEL.md` — fronteira local de segurança;
+4. `ECOSYSTEM.md` — ponte cross-project;
+5. `Joao-Matheus-Amorim/tri-ecosystem/ECOSYSTEM_STATE.json` — estado compartilhado;
+6. evidência ROSS/Production para claims técnicos.
