@@ -15,6 +15,11 @@
       "timeout_seconds": 300
     },
     {
+      "name": "TRI cross-project consistency",
+      "command": "node scripts/tri-ecosystem-consistency-check.mjs",
+      "timeout_seconds": 300
+    },
+    {
       "name": "eslint",
       "command": "npm run lint",
       "timeout_seconds": 600
