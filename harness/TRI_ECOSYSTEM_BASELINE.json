@@ -1,0 +1,32 @@
+{
+  "schema": "tri-ecosystem-local-baseline/1.0",
+  "release_id": "TRI-STATE-2026-08-30-01",
+  "authority": "Joao-Matheus-Amorim/tri-ecosystem",
+  "local_repository": "Joao-Matheus-Amorim/blog-plano-saude",
+  "local_role": "inbound_seo_content_and_original_demand_capture",
+  "radar_product_epoch": "RADAR-V6-OPPORTUNITY-KRAKEN",
+  "radar_opportunity_model": "OPPORTUNITY_POTENTIAL",
+  "radar_latest_certified_product_batch": 19,
+  "radar_latest_certified_product_main_sha": "4399816a534e1a683b224ebb776fbbd915d4ac28",
+  "radar_production_observed": false,
+  "contracts": {
+    "family": "tri-contracts/1.0",
+    "global_hashes": {
+      "tri.lead.created.v1.schema.json": "ee28b65e7ab628ff44aa8c054be361dcadca225104dd2ad6c72fb42e93ef6cd2",
+      "tri.prospect.upserted.v1.schema.json": "b5377a3791d9f4a813399700b0753febc7e26f6767be159f30bec872f4d24bdb",
+      "tri.commercial.feedback.v1.schema.json": "3ed0565fae8d8b25ea0393e2a53995c5b32e66829cfc5a86263d216191b64ff6"
+    },
+    "local_locked_contracts": [
+      "tri.lead.created.v1.schema.json",
+      "tri.prospect.upserted.v1.schema.json"
+    ]
+  },
+  "production_truth": {
+    "blog_to_crm": "OBSERVED_IN_PRODUCTION",
+    "radar_to_crm_to_radar": "PRODUCTION_RUNTIME_PENDING_NOT_OBSERVED"
+  },
+  "privacy": {
+    "radar_evolution_does_not_expand_blog_consent_scope": true,
+    "sensitive_health_inference_for_sales": false
+  }
+}
