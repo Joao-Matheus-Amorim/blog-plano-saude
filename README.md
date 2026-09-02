@@ -50,6 +50,21 @@ npm run preview
 
 O projeto está configurado para deploy automático na Vercel via `vercel.json`.
 
+## 🤖 TRI — modo de engenharia
+
+Este projeto segue o contrato cross-project do TRI em `docs/TRI_MODEL_SIDE_ENGINEERING_MODE.md`.
+
+Regra operacional atual:
+
+```text
+model-side agent → branch/implementação/revisão/PR
+GitHub → verdade de código e refs
+ROSS → certificação por SHA quando exigida
+usuário → Goal + aprovações + ROSS manual estritamente necessário
+```
+
+Como `main` pode acionar Vercel Production, trabalho normal — inclusive documentação — é **branch-first**. Não misturar comandos/branches de outros repositórios na sessão ativa deste projeto.
+
 ## 📞 Contato
 
 - **WhatsApp:** [(21) 97747-2141](https://wa.me/5521977472141)
