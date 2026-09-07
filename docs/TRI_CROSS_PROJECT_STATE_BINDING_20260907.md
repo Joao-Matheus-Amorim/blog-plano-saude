@@ -8,6 +8,12 @@ Canonical cross-project reconciliation:
 
 `Joao-Matheus-Amorim/tri-ecosystem/docs/48_CROSS_PROJECT_STATE_RECONCILIATION_20260907.md`
 
+Accepted TRI authority anchor for this binding:
+
+`tri-ecosystem/main = c20b29f686f3a65a249f438b475d72c87e965fc5`
+
+The dated checkpoint path is the semantic authority; the SHA above records the exact TRI main commit that first accepted it. A later TRI main may supersede specific reconciled facts only through a newer accepted checkpoint.
+
 ## Blog role remains unchanged
 
 The Blog continues to own:
