@@ -1,5 +1,7 @@
 # TRI / OG Ecosystem Authority
 
+
+> **Current cross-project recovery checkpoint (2026-09-19):** `docs/BLOG_CROSS_PROJECT_STATE_BINDING_20260919.md`. Read it together with the newest accepted `tri-ecosystem` reconciliation before using older dated cross-project snapshots as current truth.
 Este repositório faz parte do ecossistema TRI / OG.
 
 Autoridade cross-project para estratégia, ownership compartilhado, contratos, privacidade, integração e modelo de release:
