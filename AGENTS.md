@@ -1,5 +1,6 @@
 # Agent Instructions — Blog Plano Saúde
 
+Read `docs/BLOG_CROSS_PROJECT_STATE_BINDING_20260919.md` as the newest local cross-project recovery binding before structural work.
 Antes de mudança estrutural neste repositório:
 
 1. leia `ECOSYSTEM.md`;
