@@ -65,3 +65,8 @@ Lead crítico não pode depender de fire-and-forget. Mudanças Blog → CRM deve
 Se uma tarefa conflitar com ownership, contratos, privacidade, estratégia ou release cross-project, registrar a divergência conforme o Change Protocol antes de implementar a nova direção.
 
 Blog `main` é Production-connected; docs continuam branch-first e merge em `main` não é operacionalmente neutro.
+
+
+## Roadmap CRM 360 — 2026-10-08
+
+Leia `docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md` e o roadmap `tri-ecosystem/docs/63_OG_CRM360_ARCHITECTURE_AND_DELIVERY_ROADMAP_20261008.md` para o novo alinhamento interprojetos. Blog mantém captura voluntária, consentimento/attribution e `tri.lead.created.v1` via outbox; a corretora cadastra clientes e o OG CRM administra carteira/contratos; Radar só prepara fichas para revisão humana. **PLANNED**, sem alterar formulário, runtime, produção ou contrato. O binding de 2026-09-07 permanece histórico.
