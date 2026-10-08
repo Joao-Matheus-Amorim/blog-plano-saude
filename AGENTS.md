@@ -1,5 +1,15 @@
 # Agent Instructions — Blog Plano Saúde
 
+## SKILL_ROUTING_BOOTSTRAP/1 — obrigatório antes de cada tarefa de engenharia
+
+**Antes de planejar/editar/testar:** classifique o tipo de tarefa e consulte o roteador canônico do TRI em `tri-ecosystem/harness/AGENT_SKILL_ROUTING_V1.json` e `tri-ecosystem/docs/68_AGENT_SKILL_ROUTER_AND_HARNESS_DISCOVERY_20261008.md`. Com checkout TRI disponível: `python3 scripts/agent_skill_router.py --repo blog-plano-saude --intent <intencao>`; para checar presença de arquivos use `--workspace <pasta-dos-repos> --verify`. Não rode uma skill irrelevante a cada mensagem; refaça o preflight se o escopo mudar.
+
+**Cross-repo obrigatório:** se TRI/skill não existir no checkout atual, BUSQUE o arquivo no repositório proprietário via conector GitHub no ref/SHA verificado, leia-o e registre a fonte; sem acesso, marque `HOLD`, não improvise um substituto. GitHub contendo a skill NÃO implica instalação automática ou leitura no ChatGPT/Codex/Claude. Um resultado `FILE_RESOLVED` comprova presença, não execução. Relate `ENTRYPOINTS_READ`, `REQUIRED_SKILLS`, `SKILL_CONTENT_READ`, `CHECKS_EXECUTED`, `SHA`, `HOLD/SKIP` com honestidade.
+
+**Intenções-chave:** `audit-full`, `audit-documentation`, `audit-operational`, `debug`, `governance-failure`, `multi-repo-architecture`, `promote-validated`, `release-crm`, `release-blog`, `release-radar`, `ross-windows-onboarding`, `general`. Preserve os harnesses, gates e critérios locais; o roteador não substitui ROSS, testes nem autorização para produção.
+
+---
+
 Antes de mudança estrutural neste repositório:
 
 1. leia `ECOSYSTEM.md`;
