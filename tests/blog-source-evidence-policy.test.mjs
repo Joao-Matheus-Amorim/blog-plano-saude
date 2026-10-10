@@ -43,10 +43,10 @@ test('preserves manual deployment freeze and exact evidence scope',()=>{
 });
 
 test('CRM360 inbound documentary overlay is explicitly hashed and rejects content drift',()=>{
- const altered=structuredClone(candidate);
+ const altered=JSON.parse(JSON.stringify(candidate));
  altered.inbound_doc_digests['AGENTS.md']='0'.repeat(64);
  assert.throws(()=>check({candidate:altered}),/inbound_governance_sha256_mismatch/);
- const widened=structuredClone(candidate);
+ const widened=JSON.parse(JSON.stringify(candidate));
  widened.inbound_doc_digests['api/leads/index.js']='f'.repeat(64);
  assert.throws(()=>check({candidate:widened}),/inbound_governance_sha256_mismatch/);
  const corrupt={...actualGovernanceDigests,'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md':'e'.repeat(64)};
