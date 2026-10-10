@@ -36,6 +36,10 @@ try {
 try {
   validateSourceEvidenceOverlay({
     original:evidence,candidate,changedHistorical:changed,changedCurrent:currentDiff,
+    actualGovernanceDigests:{
+      'AGENTS.md':sha256(path.join(ROOT,'AGENTS.md')),
+      'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md':sha256(path.join(ROOT,'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md'))
+    },
     vercel:JSON.parse(fs.readFileSync(path.join(ROOT,'vercel.json'),'utf8'))
   });
 } catch(error) { fail(error.message); }

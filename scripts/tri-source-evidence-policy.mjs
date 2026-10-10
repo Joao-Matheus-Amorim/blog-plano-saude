@@ -7,7 +7,12 @@ const HISTORICAL_EXTRA = Object.freeze([
  'docs/TRI_MODEL_SIDE_ENGINEERING_MODE.md',
  'vercel.json',
 ]);
+const INBOUND_GOVERNANCE_PATHS = Object.freeze([
+ 'AGENTS.md',
+ 'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md',
+]);
 const CURRENT_SOURCE = Object.freeze([
+ ...INBOUND_GOVERNANCE_PATHS,
  'scripts/tri-evidence-check.mjs',
  'scripts/tri-source-evidence-policy.mjs',
  'harness/BLOG_SOURCE_CERT_CANDIDATE_20261009.json',
@@ -17,7 +22,7 @@ const CURRENT_SOURCE = Object.freeze([
 const equalSet=(a,b)=>Array.isArray(a)&&a.length===b.length&&
  new Set(a).size===a.length&&a.every(f=>b.includes(f));
 export function validateSourceEvidenceOverlay({
- original,candidate,changedHistorical,changedCurrent,vercel,
+ original,candidate,changedHistorical,changedCurrent,vercel,actualGovernanceDigests,
 }) {
  if(candidate?.schema!=='tri-blog-source-cert-candidate/1' ||
     candidate?.project!=='blog-plano-saude' || candidate?.scope!=='source-only' ||
@@ -40,6 +45,13 @@ export function validateSourceEvidenceOverlay({
    throw new Error('unexpected_historical_diff');
  if(!Array.isArray(changedCurrent)||changedCurrent.some(f=>!CURRENT_SOURCE.includes(f)))
    throw new Error('unexpected_current_diff');
+ if (!candidate.inbound_doc_digests || !actualGovernanceDigests ||
+     !equalSet(Object.keys(candidate.inbound_doc_digests),INBOUND_GOVERNANCE_PATHS) ||
+     !equalSet(Object.keys(actualGovernanceDigests),INBOUND_GOVERNANCE_PATHS) ||
+     INBOUND_GOVERNANCE_PATHS.some((file) =>
+       !/^[a-f0-9]{64}$/.test(candidate.inbound_doc_digests[file]) ||
+       candidate.inbound_doc_digests[file] !== actualGovernanceDigests[file]))
+    throw new Error('inbound_governance_sha256_mismatch');
  if(vercel?.git?.deploymentEnabled!==false)
    throw new Error('git_auto_deploy_not_disabled');
  return {historical:'PASS',current_source:'ROSS_NOT_CERTIFIED',deploy:'HOLD'};

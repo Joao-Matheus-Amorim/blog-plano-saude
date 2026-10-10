@@ -16,7 +16,9 @@
     "scripts/tri-source-evidence-policy.mjs",
     "harness/BLOG_SOURCE_CERT_CANDIDATE_20261009.json",
     "tests/blog-source-evidence-policy.test.mjs",
-    "docs/BLOG_SOURCE_EVIDENCE_BOUNDARY_20261009.md"
+    "docs/BLOG_SOURCE_EVIDENCE_BOUNDARY_20261009.md",
+    "AGENTS.md",
+    "docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md"
   ],
   "production_authorized": false,
   "deploy_authorized": false,
@@ -27,5 +29,9 @@
     "manual deploy authorization",
     "live testing and rollback",
     "ROSS current-SHA certification"
-  ]
+  ],
+  "inbound_doc_digests": {
+    "AGENTS.md": "335601daef99e9994649969c7cc4b0298026b8a296ac417b026d78f116726e78",
+    "docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md": "6658130b0db7e123a7d4e2c0edcbc1e38c8993f17dadcd1e0368decbd26602cc"
+  }
 }

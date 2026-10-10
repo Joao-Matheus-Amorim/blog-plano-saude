@@ -1,5 +1,17 @@
 # Agent Instructions — Blog Plano Saúde
 
+## SKILL_ROUTING_BOOTSTRAP/1 — obrigatório antes de cada tarefa de engenharia
+
+**Alinhamento de fonte (09/10/2026):** PR TRI #49 mergeada na main e certificada ROSS em `37be81e96016c330e4f4b5846a5fc7a61c0e2c6f`. O roteador está em `tri-ecosystem/main` (consultar SHA remoto atual). Blog continua **somente inbound voluntário**; roteiro CRM360 não cria cliente, ficha Radar ou autorização de contato.
+
+**Antes de planejar/editar/testar:** classifique o tipo de tarefa e consulte o roteador canônico do TRI em `tri-ecosystem/harness/AGENT_SKILL_ROUTING_V1.json` e `tri-ecosystem/docs/68_AGENT_SKILL_ROUTER_AND_HARNESS_DISCOVERY_20261008.md`. Com checkout TRI disponível: `python3 scripts/agent_skill_router.py --repo blog-plano-saude --intent <intencao>`; para checar presença de arquivos use `--workspace <pasta-dos-repos> --verify`. Não rode uma skill irrelevante a cada mensagem; refaça o preflight se o escopo mudar.
+
+**Cross-repo obrigatório:** se TRI/skill não existir no checkout atual, BUSQUE o arquivo no repositório proprietário via conector GitHub no ref/SHA verificado, leia-o e registre a fonte; sem acesso, marque `HOLD`, não improvise um substituto. GitHub contendo a skill NÃO implica instalação automática ou leitura no ChatGPT/Codex/Claude. Um resultado `FILE_RESOLVED` comprova presença, não execução. Relate `ENTRYPOINTS_READ`, `REQUIRED_SKILLS`, `SKILL_CONTENT_READ`, `CHECKS_EXECUTED`, `SHA`, `HOLD/SKIP` com honestidade.
+
+**Intenções-chave:** `audit-full`, `audit-documentation`, `audit-operational`, `debug`, `governance-failure`, `multi-repo-architecture`, `promote-validated`, `release-crm`, `release-blog`, `release-radar`, `ross-windows-onboarding`, `general`. Preserve os harnesses, gates e critérios locais; o roteador não substitui ROSS, testes nem autorização para produção.
+
+---
+
 Antes de mudança estrutural neste repositório:
 
 1. leia `ECOSYSTEM.md`;
@@ -65,3 +77,15 @@ Lead crítico não pode depender de fire-and-forget. Mudanças Blog → CRM deve
 Se uma tarefa conflitar com ownership, contratos, privacidade, estratégia ou release cross-project, registrar a divergência conforme o Change Protocol antes de implementar a nova direção.
 
 Blog `main` é Production-connected; docs continuam branch-first e merge em `main` não é operacionalmente neutro.
+
+
+## Roadmap CRM 360 — 2026-10-08
+
+Leia `docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md` e o roadmap `tri-ecosystem/docs/63_OG_CRM360_ARCHITECTURE_AND_DELIVERY_ROADMAP_20261008.md` para o novo alinhamento interprojetos. Blog mantém captura voluntária, consentimento/attribution e `tri.lead.created.v1` via outbox; a corretora cadastra clientes e o OG CRM administra carteira/contratos; Radar só prepara fichas para revisão humana. **PLANNED**, sem alterar formulário, runtime, produção ou contrato. O binding de 2026-09-07 permanece histórico.
+
+
+## Crivo documental completo — gatilho obrigatório (CROSS-CRIVO/1.0, 2026-10-08)
+
+Quando o usuário pedir **crivo**, **crivo documental**, **doc-doc**, **crivo full**, auditoria do projeto ou limpeza da documentação, ler e aplicar a skill de autoridade **`tri-ecosystem/.agents/skills/cross-project-crivo/SKILL.md`** e o protocolo `tri-ecosystem/docs/66_DOCUMENTATION_LIFECYCLE_CRIVO_20261008.md`. Não criar auditoria improvisada ignorando a skill existente. Para crivo `full`, a auditoria de documentos D1–D7 é **obrigatória**, além dos testes de produto e segurança; para pedido apenas `documental`, D1–D7 é o núcleo. Se não for possível executar etapa, declarar `HOLD/PARTIAL`, jamais `PASS` por omissão.
+
+Manter os checks locais: OG CRM `.claude/skills/crivo/SKILL.md` e `CRIVO/1.0` operacional; Radar `radar-gov`; ROSS juiz por SHA. Classificar documentos antigos, corrigir índices e alertas de supersessão, **preservar histórico/certificações**; mover/apagar só após mapa de consumidores, revisão e aprovação própria. O inventário read-only `tri-ecosystem/.agents/skills/cross-project-crivo/scripts/audit_docs.py` não é autoridade para exclusão automática. Em cada repo, registrar estado e evidência da revisão.
