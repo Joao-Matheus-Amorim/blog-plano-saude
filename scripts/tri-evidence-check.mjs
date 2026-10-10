@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { validateSourceEvidenceOverlay } from './tri-source-evidence-policy.mjs';
 
 const ROOT = path.resolve(path.dirname(new globalThis.URL(import.meta.url).pathname), '..');
 const evidencePath = path.join(ROOT, 'harness', 'TRI_ALIGNMENT_VALIDATION.json');
@@ -25,10 +26,19 @@ try {
   fail(`validated functional SHA is not an ancestor: ${evidence.validated_functional_sha}`);
 }
 
-const allowed = new Set(evidence.allowed_post_validation_paths || []);
-const changed = git(['diff', '--name-only', `${evidence.validated_functional_sha}..HEAD`]).split('\n').filter(Boolean);
-const unexpected = changed.filter((file) => !allowed.has(file));
-if (unexpected.length) fail(`functional/config changes after validated SHA: ${unexpected.join(', ')}`);
+const candidate = JSON.parse(fs.readFileSync(path.join(ROOT,'harness','BLOG_SOURCE_CERT_CANDIDATE_20261009.json'),'utf8'));
+const changed = git(['diff','--name-only',evidence.validated_functional_sha+'..HEAD']).split('\n').filter(Boolean);
+let currentDiff;
+try {
+  execFileSync('git',['-C',ROOT,'merge-base','--is-ancestor',candidate.base_main_sha,'HEAD'],{stdio:'ignore'});
+  currentDiff=git(['diff','--name-only',candidate.base_main_sha+'..HEAD']).split('\n').filter(Boolean);
+} catch { fail('source_baseline_not_in_ancestry'); }
+try {
+  validateSourceEvidenceOverlay({
+    original:evidence,candidate,changedHistorical:changed,changedCurrent:currentDiff,
+    vercel:JSON.parse(fs.readFileSync(path.join(ROOT,'vercel.json'),'utf8'))
+  });
+} catch(error) { fail(error.message); }
 
 for (const [label, file, expected] of [
   ['bundle result', evidence.bundle_result, evidence.bundle_result_sha256],
