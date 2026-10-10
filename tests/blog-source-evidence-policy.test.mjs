@@ -21,7 +21,7 @@ test('historical certificate is not promoted as current certificate',()=>{
 test('rejects undeclared API changes and broad allowlists',()=>{
  assert.throws(()=>check({changedHistorical:[...input.changedHistorical,'api/leads/index.js']}),/unexpected_historical_diff/);
  assert.throws(()=>check({changedCurrent:['src/App.tsx']}),/unexpected_current_diff/);
- const c=structuredClone(candidate);c.existing_history_paths.push('api/leads/index.js');
+ const c=JSON.parse(JSON.stringify(candidate));c.existing_history_paths.push('api/leads/index.js');
  assert.throws(()=>check({candidate:c}),/candidate_evidence_allowlist_mismatch/);
 });
 test('rejects candidate status or baseline impersonation',()=>{
