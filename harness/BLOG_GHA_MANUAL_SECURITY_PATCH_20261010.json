@@ -1,0 +1,22 @@
+{
+  "schema": "tri-blog-workflow-hardening/1",
+  "project": "blog-plano-saude",
+  "scope": "github-actions-manual-pinned-only",
+  "base_main_sha": "f26a4b4162513dad12e143eb0805940ff081bf3a",
+  "paths": [
+    ".github/workflows/e2e.yml",
+    ".ross/ci.json",
+    "package.json",
+    "package-lock.json",
+    "scripts/tri-evidence-check.mjs",
+    "scripts/tri-source-evidence-policy.mjs",
+    "harness/BLOG_GHA_MANUAL_SECURITY_PATCH_20261010.json",
+    "tests/blog-workflow-manual.test.mjs",
+    "docs/BLOG_GHA_MANUAL_SECURITY_PATCH_20261010.md"
+  ],
+  "auto_dispatch": false,
+  "production_authorized": false,
+  "deploy_authorized": false,
+  "deployed": false,
+  "ross_certified": false
+}

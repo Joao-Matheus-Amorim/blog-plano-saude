@@ -43,6 +43,11 @@
         "timeout_seconds": 300
       },
       {
+        "name": "Manual GitHub Actions workflow SHA and policy",
+        "command": "node --test tests/blog-workflow-manual.test.mjs",
+        "timeout_seconds": 300
+      },
+      {
         "name": "TRI Blog security boundary",
         "command": "node scripts/tri-security-check.mjs",
         "timeout_seconds": 300
