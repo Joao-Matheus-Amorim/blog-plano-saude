@@ -5,15 +5,19 @@ export default defineConfig({
   plugins: [react()],
   build: {
     // ✅ Minificar para produção
-    minify: 'esbuild',
+    minify: 'oxc',
     // ✅ Sourcemaps para debug (desabilitar em produção)
     sourcemap: false,
     // ✅ Otimizar chunks
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'animation-vendor': ['framer-motion']
+        manualChunks(id) {
+          if (/[/\\]node_modules[/\\](react|react-dom|react-router|react-router-dom)[/\\]/.test(id)) {
+            return 'react-vendor'
+          }
+          if (/[/\\]node_modules[/\\]framer-motion[/\\]/.test(id)) {
+            return 'animation-vendor'
+          }
         }
       }
     },

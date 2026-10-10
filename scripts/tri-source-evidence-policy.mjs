@@ -105,3 +105,51 @@ export function validateRuntimeSecurityOverlay({
   throw new Error('git_auto_deploy_not_disabled');
  return {scope:'dependency-security-only',source:'ROSS_REQUIRED',deploy:'HOLD'};
 }
+
+
+// Additional source-only build-toolchain remediation after the certified
+// React Router security fix. Neither earlier evidence overlay is widened.
+const BUILD_SECURITY_PATHS=Object.freeze([
+ '.ross/ci.json','package.json','package-lock.json','vite.config.js',
+ 'scripts/tri-evidence-check.mjs','scripts/tri-source-evidence-policy.mjs',
+ 'harness/BLOG_BUILD_SECURITY_PATCH_20261010.json',
+ 'tests/blog-vite8-bundler.test.mjs','tests/blog-vite8-security-overlay.test.mjs',
+ 'docs/BLOG_BUILD_SECURITY_PATCH_20261010.md',
+]);
+export function buildSecurityPaths(){return [...BUILD_SECURITY_PATHS];}
+export function validateBuildSecurityOverlay({
+ manifest,changedSinceBase,baseInAncestry,pkg,lock,bundlerConfigValid,
+ securityCommands,vercel,
+}){
+ if(manifest?.schema!=='tri-blog-build-security-candidate/1' ||
+    manifest?.project!=='blog-plano-saude' ||
+    manifest?.scope!=='build-security-only' ||
+    manifest?.base_main_sha!=='50853e987d3244cad3c3341bcf24683274966890' ||
+    !equalSet(manifest?.paths,BUILD_SECURITY_PATHS) ||
+    manifest?.vite_version!=='8.3.4' ||
+    manifest?.plugin_react_version!=='6.1.2' ||
+    manifest?.production_authorized!==false ||
+    manifest?.deploy_authorized!==false ||
+    manifest?.deployed!==false || manifest?.ross_certified!==false)
+  throw new Error('build_security_identity_mismatch');
+ if(!baseInAncestry)throw new Error('build_security_base_not_ancestor');
+ if(!Array.isArray(changedSinceBase) ||
+    changedSinceBase.some(f=>!BUILD_SECURITY_PATHS.includes(f)))
+   throw new Error('unexpected_build_security_diff');
+ if(!['.ross/ci.json','package.json','package-lock.json','vite.config.js',
+      'harness/BLOG_BUILD_SECURITY_PATCH_20261010.json'].every(f=>changedSinceBase.includes(f)))
+   throw new Error('build_security_missing_required_file');
+ if(pkg?.devDependencies?.vite!=='8.3.4' ||
+    pkg?.devDependencies?.['@vitejs/plugin-react']!=='6.1.2' ||
+    lock?.packages?.['node_modules/vite']?.version!=='8.3.4' ||
+    lock?.packages?.['node_modules/@vitejs/plugin-react']?.version!=='6.1.2')
+   throw new Error('build_security_versions_mismatch');
+ if(!bundlerConfigValid)throw new Error('unsafe_bundler_config');
+ if(!equalSet(securityCommands,[
+   'npm audit --omit=dev --audit-level=moderate --no-fund',
+   'npm audit --audit-level=moderate --no-fund',
+   'node scripts/tri-security-check.mjs'
+ ]))throw new Error('full_audit_gate_missing');
+ if(vercel?.git?.deploymentEnabled!==false)throw new Error('git_auto_deploy_not_disabled');
+ return {scope:'build-security-only',ross:'REQUIRED',deploy:'HOLD'};
+}
