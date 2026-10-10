@@ -1,7 +1,8 @@
 # Blog Plano Saúde — binding inbound do roadmap OG CRM 360 (08/10/2026)
 
 **Status:** alinhamento documental / PLANNED; nenhum arquivo de runtime, formulário, API, contrato ou banco alterado.  
-**Base main:** `f84b649e03d59773fcb19c25638b9bdd90cdbd96`.  
+**Base histórica Production READY (07/09/2026), não main atual:** `f84b649e03d59773fcb19c25638b9bdd90cdbd96`.
+**Fonte certificada de origem para reconciliação:** `8d621f0e2f0383ba43a21dd712a01f0563811455` (ROSS source PASS, PR #16). TRI #49 foi mergeada/certificada em `37be81e96016c330e4f4b5846a5fc7a61c0e2c6f`. A direção arquitetural está aceita, mas CRM360 continua **PLANNED**; não houve deploy novo.
 **Autoridade:** `tri-ecosystem/docs/63_OG_CRM360_ARCHITECTURE_AND_DELIVERY_ROADMAP_20261008.md`; ADR-030; Change TRI-OG-CRM360-ROADMAP-20261008.  
 **Histórico preservado:** `docs/TRI_CROSS_PROJECT_STATE_BINDING_20260907.md`, `PROJECT_MEMORY.md`, `ECOSYSTEM.md` e `harness/` continuam fontes locais.
 
@@ -25,8 +26,8 @@ Blog não implementa `customer`, `contract`, agenda da corretora, score Radar, f
 
 ## Crivo e release
 
-- No Worker, `ROSS blog-plano-saude FAIL` observado no evidence gate ligado a alterações documentais posteriores à referência validada, enquanto `test:tri` teve **9/9** e Vercel reportou deployment `READY` da main; esses são fatos diferentes. G0 global irá diagnosticar owner-layer evidence drift, sem desativar `tri-evidence-check.mjs` ou chamar produção de falha sem prova.
-- `main` está conectada ao Vercel Production. Este documento vai por branch → Preview → gate/evidence → PR. Não fazer merge/publicação sem autorização explícita.
+- O `ROSS blog-plano-saude FAIL` histórico de evidência antecedeu a correção da PR #16. A `main` `8d621f0e` foi certificada source pelo ROSS, **não publicada**, e o último Production READY permanece na base antiga `f84b649e`; HTTP E2E do código novo continua pendente.
+- `vercel.json` contém `git.deploymentEnabled=false`; merge não publica automaticamente. Release/HTTP externo seguem como gates manuais separados; esta PR documental não autoriza publicação.
 - Nenhuma revisão de schema `tri.lead.created.v1`, contrato, secret, política de captura ou producer neste alinhamento.
 
 **Critério de conclusão desta fase:** Blog reconhece a arquitetura e continua fazendo inbound para o CRM antigo sem alterar comportamento. Os módulos Carteira/Oportunidades são trabalho de OG CRM e Radar somente nas fronteiras definidas.

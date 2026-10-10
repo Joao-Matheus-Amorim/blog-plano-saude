@@ -2,6 +2,8 @@
 
 ## SKILL_ROUTING_BOOTSTRAP/1 — obrigatório antes de cada tarefa de engenharia
 
+**Alinhamento de fonte (09/10/2026):** PR TRI #49 mergeada na main e certificada ROSS em `37be81e96016c330e4f4b5846a5fc7a61c0e2c6f`. O roteador está em `tri-ecosystem/main` (consultar SHA remoto atual). Blog continua **somente inbound voluntário**; roteiro CRM360 não cria cliente, ficha Radar ou autorização de contato.
+
 **Antes de planejar/editar/testar:** classifique o tipo de tarefa e consulte o roteador canônico do TRI em `tri-ecosystem/harness/AGENT_SKILL_ROUTING_V1.json` e `tri-ecosystem/docs/68_AGENT_SKILL_ROUTER_AND_HARNESS_DISCOVERY_20261008.md`. Com checkout TRI disponível: `python3 scripts/agent_skill_router.py --repo blog-plano-saude --intent <intencao>`; para checar presença de arquivos use `--workspace <pasta-dos-repos> --verify`. Não rode uma skill irrelevante a cada mensagem; refaça o preflight se o escopo mudar.
 
 **Cross-repo obrigatório:** se TRI/skill não existir no checkout atual, BUSQUE o arquivo no repositório proprietário via conector GitHub no ref/SHA verificado, leia-o e registre a fonte; sem acesso, marque `HOLD`, não improvise um substituto. GitHub contendo a skill NÃO implica instalação automática ou leitura no ChatGPT/Codex/Claude. Um resultado `FILE_RESOLVED` comprova presença, não execução. Relate `ENTRYPOINTS_READ`, `REQUIRED_SKILLS`, `SKILL_CONTENT_READ`, `CHECKS_EXECUTED`, `SHA`, `HOLD/SKIP` com honestidade.
