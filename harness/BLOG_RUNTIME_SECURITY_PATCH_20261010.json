@@ -1,0 +1,22 @@
+{
+  "schema": "tri-blog-runtime-security-candidate/1",
+  "project": "blog-plano-saude",
+  "scope": "dependency-security-only",
+  "base_certified_main_sha": "945fcea42ce221f046391913226bdeb0a93e7e13",
+  "paths": [
+    ".ross/ci.json",
+    "package.json",
+    "package-lock.json",
+    "scripts/tri-evidence-check.mjs",
+    "scripts/tri-source-evidence-policy.mjs",
+    "harness/BLOG_RUNTIME_SECURITY_PATCH_20261010.json",
+    "tests/blog-runtime-security-overlay.test.mjs",
+    "docs/BLOG_ROUTER_SECURITY_PATCH_20261010.md"
+  ],
+  "package_name": "react-router-dom",
+  "package_version": "7.18.4",
+  "production_authorized": false,
+  "deploy_authorized": false,
+  "deployed": false,
+  "ross_certified": false
+}
