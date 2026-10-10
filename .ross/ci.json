@@ -33,6 +33,11 @@
   "security": {
     "commands": [
       {
+        "name": "Production dependency audit",
+        "command": "npm audit --omit=dev --audit-level=moderate --no-fund",
+        "timeout_seconds": 300
+      },
+      {
         "name": "TRI Blog security boundary",
         "command": "node scripts/tri-security-check.mjs",
         "timeout_seconds": 300

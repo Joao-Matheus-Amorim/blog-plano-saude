@@ -56,3 +56,52 @@ export function validateSourceEvidenceOverlay({
    throw new Error('git_auto_deploy_not_disabled');
  return {historical:'PASS',current_source:'ROSS_NOT_CERTIFIED',deploy:'HOLD'};
 }
+
+
+// A separate, narrowly scoped runtime security remediation; historical source-only
+// candidate and its immutable evidence remain unchanged.
+const RUNTIME_SECURITY_PATHS=Object.freeze([
+ '.ross/ci.json',
+ 'package.json',
+ 'package-lock.json',
+ 'scripts/tri-evidence-check.mjs',
+ 'scripts/tri-source-evidence-policy.mjs',
+ 'harness/BLOG_RUNTIME_SECURITY_PATCH_20261010.json',
+ 'tests/blog-runtime-security-overlay.test.mjs',
+ 'docs/BLOG_ROUTER_SECURITY_PATCH_20261010.md',
+]);
+export function runtimeSecurityPaths(){return [...RUNTIME_SECURITY_PATHS];}
+export function validateRuntimeSecurityOverlay({
+ manifest,changedSinceBase,packageJson,packageLock,baseInAncestry,
+ vercel,auditGate
+}){
+ if(manifest?.schema!=='tri-blog-runtime-security-candidate/1' ||
+    manifest?.project!=='blog-plano-saude' ||
+    manifest?.scope!=='dependency-security-only' ||
+    manifest?.base_certified_main_sha!=='945fcea42ce221f046391913226bdeb0a93e7e13' ||
+    !equalSet(manifest?.paths,RUNTIME_SECURITY_PATHS) ||
+    manifest?.package_name!=='react-router-dom' ||
+    manifest?.package_version!=='7.18.4' ||
+    manifest?.production_authorized!==false ||
+    manifest?.deploy_authorized!==false ||
+    manifest?.deployed!==false || manifest?.ross_certified!==false)
+  throw new Error('runtime_security_identity_mismatch');
+ if(!baseInAncestry)throw new Error('runtime_security_base_not_ancestor');
+ if(!Array.isArray(changedSinceBase) ||
+    changedSinceBase.some(f=>!RUNTIME_SECURITY_PATHS.includes(f)))
+  throw new Error('unexpected_runtime_security_diff');
+ if(!changedSinceBase.includes('package.json') ||
+    !changedSinceBase.includes('package-lock.json') ||
+    !changedSinceBase.includes('harness/BLOG_RUNTIME_SECURITY_PATCH_20261010.json'))
+  throw new Error('security_patch_missing_lock_or_manifest');
+ if(packageJson?.dependencies?.['react-router-dom']!=='7.18.4' ||
+    packageLock?.packages?.['node_modules/react-router-dom']?.version!=='7.18.4' ||
+    packageLock?.packages?.['node_modules/react-router']?.version!=='7.18.4')
+  throw new Error('runtime_router_version_mismatch');
+ if(packageLock?.packages?.['node_modules/@remix-run/router'])
+  throw new Error('obsolete_runtime_router_present');
+ if(!auditGate)throw new Error('runtime_security_audit_missing');
+ if(vercel?.git?.deploymentEnabled!==false)
+  throw new Error('git_auto_deploy_not_disabled');
+ return {scope:'dependency-security-only',source:'ROSS_REQUIRED',deploy:'HOLD'};
+}
