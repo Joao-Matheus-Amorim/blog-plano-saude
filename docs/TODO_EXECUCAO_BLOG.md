@@ -1,5 +1,7 @@
 # TODO de Execução — Blog Plano de Saúde
 
+> **STATUS / SUPERSESSION — 2026-09-19:** este arquivo é um backlog histórico de execução, não uma fonte de estado atual. Antes de executar qualquer item abaixo, confronte-o com `docs/BLOG_CROSS_PROJECT_STATE_BINDING_20260919.md`, `PROJECT_MEMORY.md`, código atual, harness e evidência ROSS. Item listado aqui não significa automaticamente pendência atual; capacidades já implementadas/certificadas não devem ser refeitas.
+
 Este documento é o passo a passo técnico-operacional do `blog-plano-saude` para uso pessoal.
 
 O projeto é individual. Não é para virar uma empresa inchada, nem uma plataforma genérica. A regra é: capturar lead, ajudar você a entender o caso, apoiar o atendimento humano e registrar o que aconteceu.

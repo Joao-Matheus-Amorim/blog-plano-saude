@@ -1,5 +1,7 @@
 # PROJECT MEMORY — Blog Plano Saúde
 
+> **CURRENT AUTHORITY POINTER:** `docs/BLOG_CROSS_PROJECT_STATE_BINDING_20260919.md` is the 2026-09-19 cross-project state. Older dates, SHAs, pending/planned statements and stage-specific implementation limits in this document remain historical unless the current binding explicitly confirms them. Do not use them to override newer code, harness/evidence or certified state.
+
 Projeto: `blog-plano-saude`  
 Papel: aquisição inbound, SEO, conteúdo, landing pages, formulários, attribution e captura original de demanda.  
 Autoridade cross-project: `Joao-Matheus-Amorim/tri-ecosystem`.  

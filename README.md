@@ -1,5 +1,7 @@
 # Maisa Valentim — Consultoria de Planos de Saúde
 
+> **CURRENT AUTHORITY POINTER:** `docs/BLOG_CROSS_PROJECT_STATE_BINDING_20260919.md` is the 2026-09-19 cross-project state. Older dates, SHAs, pending/planned statements and stage-specific implementation limits in this document remain historical unless the current binding explicitly confirms them. Do not use them to override newer code, harness/evidence or certified state.
+
 Site institucional e blog da corretora **Maisa Valentim**, especializada em planos de saúde no Rio de Janeiro. Desenvolvido com React + Vite e hospedado na Vercel.
 
 ## 📌 Sobre o Projeto
