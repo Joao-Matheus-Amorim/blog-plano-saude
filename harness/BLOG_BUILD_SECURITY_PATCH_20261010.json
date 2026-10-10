@@ -1,0 +1,24 @@
+{
+  "schema": "tri-blog-build-security-candidate/1",
+  "project": "blog-plano-saude",
+  "scope": "build-security-only",
+  "base_main_sha": "50853e987d3244cad3c3341bcf24683274966890",
+  "paths": [
+    ".ross/ci.json",
+    "package.json",
+    "package-lock.json",
+    "vite.config.js",
+    "scripts/tri-evidence-check.mjs",
+    "scripts/tri-source-evidence-policy.mjs",
+    "harness/BLOG_BUILD_SECURITY_PATCH_20261010.json",
+    "tests/blog-vite8-bundler.test.mjs",
+    "tests/blog-vite8-security-overlay.test.mjs",
+    "docs/BLOG_BUILD_SECURITY_PATCH_20261010.md"
+  ],
+  "vite_version": "8.3.4",
+  "plugin_react_version": "6.1.2",
+  "production_authorized": false,
+  "deploy_authorized": false,
+  "deployed": false,
+  "ross_certified": false
+}

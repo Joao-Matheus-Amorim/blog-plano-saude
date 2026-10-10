@@ -38,6 +38,11 @@
         "timeout_seconds": 300
       },
       {
+        "name": "Complete dependency audit (production and build)",
+        "command": "npm audit --audit-level=moderate --no-fund",
+        "timeout_seconds": 300
+      },
+      {
         "name": "TRI Blog security boundary",
         "command": "node scripts/tri-security-check.mjs",
         "timeout_seconds": 300
