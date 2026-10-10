@@ -153,3 +153,41 @@ export function validateBuildSecurityOverlay({
  if(vercel?.git?.deploymentEnabled!==false)throw new Error('git_auto_deploy_not_disabled');
  return {scope:'build-security-only',ross:'REQUIRED',deploy:'HOLD'};
 }
+
+
+// Immutable GH Actions safety overlay following the certified Vite build fix.
+const WORKFLOW_SECURITY_PATHS=Object.freeze([
+ '.github/workflows/e2e.yml','.ross/ci.json','package.json','package-lock.json',
+ 'scripts/tri-evidence-check.mjs','scripts/tri-source-evidence-policy.mjs',
+ 'harness/BLOG_GHA_MANUAL_SECURITY_PATCH_20261010.json',
+ 'tests/blog-workflow-manual.test.mjs','docs/BLOG_GHA_MANUAL_SECURITY_PATCH_20261010.md',
+]);
+export function workflowSecurityPaths(){return [...WORKFLOW_SECURITY_PATHS];}
+export function validateWorkflowSecurityOverlay({
+ manifest,changedSinceBase,baseInAncestry,workflowValid,securityGate,vercel,
+}){
+ if(manifest?.schema!=='tri-blog-workflow-hardening/1' ||
+    manifest?.project!=='blog-plano-saude' ||
+    manifest?.scope!=='github-actions-manual-pinned-only' ||
+    manifest?.base_main_sha!=='f26a4b4162513dad12e143eb0805940ff081bf3a' ||
+    !equalSet(manifest?.paths,WORKFLOW_SECURITY_PATHS) ||
+    manifest?.auto_dispatch!==false ||
+    manifest?.production_authorized!==false ||
+    manifest?.deploy_authorized!==false ||
+    manifest?.deployed!==false ||
+    manifest?.ross_certified!==false)
+  throw new Error('workflow_identity_mismatch');
+ if(!baseInAncestry)throw new Error('workflow_base_not_ancestor');
+ if(!Array.isArray(changedSinceBase) ||
+    changedSinceBase.some(p=>!WORKFLOW_SECURITY_PATHS.includes(p)))
+   throw new Error('unexpected_workflow_diff');
+ if(!['.github/workflows/e2e.yml','.ross/ci.json','package.json',
+    'package-lock.json','harness/BLOG_GHA_MANUAL_SECURITY_PATCH_20261010.json']
+    .every(p=>changedSinceBase.includes(p)))
+   throw new Error('workflow_required_paths_missing');
+ if(!workflowValid)throw new Error('unsafe_workflow');
+ if(!securityGate)throw new Error('workflow_security_gate_missing');
+ if(vercel?.git?.deploymentEnabled!==false)
+   throw new Error('git_auto_deploy_not_disabled');
+ return {scope:'github-actions-manual-pinned-only',ross:'REQUIRED',deploy:'HOLD'};
+}
