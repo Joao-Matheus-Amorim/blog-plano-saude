@@ -52,8 +52,11 @@ O Blog precisa reconhecer a evolução recente do Radar sem assumir ownership de
 Scrapling adapter = implemented + certified in Radar main
 I3-A runner = certified in Radar main
 I3-B frozen plan = certified in Radar main
-I3-C live observation = pending
-I3-D lifecycle decision = pending
+I3-C attempt #1 = HOLD histórico; não repetir
+I3-C replacement1 = completed + certified
+I3-D = SHADOW_MEASURED
+Wave 1 = COMPLETE_AT_CERTIFIED_SHADOW_MEASURED_BOUNDARY
+Waves 2–6 = COMPLETE_CERTIFIED_RUNTIME_INERT
 Radar automatic CRM delivery = disabled
 Radar Production observed = false
 ```
@@ -76,7 +79,7 @@ Lead crítico não pode depender de fire-and-forget. Mudanças Blog → CRM deve
 
 Se uma tarefa conflitar com ownership, contratos, privacidade, estratégia ou release cross-project, registrar a divergência conforme o Change Protocol antes de implementar a nova direção.
 
-Blog `main` é Production-connected; docs continuam branch-first e merge em `main` não é operacionalmente neutro.
+Blog `main` tem deploy automático da integração Git desativado por `vercel.json` (`git.deploymentEnabled=false`). Documentação continua branch-first; merge não equivale a deploy nem libera publicação manual.
 
 
 ## Roadmap CRM 360 — 2026-10-08

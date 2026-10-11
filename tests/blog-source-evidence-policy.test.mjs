@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import { validateSourceEvidenceOverlay } from '../scripts/tri-source-evidence-policy.mjs';
 
 const original=JSON.parse(fs.readFileSync('harness/TRI_ALIGNMENT_VALIDATION.json','utf8'));
 const candidate=JSON.parse(fs.readFileSync('harness/BLOG_SOURCE_CERT_CANDIDATE_20261009.json','utf8'));
 const actualGovernanceDigests={
- 'AGENTS.md':crypto.createHash('sha256').update(fs.readFileSync('AGENTS.md')).digest('hex'),
+ 'AGENTS.md':crypto.createHash('sha256').update(execFileSync('git',['show','${base}:AGENTS.md'])).digest('hex'),
  'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md':crypto.createHash('sha256').update(fs.readFileSync('docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md')).digest('hex')
 };
 const input={
