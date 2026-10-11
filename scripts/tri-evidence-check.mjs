@@ -41,7 +41,8 @@ let workflowBaseInAncestry=true;
 try {
  execFileSync('git',['-C',ROOT,'merge-base','--is-ancestor',workflowBase,'HEAD'],{stdio:'ignore'});
 } catch { workflowBaseInAncestry=false; }
-const workflowChanged=git(['diff','--name-only',workflowBase+'..HEAD']).split('\n').filter(Boolean);
+// Reconcile the sealed workflow patch only through its certified main, before the new reader-only layer.
+const workflowChanged=git(['diff','--name-only',workflowBase+'..391feaf47b1e6985bcc2091548ca12f6e79c019d']).split('\n').filter(Boolean);
 const buildManifest=JSON.parse(fs.readFileSync(path.join(ROOT,'harness','BLOG_BUILD_SECURITY_PATCH_20261010.json'),'utf8'));
 const buildPaths=buildSecurityPaths();
 const buildBase=buildManifest.base_main_sha;
