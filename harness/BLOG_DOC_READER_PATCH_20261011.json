@@ -1,0 +1,24 @@
+{
+  "schema": "tri-blog-doc-reader-patch/1",
+  "project": "blog-plano-saude",
+  "scope": "documentation-reader-only",
+  "base_main_sha": "391feaf47b1e6985bcc2091548ca12f6e79c019d",
+  "reference_radar_main_sha": "30b36a1d37a22d153198cbfe059130f90623ecb1",
+  "reference_radar_authority": "radarplan/AGENTS.md",
+  "historical_agents_sha256": "335601daef99e9994649969c7cc4b0298026b8a296ac417b026d78f116726e78",
+  "paths": [
+    ".ross/ci.json",
+    "AGENTS.md",
+    "README.md",
+    "scripts/tri-evidence-check.mjs",
+    "scripts/tri-source-evidence-policy.mjs",
+    "tests/blog-source-evidence-policy.test.mjs",
+    "tests/blog-current-doc-reader.test.mjs",
+    "harness/BLOG_DOC_READER_PATCH_20261011.json",
+    "docs/BLOG_DOC_READER_PATCH_20261011.md"
+  ],
+  "production_authorized": false,
+  "deploy_authorized": false,
+  "deployed": false,
+  "ross_certified": false
+}

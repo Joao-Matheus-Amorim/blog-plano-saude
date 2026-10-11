@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { validateSourceEvidenceOverlay, validateRuntimeSecurityOverlay, runtimeSecurityPaths, validateBuildSecurityOverlay, buildSecurityPaths, validateWorkflowSecurityOverlay, workflowSecurityPaths } from './tri-source-evidence-policy.mjs';
+import { validateSourceEvidenceOverlay, validateRuntimeSecurityOverlay, runtimeSecurityPaths, validateBuildSecurityOverlay, buildSecurityPaths, validateWorkflowSecurityOverlay, workflowSecurityPaths, validateDocReaderOverlay, docReaderPaths } from './tri-source-evidence-policy.mjs';
 import yaml from 'js-yaml';
 
 const ROOT = path.resolve(path.dirname(new globalThis.URL(import.meta.url).pathname), '..');
@@ -41,7 +41,8 @@ let workflowBaseInAncestry=true;
 try {
  execFileSync('git',['-C',ROOT,'merge-base','--is-ancestor',workflowBase,'HEAD'],{stdio:'ignore'});
 } catch { workflowBaseInAncestry=false; }
-const workflowChanged=git(['diff','--name-only',workflowBase+'..HEAD']).split('\n').filter(Boolean);
+// Reconcile the sealed workflow patch only through its certified main, before the new reader-only layer.
+const workflowChanged=git(['diff','--name-only',workflowBase+'..391feaf47b1e6985bcc2091548ca12f6e79c019d']).split('\n').filter(Boolean);
 const buildManifest=JSON.parse(fs.readFileSync(path.join(ROOT,'harness','BLOG_BUILD_SECURITY_PATCH_20261010.json'),'utf8'));
 const buildPaths=buildSecurityPaths();
 const buildBase=buildManifest.base_main_sha;
@@ -137,18 +138,38 @@ try {
 } catch(error) { fail(error.message); }
 // Preserve the historical source-only validation unchanged. The new runtime
 // security paths are checked independently against their own exact baseline.
-const historicalSourceDiff = changed.filter(file=>!runtimePaths.includes(file) && !buildPaths.includes(file) && !workflowPaths.includes(file));
-const currentSourceDiff = currentDiff.filter(file=>!runtimePaths.includes(file) && !buildPaths.includes(file) && !workflowPaths.includes(file));
+const docPaths=docReaderPaths();
+const historicalSourceDiff = changed.filter(file=>!runtimePaths.includes(file) && !buildPaths.includes(file) && !workflowPaths.includes(file) && !docPaths.includes(file));
+const currentSourceDiff = currentDiff.filter(file=>!runtimePaths.includes(file) && !buildPaths.includes(file) && !workflowPaths.includes(file) && !docPaths.includes(file));
 try {
   validateSourceEvidenceOverlay({
     original:evidence,candidate,changedHistorical:historicalSourceDiff,changedCurrent:currentSourceDiff,
     actualGovernanceDigests:{
-      'AGENTS.md':sha256(path.join(ROOT,'AGENTS.md')),
+      // Read the pre-overlay AGENTS blob at the immutable certified main; never redefine the old receipt using current prose.
+      'AGENTS.md':crypto.createHash('sha256').update(execFileSync('git',['-C',ROOT,'show','391feaf47b1e6985bcc2091548ca12f6e79c019d:AGENTS.md'])).digest('hex'),
       'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md':sha256(path.join(ROOT,'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md'))
     },
     vercel:JSON.parse(fs.readFileSync(path.join(ROOT,'vercel.json'),'utf8'))
   });
 } catch(error) { fail(error.message); }
+
+const docManifest=JSON.parse(fs.readFileSync(path.join(ROOT,'harness','BLOG_DOC_READER_PATCH_20261011.json'),'utf8'));
+const docBase=docManifest.base_main_sha;
+let docBaseInAncestry=true;
+try {execFileSync('git',['-C',ROOT,'merge-base','--is-ancestor',docBase,'HEAD'],{stdio:'ignore'});}
+catch {docBaseInAncestry=false;}
+const docChanged=git(['diff','--name-only',docBase+'..HEAD']).split('\n').filter(Boolean);
+try {
+ validateDocReaderOverlay({
+  manifest:docManifest,changedSinceBase:docChanged,
+  baseInAncestry:docBaseInAncestry,
+  historicalAgentsDigest:crypto.createHash('sha256').update(execFileSync('git',['-C',ROOT,'show',docBase+':AGENTS.md'])).digest('hex'),
+  readme:fs.readFileSync(path.join(ROOT,'README.md'),'utf8'),
+  agents:fs.readFileSync(path.join(ROOT,'AGENTS.md'),'utf8'),
+  vercel:JSON.parse(fs.readFileSync(path.join(ROOT,'vercel.json'),'utf8')),
+  rossConfig:cfgROSS
+ });
+} catch(error) {fail(error.message);}
 
 for (const [label, file, expected] of [
   ['bundle result', evidence.bundle_result, evidence.bundle_result_sha256],
@@ -159,6 +180,7 @@ for (const [label, file, expected] of [
   if (actual !== expected) fail(`${label} SHA-256 mismatch: expected=${expected} actual=${actual}`);
 }
 
+globalThis.console.log('BLOG_DOC_READER_SCOPE_PASS_DEPLOY_HOLD');
 globalThis.console.log('TRI_EVIDENCE_PASS');
 globalThis.console.log('BLOG_RUNTIME_SECURITY_SCOPE_PASS_DEPLOY_HOLD');
 globalThis.console.log('BLOG_BUILD_SECURITY_SCOPE_PASS_DEPLOY_HOLD');

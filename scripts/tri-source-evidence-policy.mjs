@@ -191,3 +191,59 @@ export function validateWorkflowSecurityOverlay({
    throw new Error('git_auto_deploy_not_disabled');
  return {scope:'github-actions-manual-pinned-only',ross:'REQUIRED',deploy:'HOLD'};
 }
+
+ 
+// Separately governed reader-only reconciliation after Blog #19. Do not widen
+// any frozen source/runtime/build/workflow patch or mutate its receipt.
+const DOC_READER_PATHS=Object.freeze([
+  ".ross/ci.json",
+  "AGENTS.md",
+  "README.md",
+  "scripts/tri-evidence-check.mjs",
+  "scripts/tri-source-evidence-policy.mjs",
+  "tests/blog-source-evidence-policy.test.mjs",
+  "tests/blog-current-doc-reader.test.mjs",
+  "harness/BLOG_DOC_READER_PATCH_20261011.json",
+  "docs/BLOG_DOC_READER_PATCH_20261011.md"
+]);
+export function docReaderPaths(){return [...DOC_READER_PATHS];}
+export function validateDocReaderOverlay({
+ manifest,changedSinceBase,baseInAncestry,historicalAgentsDigest,
+ readme,agents,vercel,rossConfig
+}){
+ if(manifest?.schema!=='tri-blog-doc-reader-patch/1' ||
+    manifest?.project!=='blog-plano-saude' ||
+    manifest?.scope!=='documentation-reader-only' ||
+    manifest?.base_main_sha!=='391feaf47b1e6985bcc2091548ca12f6e79c019d' ||
+    manifest?.reference_radar_main_sha!=='30b36a1d37a22d153198cbfe059130f90623ecb1' ||
+    manifest?.reference_radar_authority!=='radarplan/AGENTS.md' ||
+    manifest?.historical_agents_sha256!=='335601daef99e9994649969c7cc4b0298026b8a296ac417b026d78f116726e78' ||
+    manifest?.production_authorized!==false ||
+    manifest?.deploy_authorized!==false ||
+    manifest?.deployed!==false || manifest?.ross_certified!==false ||
+    !equalSet(manifest?.paths,DOC_READER_PATHS))
+   throw new Error('doc_reader_identity_mismatch');
+ if(!baseInAncestry)throw new Error('doc_reader_base_not_ancestor');
+ if(!equalSet(changedSinceBase,DOC_READER_PATHS))
+   throw new Error('doc_reader_diff_not_exact');
+ if(historicalAgentsDigest!==manifest.historical_agents_sha256)
+   throw new Error('doc_reader_historical_agents_changed');
+ if(vercel?.git?.deploymentEnabled!==false ||
+    !readme.includes('`git.deploymentEnabled=false`') ||
+    /configurado para deploy autom[aá]tico na Vercel/i.test(readme) ||
+    !readme.includes('Publicação futura exige autorização manual') ||
+    !readme.includes('React Router DOM v7'))
+   throw new Error('doc_reader_deploy_or_runtime_claim_mismatch');
+ if(!agents.includes('I3-C attempt #1 = HOLD histórico; não repetir') ||
+    !agents.includes('I3-C replacement1 = completed + certified') ||
+    !agents.includes('I3-D = SHADOW_MEASURED') ||
+    !agents.includes('Wave 1 = COMPLETE_AT_CERTIFIED_SHADOW_MEASURED_BOUNDARY') ||
+    !agents.includes('Waves 2–6 = COMPLETE_CERTIFIED_RUNTIME_INERT') ||
+    !agents.includes('Radar automatic CRM delivery = disabled') ||
+    !agents.includes('Radar Production observed = false') ||
+    /I3-C live observation = pending|I3-D lifecycle decision = pending/.test(agents))
+   throw new Error('doc_reader_radar_claim_mismatch');
+ if(!rossConfig?.local?.some(x=>x.command==="node --test tests/blog-current-doc-reader.test.mjs tests/blog-source-evidence-policy.test.mjs"))
+   throw new Error('doc_reader_regression_gate_missing');
+ return {documentation:'PASS',historical:'IMMUTABLE',ross:'REQUIRED',deploy:'HOLD'};
+}

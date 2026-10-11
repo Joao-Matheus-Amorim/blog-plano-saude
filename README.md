@@ -23,7 +23,7 @@ Plataforma completa de captacão e conversão de leads para venda de planos de s
 | Tecnologia | Uso |
 |---|---|
 | React 18 + Vite 5 | Frontend |
-| React Router DOM v6 | Navegacão SPA |
+| React Router DOM v7 | Navegacão SPA |
 | Framer Motion | Animacões |
 | Neon + Vercel Functions | Backend / Banco de dados |
 | React Helmet Async | SEO dinâmico |
@@ -48,7 +48,7 @@ npm run preview
 
 ## 🌍 Deploy
 
-O projeto está configurado para deploy automático na Vercel via `vercel.json`.
+O `vercel.json` define `git.deploymentEnabled=false`: a integração Git **não realiza deploy automático** ao atualizar a `main`. Publicação futura exige autorização manual própria, plano de rollback e verificação no ambiente publicado. Merge e certificação ROSS não significam deploy.
 
 ## 🤖 TRI — modo de engenharia
 
@@ -63,7 +63,7 @@ ROSS → certificação por SHA quando exigida
 usuário → Goal + aprovações + ROSS manual estritamente necessário
 ```
 
-Como `main` pode acionar Vercel Production, trabalho normal — inclusive documentação — é **branch-first**. Não misturar comandos/branches de outros repositórios na sessão ativa deste projeto.
+Ainda que a integração Git não publique automaticamente, trabalho normal — inclusive documentação — é **branch-first**, com revisão, testes e certificação aplicável. Publicar exige autorização separada. Não misturar comandos/branches de outros repositórios na sessão ativa deste projeto.
 
 ## 📞 Contato
 
