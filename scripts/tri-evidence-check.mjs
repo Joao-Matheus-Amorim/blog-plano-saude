@@ -145,7 +145,7 @@ try {
     original:evidence,candidate,changedHistorical:historicalSourceDiff,changedCurrent:currentSourceDiff,
     actualGovernanceDigests:{
       // Read the pre-overlay AGENTS blob at the immutable certified main; never redefine the old receipt using current prose.
-      'AGENTS.md':crypto.createHash('sha256').update(execFileSync('git',['-C',ROOT,'show','${base}:AGENTS.md'])).digest('hex'),
+      'AGENTS.md':crypto.createHash('sha256').update(execFileSync('git',['-C',ROOT,'show','391feaf47b1e6985bcc2091548ca12f6e79c019d:AGENTS.md'])).digest('hex'),
       'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md':sha256(path.join(ROOT,'docs/TRI_OG_CRM360_INBOUND_BOUNDARY_20261008.md'))
     },
     vercel:JSON.parse(fs.readFileSync(path.join(ROOT,'vercel.json'),'utf8'))
